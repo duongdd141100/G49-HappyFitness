@@ -4,7 +4,17 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorMessageEnum {
-    LOGIN_FAILED("001001", "Login Failed");
+    LOGIN_FAILED("001001", "Login Failed"),
+
+    TOKEN_EMPTY("001002", "Token Empty"),
+
+    TOKEN_INVALID("001003", "Token Invalid"),
+
+    CREATE_TOKEN_FAILED("001004", "Create Token Failed"),
+
+    LACK_OF_INFORMATION("001005", "Lack Of Information"),
+
+    USERNAME_EXIST("001006", "Username is exist! Please choose new username!"),;
 
     private String code;
 
