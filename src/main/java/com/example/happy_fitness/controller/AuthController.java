@@ -46,12 +46,23 @@ public class AuthController {
         try {
             return ResponseEntity.ok(BaseResponse.ok(authService.editProfile(user, newUser)));
         } catch (Exception e) {
-            log.error(RequestMappingConstant.SIGN_IN + e);
+            log.error(RequestMappingConstant.EDIT_PROFILE + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
     @GetMapping("/me")
     public ResponseEntity<BaseResponse<String>> me(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(BaseResponse.ok(user));
+    }
+
+    @GetMapping("/change-password")
+    public ResponseEntity<BaseResponse<String>> changePassword(@AuthenticationPrincipal User user, String newPassword) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(authService.changePassword(user, newPassword)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.CHANGE_PASSWORD + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
     }
 }

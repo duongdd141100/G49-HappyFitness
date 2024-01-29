@@ -1,6 +1,7 @@
 package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
+import com.example.happy_fitness.common.ResponseCodeEnum;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.service.AuthService;
@@ -65,5 +66,11 @@ public class AuthServiceImpl implements AuthService {
         user.setAddress(newUser.getAddress());
         user.setPhoneNumber(newUser.getPhoneNumber());
         return userRepo.save(user);
+    }
+
+    @Override
+    public String changePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return ResponseCodeEnum.OK.getMessage();
     }
 }

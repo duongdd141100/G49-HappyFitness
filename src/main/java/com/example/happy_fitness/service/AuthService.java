@@ -10,4 +10,6 @@ public interface AuthService {
     User save(User user);
 
     User editProfile(User user, User newUser);
+
+    String changePassword(User user, String newPassword);
 }
