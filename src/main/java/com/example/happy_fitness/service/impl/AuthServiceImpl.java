@@ -56,4 +56,14 @@ public class AuthServiceImpl implements AuthService {
         }
         throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
     }
+
+    @Override
+    public User editProfile(User user, User newUser) {
+        user.setFullName(newUser.getFullName());
+        user.setGender(newUser.getGender());
+        user.setDob(newUser.getDob());
+        user.setAddress(newUser.getAddress());
+        user.setPhoneNumber(newUser.getPhoneNumber());
+        return userRepo.save(user);
+    }
 }
