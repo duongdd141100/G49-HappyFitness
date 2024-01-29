@@ -8,4 +8,6 @@ public interface AuthService {
     User findByUsername(String issuer);
 
     User save(User user);
+
+    User editProfile(User user, User newUser);
 }
