@@ -101,6 +101,6 @@ public class AuthServiceImpl implements AuthService {
         Random random = new Random();
         String code = String.format("%06d", random.nextInt(MAX_CODE));
         emailService.send(email, mailTemplate.getSubject(), String.format(mailTemplate.getContent(), code), new MultipartFile[]{});
-        return null;
+        return code;
     }
 }
