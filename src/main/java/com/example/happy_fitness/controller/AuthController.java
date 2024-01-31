@@ -65,4 +65,14 @@ public class AuthController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/forget-password/{email}")
+    public ResponseEntity<BaseResponse<String>> changePassword(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(authService.forgetPassword(email)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.FORGET_PASSWORD + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
