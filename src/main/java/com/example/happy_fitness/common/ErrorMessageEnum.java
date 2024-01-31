@@ -14,7 +14,11 @@ public enum ErrorMessageEnum {
 
     LACK_OF_INFORMATION("001005", "Lack Of Information"),
 
-    USERNAME_EXIST("001006", "Username is exist! Please choose new username!"),;
+    USERNAME_EXIST("001006", "Username is exist! Please choose new username!"),
+
+    EMAIL_NOT_EXIST("002007", "Email not exist!"),
+
+    SEND_MAIL_FAILED("002008", "Send mail failed!"),;
 
     private String code;
 
