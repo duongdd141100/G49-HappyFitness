@@ -8,6 +8,23 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "users")
+@SqlResultSetMapping(
+        name = "UserDto",
+        classes = @ConstructorResult(
+                targetClass = com.example.happy_fitness.dto.UserDto.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Float.class),
+                        @ColumnResult(name = "username", type = String.class),
+                        @ColumnResult(name = "fullName", type = String.class),
+                        @ColumnResult(name = "email", type = String.class),
+                        @ColumnResult(name = "gender", type = Boolean.class),
+                        @ColumnResult(name = "dob", type = Date.class),
+                        @ColumnResult(name = "phoneNumber", type = String.class),
+                        @ColumnResult(name = "address", type = String.class),
+                        @ColumnResult(name = "roleName", type = String.class),
+                }
+        )
+)
 public class User extends BaseEntity {
     @Column(name = "username")
     private String username;
