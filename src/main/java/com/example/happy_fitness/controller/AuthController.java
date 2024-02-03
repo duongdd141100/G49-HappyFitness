@@ -54,7 +54,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<BaseResponse<User>> me(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(BaseResponse.ok(userDetails));
+        return ResponseEntity.ok(BaseResponse.ok(authService.findByUsername(userDetails.getUsername())));
     }
 
     @GetMapping("/change-password")

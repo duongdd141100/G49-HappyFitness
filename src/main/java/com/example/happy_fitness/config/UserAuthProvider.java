@@ -46,7 +46,12 @@ public class UserAuthProvider {
     public Authentication validateToken(String token) {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
         DecodedJWT decodedJWT = verifier.verify(token);
-        UserDetails user = authService.findByUsername(decodedJWT.getIssuer());
-        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        User user = authService.findByUsername(decodedJWT.getIssuer());
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole().getName().toUpperCase())
+                .build();
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

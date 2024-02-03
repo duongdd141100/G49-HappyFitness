@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface AuthService {
     UserDetails validateUser(User user);
 
-    UserDetails findByUsername(String issuer);
+    User findByUsername(String issuer);
 
     User save(User user);
 

@@ -55,14 +55,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDetails findByUsername(String issuer) {
+    public User findByUsername(String issuer) {
         if (StringUtils.hasText(issuer)) {
-            User user = userRepo.findByUsername(issuer);
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(issuer)
-                    .password(user.getPassword())
-                    .roles(user.getRole().getName().toUpperCase())
-                    .build();
+            return userRepo.findByUsername(issuer);
         }
         throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
     }
