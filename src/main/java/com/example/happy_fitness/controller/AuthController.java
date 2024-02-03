@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,9 +23,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
     @PostMapping("/sign-in")
-    public ResponseEntity<BaseResponse<String>> signIn(@AuthenticationPrincipal User user) {
+    public ResponseEntity<BaseResponse<String>> signIn(@AuthenticationPrincipal UserDetails userDetails) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(userAuthProvider.createToken(user.getUsername())));
+            return ResponseEntity.ok(BaseResponse.ok(userAuthProvider.createToken(userDetails.getUsername())));
         } catch (Exception e) {
             log.error(RequestMappingConstant.SIGN_IN + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
@@ -52,8 +53,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<BaseResponse<String>> me(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(BaseResponse.ok(user));
+    public ResponseEntity<BaseResponse<User>> me(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(BaseResponse.ok(userDetails));
     }
 
     @GetMapping("/change-password")

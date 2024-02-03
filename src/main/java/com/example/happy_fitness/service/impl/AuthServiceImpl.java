@@ -2,7 +2,6 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.PropertyBean;
-import com.example.happy_fitness.common.ResponseCodeEnum;
 import com.example.happy_fitness.entity.MailTemplate;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.MailTemplateRepository;
@@ -11,6 +10,8 @@ import com.example.happy_fitness.service.AuthService;
 import com.example.happy_fitness.service.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -39,20 +40,29 @@ public class AuthServiceImpl implements AuthService {
 
     public static final Integer MAX_CODE = 999999;
     @Override
-    public User validateUser(User user) {
+    public UserDetails validateUser(User user) {
         if (user != null && StringUtils.hasText(user.getUsername())) {
             User realUser = userRepo.findByUsername(user.getUsername());
             if (passwordEncoder.matches(CharBuffer.wrap(user.getPassword()), realUser.getPassword())) {
-                return realUser;
+                return org.springframework.security.core.userdetails.User
+                        .withUsername(realUser.getUsername())
+                        .password(realUser.getPassword())
+                        .roles(realUser.getRole().getName().toUpperCase())
+                        .build();
             }
         }
         throw new RuntimeException(ErrorMessageEnum.LOGIN_FAILED.getCode());
     }
 
     @Override
-    public User findByUsername(String issuer) {
+    public UserDetails findByUsername(String issuer) {
         if (StringUtils.hasText(issuer)) {
-            return userRepo.findByUsername(issuer);
+            User user = userRepo.findByUsername(issuer);
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(issuer)
+                    .password(user.getPassword())
+                    .roles(user.getRole().getName().toUpperCase())
+                    .build();
         }
         throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
     }
@@ -89,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
-        return ResponseCodeEnum.OK.getMessage();
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override

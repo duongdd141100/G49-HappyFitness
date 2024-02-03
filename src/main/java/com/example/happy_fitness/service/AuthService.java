@@ -2,11 +2,12 @@ package com.example.happy_fitness.service;
 
 import com.example.happy_fitness.entity.User;
 import jakarta.mail.MessagingException;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
-    User validateUser(User user);
+    UserDetails validateUser(User user);
 
-    User findByUsername(String issuer);
+    UserDetails findByUsername(String issuer);
 
     User save(User user);
 

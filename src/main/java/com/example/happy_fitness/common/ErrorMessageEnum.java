@@ -35,6 +35,6 @@ public enum ErrorMessageEnum {
                 return messageEnum;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(code);
     }
 }
