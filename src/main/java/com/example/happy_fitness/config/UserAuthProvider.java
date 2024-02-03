@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Date;
 
 @Component
@@ -25,7 +25,8 @@ public class UserAuthProvider {
     @Value("${application.secretKey}")
     private String secretKey;
     public Authentication validateUser(User user) {
-        return new UsernamePasswordAuthenticationToken(authService.validateUser(user), null, Collections.emptyList());
+        UserDetails userDetails = authService.validateUser(user);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     public String createToken(String username) {
@@ -45,6 +46,7 @@ public class UserAuthProvider {
     public Authentication validateToken(String token) {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
         DecodedJWT decodedJWT = verifier.verify(token);
-        return new UsernamePasswordAuthenticationToken(authService.findByUsername(decodedJWT.getIssuer()), null, Collections.emptyList());
+        UserDetails user = authService.findByUsername(decodedJWT.getIssuer());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }
