@@ -57,7 +57,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User findByUsername(String issuer) {
         if (StringUtils.hasText(issuer)) {
-            return userRepo.findByUsername(issuer);
+            User user = userRepo.findByUsername(issuer);
+            user.getFacility().getManager().setFacility(null);
+            return user;
         }
         throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
     }

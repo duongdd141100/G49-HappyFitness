@@ -10,6 +10,7 @@ public class RequestMappingConstant {
     public static final String CHANGE_PASSWORD = "/api/auth/change-password";
     public static final String FORGET_PASSWORD = "/api/auth/forget-password/**";
     public static final String FIND_USER = "/api/users";
+    public static final String CREATE_USER = "/api/users/create";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
