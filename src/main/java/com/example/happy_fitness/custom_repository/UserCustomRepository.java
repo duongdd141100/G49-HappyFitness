@@ -1,6 +1,7 @@
 package com.example.happy_fitness.custom_repository;
 
 import com.example.happy_fitness.constants.Constants;
+import com.example.happy_fitness.dto.UserDto;
 import com.example.happy_fitness.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -34,7 +35,7 @@ public class UserCustomRepository {
             "        INNER JOIN" +
             "    facilities f ON u.facility_id = f.id";
 
-    public List<User> findAllByCondition(User requester, String username, String fullName, String email, Boolean gender, Float roleId) {
+    public List<UserDto> findAllByCondition(User requester, String username, String fullName, String email, Boolean gender, Float roleId) {
         String sql = BASE_QUERY + getCondition(requester, username, fullName, email, gender, roleId);
         Query query = entityManager.createNativeQuery(sql, "UserDto");
         if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())) {
