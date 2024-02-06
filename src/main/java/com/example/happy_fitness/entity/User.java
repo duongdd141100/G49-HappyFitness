@@ -22,6 +22,7 @@ import java.util.Date;
                         @ColumnResult(name = "phoneNumber", type = String.class),
                         @ColumnResult(name = "address", type = String.class),
                         @ColumnResult(name = "roleName", type = String.class),
+                        @ColumnResult(name = "facility", type = String.class),
                 }
         )
 )
