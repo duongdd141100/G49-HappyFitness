@@ -31,10 +31,11 @@ public class UserController {
             @RequestParam(required = false) String fullName,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Boolean gender,
-            @RequestParam(required = false) Float roleId
+            @RequestParam(required = false) Float roleId,
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(userService.findAllByCondition(username, fullName, email, gender, roleId)));
+            return ResponseEntity.ok(BaseResponse.ok(userService.findAllByCondition(userDetails.getUsername(), username, fullName, email, gender, roleId)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_USER + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

@@ -1,6 +1,7 @@
 package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
+import com.example.happy_fitness.constants.Constants;
 import com.example.happy_fitness.custom_repository.UserCustomRepository;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.RoleRepository;
@@ -30,22 +31,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepo;
 
-    private final String ADMIN_ROLE = "ADMIN";
-
-    private final String MANAGER_ROLE = "MANAGER";
-
-    private final String CUSTOMER_ROLE = "CUSTOMER";
-
     @Override
-    public List<User> findAllByCondition(String username, String fullName, String email, Boolean gender, Float roleId) {
-        return userCustomRepo.findAllByCondition(username, fullName, email, gender, roleId);
+    public List<User> findAllByCondition(String requesterUsername, String username, String fullName, String email, Boolean gender, Float roleId) {
+        return userCustomRepo.findAllByCondition(
+                userRepo.findByUsername(requesterUsername), username, fullName, email, gender, roleId);
     }
 
     @Override
     public User create(String creatorUsername, User user) {
         User creator = userRepo.findByUsername(creatorUsername);
-        if (MANAGER_ROLE.equalsIgnoreCase(creator.getRole().getName())) {
-            if (Stream.of(ADMIN_ROLE, MANAGER_ROLE, CUSTOMER_ROLE)
+        if (Constants.MANAGER_ROLE.equalsIgnoreCase(creator.getRole().getName())) {
+            if (Stream.of(Constants.ADMIN_ROLE, Constants.MANAGER_ROLE, Constants.CUSTOMER_ROLE)
                     .anyMatch(roleRepo.findById(user.getRole().getId()).get().getName()::equalsIgnoreCase)) {
                 throw new AccessDeniedException(ErrorMessageEnum.ERROR_CREATE_NEW_USER_BECAUSE_ROLE.getCode());
             }

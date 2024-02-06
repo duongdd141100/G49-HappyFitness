@@ -58,7 +58,9 @@ public class AuthServiceImpl implements AuthService {
     public User findByUsername(String issuer) {
         if (StringUtils.hasText(issuer)) {
             User user = userRepo.findByUsername(issuer);
-            user.getFacility().getManager().setFacility(null);
+            if (user.getFacility() != null) {
+                user.getFacility().getManager().setFacility(null);
+            }
             return user;
         }
         throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());

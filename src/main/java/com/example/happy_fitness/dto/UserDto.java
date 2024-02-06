@@ -14,5 +14,6 @@ public class UserDto {
     private Date dob;
     private String phoneNumber;
     private String address;
+    private String facility;
     private String roleName;
 }
