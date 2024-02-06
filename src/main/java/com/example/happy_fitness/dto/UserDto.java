@@ -16,4 +16,17 @@ public class UserDto {
     private String address;
     private String facility;
     private String roleName;
+
+    public UserDto(Float id, String username, String fullName, String email, Boolean gender, Date dob, String phoneNumber, String address, String facility, String roleName) {
+        this.id = id;
+        this.username = username;
+        this.fullName = fullName;
+        this.email = email;
+        this.gender = gender;
+        this.dob = dob;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.facility = facility;
+        this.roleName = roleName;
+    }
 }

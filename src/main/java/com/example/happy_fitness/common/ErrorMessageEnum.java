@@ -16,19 +16,23 @@ public enum ErrorMessageEnum {
 
     USERNAME_EXIST("001006", "Username is exist! Please choose new username!"),
 
+    USERNAME_NOT_EXIST("001007", "Username is not exist!"),
+
     /**
      * Error message for email
      */
-    EMAIL_NOT_EXIST("002007", "Email not exist!"),
+    EMAIL_NOT_EXIST("002001", "Email not exist!"),
 
-    SEND_MAIL_FAILED("002008", "Send mail failed!"),
+    SEND_MAIL_FAILED("002002", "Send mail failed!"),
 
     /**
      * Error message for authentication
      */
     ERROR_CREATE_NEW_USER_BECAUSE_ROLE("003001", "You cannot create new user with Admin, Manager or Customer role!"),
 
-    ERROR_CREATE_NEW_USER_BECAUSE_FACILITY("003002", "You cannot create new user for other facility!"),;
+    ERROR_CREATE_NEW_USER_BECAUSE_FACILITY("003002", "You cannot create new user for other facility!"),
+
+    ACCESS_DENIED_VIEW_USER_DETAIL("003003", "You can view only employee in your facility!"),;
 
     private String code;
 

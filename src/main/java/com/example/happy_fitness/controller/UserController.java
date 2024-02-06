@@ -56,4 +56,20 @@ public class UserController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/{username}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<BaseResponse<UserDto>> findUserDetail(@PathVariable String username,
+                                                            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(userService.findUserDetail(userDetails, username)));
+        } catch (AccessDeniedException e) {
+            log.error(RequestMappingConstant.CREATE_USER + e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(BaseResponse.unAuthentication(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.CREATE_USER + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
