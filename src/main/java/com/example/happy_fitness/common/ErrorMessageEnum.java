@@ -32,7 +32,9 @@ public enum ErrorMessageEnum {
 
     ERROR_CREATE_NEW_USER_BECAUSE_FACILITY("003002", "You cannot create new user for other facility!"),
 
-    ACCESS_DENIED_VIEW_USER_DETAIL("003003", "You can view only employee in your facility!"),;
+    ACCESS_DENIED_VIEW_USER_DETAIL("003003", "You can view only employee in your facility!"),
+
+    ACCESS_DENIED_RESET_PASSWORD("003004", "You can reset only password of employee in your facility!"),;
 
     private String code;
 
