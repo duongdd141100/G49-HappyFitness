@@ -12,4 +12,6 @@ public interface UserService extends BaseService<User> {
     User create(String creatorUsername, User user);
 
     UserDto findUserDetail(UserDetails userDetails, String username);
+
+    User resetPassword(UserDetails userDetails, String username);
 }

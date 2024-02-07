@@ -90,6 +90,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User resetPassword(UserDetails userDetails, String username) {
+        User user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException(ErrorMessageEnum.USERNAME_NOT_EXIST.getCode());
+        }
+        User requester = userRepo.findByUsername(userDetails.getUsername());
+        if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())) {
+            if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())
+                    && (user.getFacility() == null
+                    || !requester.getFacility().getId().equals(user.getFacility().getId()))) {
+                throw new AccessDeniedException(ErrorMessageEnum.ACCESS_DENIED_RESET_PASSWORD.getCode());
+            }
+        }
+        return null;
+    }
+
+    @Override
     public User create(User user) {
         return null;
     }
