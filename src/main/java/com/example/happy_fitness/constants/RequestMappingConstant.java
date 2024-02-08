@@ -13,6 +13,7 @@ public class RequestMappingConstant {
     public static final String CREATE_USER = "/api/users/create";
     public static final String USER_DETAIL = "/api/users/{username}";
     public static final String RESET_PASSWORD = "/api/users/reset-password/{username}";
+    public static final String DEACTIVATE = "/api/users/deactivate/{username}";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,

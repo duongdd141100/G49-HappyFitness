@@ -54,6 +54,9 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "status")
+    private Boolean status;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

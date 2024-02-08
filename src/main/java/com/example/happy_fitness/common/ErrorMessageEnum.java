@@ -34,7 +34,11 @@ public enum ErrorMessageEnum {
 
     ACCESS_DENIED_VIEW_USER_DETAIL("003003", "You can view only employee in your facility!"),
 
-    ACCESS_DENIED_RESET_PASSWORD("003004", "You can reset only password of employee in your facility!"),;
+    ACCESS_DENIED_RESET_PASSWORD("003004", "You can reset only password of employee in your facility!"),
+
+    CANNOT_DEACTIVATE_YOUR_SELF("003005", "Bạn không thể vô hiệu hoá tài khoản của chính bạn!"),
+
+    ACCESS_DENIED_DEACTIVATE_USER("003006", "Bạn chỉ có thể vô hiệu hoá tài khoản của nhân viên trong cơ sở bạn!"),;
 
     private String code;
 

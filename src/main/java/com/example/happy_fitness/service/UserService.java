@@ -15,4 +15,6 @@ public interface UserService extends BaseService<User> {
     UserDto findUserDetail(UserDetails userDetails, String username);
 
     String resetPassword(UserDetails userDetails, String username) throws MessagingException;
+
+    String deactivate(UserDetails userDetails, String username);
 }
