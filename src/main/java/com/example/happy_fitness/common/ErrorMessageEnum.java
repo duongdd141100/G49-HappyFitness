@@ -4,37 +4,37 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorMessageEnum {
-    LOGIN_FAILED("001001", "Login Failed"),
+    LOGIN_FAILED("001001", "Đăng nhập thất bại!"),
 
-    TOKEN_EMPTY("001002", "Token Empty"),
+    TOKEN_EMPTY("001002", "Token trống"),
 
-    TOKEN_INVALID("001003", "Token Invalid"),
+    TOKEN_INVALID("001003", "Token không hợp lệ"),
 
-    CREATE_TOKEN_FAILED("001004", "Create Token Failed"),
+    CREATE_TOKEN_FAILED("001004", "Khởi tạo token thất bại"),
 
-    LACK_OF_INFORMATION("001005", "Lack Of Information"),
+    LACK_OF_INFORMATION("001005", "Thiếu thông tin"),
 
-    USERNAME_EXIST("001006", "Username is exist! Please choose new username!"),
+    USERNAME_EXIST("001006", "Tên người dùng đã tồn tại! Vui lòng nhập tên người dùng khác!"),
 
-    USERNAME_NOT_EXIST("001007", "Username is not exist!"),
+    USERNAME_NOT_EXIST("001007", "Tên người dùng không tồn tại!"),
 
     /**
      * Error message for email
      */
-    EMAIL_NOT_EXIST("002001", "Email not exist!"),
+    EMAIL_NOT_EXIST("002001", "Email không tồn tại!"),
 
-    SEND_MAIL_FAILED("002002", "Send mail failed!"),
+    SEND_MAIL_FAILED("002002", "Gửi mail thất bại!"),
 
     /**
      * Error message for authentication
      */
-    ERROR_CREATE_NEW_USER_BECAUSE_ROLE("003001", "You cannot create new user with Admin, Manager or Customer role!"),
+    ERROR_CREATE_NEW_USER_BECAUSE_ROLE("003001", "Bạn không thể tạo người dùng mới với quyền Admin, Quản Lý, hoặc Khách Hàng!"),
 
-    ERROR_CREATE_NEW_USER_BECAUSE_FACILITY("003002", "You cannot create new user for other facility!"),
+    ERROR_CREATE_NEW_USER_BECAUSE_FACILITY("003002", "Bạn không thể tạo người dùng mới cho cơ sở khác!"),
 
-    ACCESS_DENIED_VIEW_USER_DETAIL("003003", "You can view only employee in your facility!"),
+    ACCESS_DENIED_VIEW_USER_DETAIL("003003", "Bạn chỉ có thể xem nhân viên trong cơ sở của bạn!"),
 
-    ACCESS_DENIED_RESET_PASSWORD("003004", "You can reset only password of employee in your facility!"),
+    ACCESS_DENIED_RESET_PASSWORD("003004", "Bạn chỉ có thể đặt lại mật khẩu cho nhân viên trong cơ sở của bạn!"),
 
     CANNOT_DEACTIVATE_YOUR_SELF("003005", "Bạn không thể vô hiệu hoá tài khoản của chính bạn!"),
 
