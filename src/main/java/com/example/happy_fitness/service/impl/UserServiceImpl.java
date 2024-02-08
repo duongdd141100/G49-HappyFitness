@@ -93,12 +93,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ErrorMessageEnum.USERNAME_NOT_EXIST.getCode());
         }
         User requester = userRepo.findByUsername(userDetails.getUsername());
-        if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())) {
-            if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())
-                    && (user.getFacility() == null
-                    || !requester.getFacility().getId().equals(user.getFacility().getId()))) {
-                throw new AccessDeniedException(ErrorMessageEnum.ACCESS_DENIED_VIEW_USER_DETAIL.getCode());
-            }
+        if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())
+                && (user.getFacility() == null
+                || !requester.getFacility().getId().equals(user.getFacility().getId()))) {
+            throw new AccessDeniedException(ErrorMessageEnum.ACCESS_DENIED_VIEW_USER_DETAIL.getCode());
         }
 
         return Optional.of(user).map(x -> new UserDto(x.getId(), x.getUsername(), x.getFullName(),
@@ -113,17 +111,35 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ErrorMessageEnum.USERNAME_NOT_EXIST.getCode());
         }
         User requester = userRepo.findByUsername(userDetails.getUsername());
-        if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())) {
-            if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())
-                    && (user.getFacility() == null
-                    || !requester.getFacility().getId().equals(user.getFacility().getId()))) {
-                throw new AccessDeniedException(ErrorMessageEnum.ACCESS_DENIED_RESET_PASSWORD.getCode());
-            }
+        if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())
+                && (user.getFacility() == null
+                || !requester.getFacility().getId().equals(user.getFacility().getId()))) {
+            throw new AccessDeniedException(ErrorMessageEnum.ACCESS_DENIED_RESET_PASSWORD.getCode());
         }
         String passRandom = RandomStringUtils.random(8, true, true);
         MailTemplate mailTemplate = mailTemplateRepo.findByCode(propertyBean.getResetPasswordTemplateCode());
         emailService.send(user.getEmail(), mailTemplate.getSubject(), String.format(mailTemplate.getContent(), passRandom), new MultipartFile[]{});
         user.setPassword(passwordEncoder.encode(passRandom));
+        userRepo.save(user);
+        return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    public String deactivate(UserDetails userDetails, String username) {
+        if (userDetails.getUsername().equals(username)) {
+            throw new AccessDeniedException(ErrorMessageEnum.CANNOT_DEACTIVATE_YOUR_SELF.getCode());
+        }
+        User user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException(ErrorMessageEnum.USERNAME_NOT_EXIST.getCode());
+        }
+        User requester = userRepo.findByUsername(userDetails.getUsername());
+        if (Constants.MANAGER_ROLE.equalsIgnoreCase(requester.getRole().getName())
+                && (user.getFacility() == null
+                || !requester.getFacility().getId().equals(user.getFacility().getId()))) {
+            throw new AccessDeniedException(ErrorMessageEnum.ACCESS_DENIED_DEACTIVATE_USER.getCode());
+        }
+        user.setStatus(false);
         userRepo.save(user);
         return HttpStatus.OK.getReasonPhrase();
     }
