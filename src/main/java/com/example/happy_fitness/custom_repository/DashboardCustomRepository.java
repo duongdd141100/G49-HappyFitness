@@ -1,5 +1,6 @@
 package com.example.happy_fitness.custom_repository;
 
+import com.example.happy_fitness.dto.DashboardInfoDto;
 import com.example.happy_fitness.dto.RevenueDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -39,8 +40,33 @@ public class DashboardCustomRepository {
             " ORDER BY year DESC , month DESC" +
             " LIMIT 12";
 
+    private final String INFO_SQL = "SELECT " +
+            "    *" +
+            " FROM" +
+            "    (SELECT " +
+            "        SUM(unit_price * quantity) AS totalSale," +
+            "            SUM(quantity) AS productSold," +
+            "            COUNT(o.id) AS totalOrder" +
+            "    FROM" +
+            "        order_product op" +
+            "    INNER JOIN orders o ON o.id = op.order_id" +
+            "    WHERE" +
+            "        TIMESTAMPDIFF(DAY, o.created_date, NOW()) <= 30) t1" +
+            "        CROSS JOIN" +
+            "    (SELECT " +
+            "        COUNT(id) AS newCustomer" +
+            "    FROM" +
+            "        users" +
+            "    WHERE" +
+            "        TIMESTAMPDIFF(DAY, created_date, NOW()) <= 30" +
+            "            AND role_id = 3) t2";
     public List<RevenueDto> getLast12MonthRevenue() {
         Query query = entityManager.createNativeQuery(REVENUE_SQL, "RevenueDto");
         return query.getResultList();
+    }
+
+    public DashboardInfoDto getLast30DaysInfo() {
+        Query query = entityManager.createNativeQuery(INFO_SQL, "DashboardInfoDto");
+        return (DashboardInfoDto) query.getSingleResult();
     }
 }
