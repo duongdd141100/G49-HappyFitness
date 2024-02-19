@@ -32,4 +32,15 @@ public class DashboardController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @GetMapping("/info")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<BaseResponse<List<RevenueDto>>> getLast30DaysInfo() {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(dashboardService.getLast30DaysInfo()));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.REVENUE + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }

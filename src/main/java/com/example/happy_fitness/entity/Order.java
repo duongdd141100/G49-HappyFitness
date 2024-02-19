@@ -17,6 +17,18 @@ import lombok.Data;
                 }
         )
 )
+@SqlResultSetMapping(
+        name = "DashboardInfoDto",
+        classes = @ConstructorResult(
+                targetClass = com.example.happy_fitness.dto.DashboardInfoDto.class,
+                columns = {
+                        @ColumnResult(name = "totalSale", type = Float.class),
+                        @ColumnResult(name = "productSold", type = Integer.class),
+                        @ColumnResult(name = "totalOrder", type = Integer.class),
+                        @ColumnResult(name = "newCustomer", type = Integer.class),
+                }
+        )
+)
 public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "voucher_id")
