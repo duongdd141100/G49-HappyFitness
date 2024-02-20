@@ -72,7 +72,7 @@ public class ProductCustomRepository {
             condition += " AND c.id = :categoryId";
         }
         if (supplierId != null) {
-            condition += " AND c.id = :supplierId";
+            condition += " AND s.id = :supplierId";
         }
         if (minPrice != null) {
             condition += " AND fp.price >= :minPrice";
