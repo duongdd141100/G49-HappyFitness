@@ -15,10 +15,12 @@ public class RequestMappingConstant {
     public static final String RESET_PASSWORD = "/api/users/reset-password/{username}";
     public static final String DEACTIVATE = "/api/users/deactivate/{username}";
     public static final String REVENUE = "/api/dashboard/revenue";
+    public static final String GET_PRODUCT = "/api/products";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
             SIGN_UP,
-            FORGET_PASSWORD
+            FORGET_PASSWORD,
+            GET_PRODUCT
     );
 }

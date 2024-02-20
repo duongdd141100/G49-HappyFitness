@@ -38,6 +38,8 @@ public class SecurityConfig {
                                     RequestMappingConstant.SIGN_IN,
                                     RequestMappingConstant.SIGN_UP,
                                     RequestMappingConstant.FORGET_PASSWORD).permitAll()
+                            .requestMatchers(HttpMethod.GET,
+                                    RequestMappingConstant.GET_PRODUCT).permitAll()
                             .anyRequest().authenticated();
                 });
         return http.build();
