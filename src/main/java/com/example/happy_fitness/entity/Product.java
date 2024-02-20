@@ -6,6 +6,23 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "products")
+@SqlResultSetMapping(
+        name = "ProductDto",
+        classes = @ConstructorResult(
+                targetClass = com.example.happy_fitness.dto.ProductDto.class,
+                columns = {
+                        @ColumnResult(name = "code", type = String.class),
+                        @ColumnResult(name = "name", type = String.class),
+                        @ColumnResult(name = "imagePath", type = String.class),
+                        @ColumnResult(name = "category", type = String.class),
+                        @ColumnResult(name = "supplier", type = String.class),
+                        @ColumnResult(name = "price", type = Float.class),
+                        @ColumnResult(name = "facility", type = String.class),
+                        @ColumnResult(name = "status", type = String.class),
+                        @ColumnResult(name = "stockQuantity", type = Integer.class),
+                }
+        )
+)
 public class Product extends BaseEntity {
     @Column(name = "code", unique = true)
     private String code;
@@ -14,7 +31,7 @@ public class Product extends BaseEntity {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "supplier__id")
+    @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
     @ManyToOne
