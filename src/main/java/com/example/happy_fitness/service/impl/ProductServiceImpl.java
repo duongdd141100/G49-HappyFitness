@@ -60,7 +60,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(Product product, Float id) {
-        return null;
+        if (!StringUtils.hasText(product.getName())
+                || product.getCategory() == null
+                || product.getCategory().getId() == null
+                || product.getSupplier() == null
+                || product.getSupplier().getId() == null) {
+            throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
+        }
+        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(""));
+        finalProduct.setName(product.getName());
+        finalProduct.setCategory(product.getCategory());
+        finalProduct.setSupplier(product.getSupplier());
+        finalProduct.setDescription(product.getDescription());
+        return productRepo.save(finalProduct);
     }
 
     @Override
