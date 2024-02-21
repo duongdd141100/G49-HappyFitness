@@ -23,4 +23,12 @@ public class FacilityProduct extends BaseEntity {
 
     @Column(name = "status")
     private String status;
+
+    public FacilityProduct(Facility facility, Product product, Integer stockQuantity, Float price, String status) {
+        this.facility = facility;
+        this.product = product;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+        this.status = status;
+    }
 }
