@@ -16,6 +16,7 @@ public class RequestMappingConstant {
     public static final String DEACTIVATE = "/api/users/deactivate/{username}";
     public static final String REVENUE = "/api/dashboard/revenue";
     public static final String GET_PRODUCT = "/api/products";
+    public static final String ADD_PRODUCT = "/api/products/add";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
