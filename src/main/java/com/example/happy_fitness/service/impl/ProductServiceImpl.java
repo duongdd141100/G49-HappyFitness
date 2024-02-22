@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -36,7 +37,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findProducts(Float facilityId, String status, Float categoryId, Float supplierId, Float minPrice, Float maxPrice) {
-        return productCustomRepo.findProduct(facilityId, status, categoryId, supplierId, minPrice, maxPrice);
+        return productCustomRepo.findProduct(facilityId, status, categoryId, supplierId, minPrice, maxPrice)
+                .stream().map(x -> {
+                    x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
+                    return x;
+                }).toList();
     }
 
     @Override
@@ -50,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
         }
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
         product.setCode("P_" + formatter.format(new Date()));
+        product.setIsActive(true);
         Product finalProduct = productRepo.save(product);
         List<Facility> facilities = facilityRepo.findAll();
         facilityProductRepo.saveAll(facilities.stream().map(x -> new FacilityProduct(x, finalProduct, 0, 0.0F,
@@ -67,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
                 || product.getSupplier().getId() == null) {
             throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
         }
-        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(""));
+        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
         finalProduct.setName(product.getName());
         finalProduct.setCategory(product.getCategory());
         finalProduct.setSupplier(product.getSupplier());
@@ -77,6 +83,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Float id) {
-
+        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
+        finalProduct.setIsActive(false);
+        productRepo.save(finalProduct);
+        facilityProductRepo.saveAll(facilityProductRepo.findAllByProduct_Id(id).stream().map(x -> {
+            x.setStatus(FacilityProductStatusEnum.DEACTIVATE.name());
+            return x;
+        }).collect(Collectors.toList()));
     }
 }

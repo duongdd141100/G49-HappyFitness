@@ -38,8 +38,12 @@ public enum ErrorMessageEnum {
 
     CANNOT_DEACTIVATE_YOUR_SELF("003005", "Bạn không thể vô hiệu hoá tài khoản của chính bạn!"),
 
-    ACCESS_DENIED_DEACTIVATE_USER("003006", "Bạn chỉ có thể vô hiệu hoá tài khoản của nhân viên trong cơ sở bạn!"),;
+    ACCESS_DENIED_DEACTIVATE_USER("003006", "Bạn chỉ có thể vô hiệu hoá tài khoản của nhân viên trong cơ sở bạn!"),
 
+    /**
+     * Error message for authentication
+     */
+    PRODUCT_NOT_EXIST("004001", "Sản phẩm không tồn tại!"),;
     private String code;
 
     private String message;
