@@ -37,7 +37,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findProducts(Float facilityId, String status, Float categoryId, Float supplierId, Float minPrice, Float maxPrice) {
-        return productCustomRepo.findProduct(facilityId, status, categoryId, supplierId, minPrice, maxPrice);
+        return productCustomRepo.findProduct(facilityId, status, categoryId, supplierId, minPrice, maxPrice)
+                .stream().map(x -> {
+                    x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
+                    return x;
+                }).toList();
     }
 
     @Override
@@ -51,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
         }
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
         product.setCode("P_" + formatter.format(new Date()));
+        product.setIsActive(true);
         Product finalProduct = productRepo.save(product);
         List<Facility> facilities = facilityRepo.findAll();
         facilityProductRepo.saveAll(facilities.stream().map(x -> new FacilityProduct(x, finalProduct, 0, 0.0F,
