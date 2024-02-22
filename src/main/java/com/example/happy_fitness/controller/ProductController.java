@@ -48,4 +48,15 @@ public class ProductController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<BaseResponse<String>> updateProduct(@RequestBody Product product, @PathVariable Float id) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(productService.update(product, id)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.UPDATE_PRODUCT + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
