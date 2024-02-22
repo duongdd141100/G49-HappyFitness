@@ -2,10 +2,12 @@ package com.example.happy_fitness.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "facility_product")
+@NoArgsConstructor
 public class FacilityProduct extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "facility_id")

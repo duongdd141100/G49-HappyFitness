@@ -7,7 +7,8 @@ public enum FacilityProductStatusEnum {
     COMING_SOON("Chưa bán"),
     OUT_OF_STOCK("Hết hàng"),
     STOP_SELL("Ngưng bán"),
-    ACTIVE("Hoạt động");
+    ACTIVE("Hoạt động"),
+    DEACTIVATE("Vô hiệu hóa");
 
     private final String value;
 

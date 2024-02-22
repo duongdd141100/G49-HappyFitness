@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -67,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
                 || product.getSupplier().getId() == null) {
             throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
         }
-        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(""));
+        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
         finalProduct.setName(product.getName());
         finalProduct.setCategory(product.getCategory());
         finalProduct.setSupplier(product.getSupplier());
@@ -77,6 +78,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Float id) {
-
+        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
+        finalProduct.setIsActive(false);
+        productRepo.save(finalProduct);
+        facilityProductRepo.saveAll(facilityProductRepo.findAllByProduct_Id(id).stream().map(x -> {
+            x.setStatus(FacilityProductStatusEnum.DEACTIVATE.name());
+            return x;
+        }).collect(Collectors.toList()));
     }
 }
