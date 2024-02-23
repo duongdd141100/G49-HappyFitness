@@ -43,7 +43,10 @@ public enum ErrorMessageEnum {
     /**
      * Error message for authentication
      */
-    PRODUCT_NOT_EXIST("004001", "Sản phẩm không tồn tại!"),;
+    PRODUCT_NOT_EXIST("004001", "Sản phẩm không tồn tại!"),
+
+    PRODUCT_CODE_NULL("004002", "Mã sản phẩm không đươc để trống!");
+
     private String code;
 
     private String message;

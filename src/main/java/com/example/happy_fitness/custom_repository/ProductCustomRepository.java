@@ -3,6 +3,7 @@ package com.example.happy_fitness.custom_repository;
 import com.example.happy_fitness.dto.ProductDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import org.hibernate.query.sql.internal.NativeQueryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -82,5 +83,13 @@ public class ProductCustomRepository {
             condition += " AND fp.price <= :maxPrice";
         }
         return condition;
+    }
+
+    public ProductDto findProductDetail(Float facilityId, String code) {
+        String sql = GET_PRODUCT_QUERY + " WHERE p.code = :code AND f.id = :facilityId";
+        Query query = entityManager.createNativeQuery(sql, "ProductDto");
+        query.setParameter("code", code);
+        query.setParameter("facilityId", facilityId);
+        return (ProductDto) ((NativeQueryImpl) query).getSingleResultOrNull();
     }
 }
