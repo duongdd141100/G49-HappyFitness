@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +43,21 @@ public class ProductServiceImpl implements ProductService {
                     x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
                     return x;
                 }).toList();
+    }
+
+    @Override
+    public ProductDto findProductDetail(Float facilityId, String code) {
+        if (!StringUtils.hasText(code)) {
+            throw new RuntimeException(ErrorMessageEnum.PRODUCT_CODE_NULL.getCode());
+        }
+        ProductDto product = productCustomRepo.findProductDetail(facilityId, code);
+        if (product == null) {
+            throw new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode());
+        }
+        return Optional.of(product).map(x -> {
+                    x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
+                    return x;
+                }).get();
     }
 
     @Override

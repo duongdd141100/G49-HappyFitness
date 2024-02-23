@@ -39,6 +39,16 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/{code}")
+    public ResponseEntity<BaseResponse<List<ProductDto>>> getProductDetail(@PathVariable String code, @RequestParam Float facilityId) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(productService.findProductDetail(facilityId, code)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.GET_PRODUCT + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse<String>> addProduct(@RequestBody Product product) {
