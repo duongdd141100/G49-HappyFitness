@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CartService extends BaseService<Cart> {
     List<CartDto> findAllByUser(String username);
+
+    String addToCart(String username, Cart cart);
 }

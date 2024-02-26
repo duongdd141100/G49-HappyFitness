@@ -45,7 +45,9 @@ public enum ErrorMessageEnum {
      */
     PRODUCT_NOT_EXIST("004001", "Sản phẩm không tồn tại!"),
 
-    PRODUCT_CODE_NULL("004002", "Mã sản phẩm không đươc để trống!");
+    PRODUCT_CODE_NULL("004002", "Mã sản phẩm không đươc để trống!"),
+
+    PRODUCT_NOT_ACTIVE("004003", "Sản phẩm không hoạt động!");
 
     private String code;
 

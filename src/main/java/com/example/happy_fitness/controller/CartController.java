@@ -36,9 +36,10 @@ public class CartController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Cart>> add(@RequestBody Cart cart) {
+    public ResponseEntity<BaseResponse<String>> add(@RequestBody Cart cart,
+                                                  @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(cartService.create(cart)));
+            return ResponseEntity.ok(BaseResponse.ok(cartService.addToCart(userDetails.getUsername(), cart)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.ADD_TO_CART + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
