@@ -11,6 +11,7 @@ import lombok.Data;
         classes = @ConstructorResult(
                 targetClass = com.example.happy_fitness.dto.CartDto.class,
                 columns = {
+                        @ColumnResult(name = "id", type = Float.class),
                         @ColumnResult(name = "facilityProductId", type = Float.class),
                         @ColumnResult(name = "code", type = String.class),
                         @ColumnResult(name = "name", type = String.class),

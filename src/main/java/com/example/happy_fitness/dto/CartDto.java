@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class CartDto {
+    private Float id;
     private Float facilityProductId;
     private String code;
     private String name;

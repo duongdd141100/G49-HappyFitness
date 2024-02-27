@@ -15,6 +15,7 @@ public class CartCustomRepository {
     private EntityManager entityManager;
     
     private final String GET_CART_SQL = "SELECT " +
+            "    c.id," +
             "    fp.id AS facilityProductId," +
             "    p.code," +
             "    p.name," +
