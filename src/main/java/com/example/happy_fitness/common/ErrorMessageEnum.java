@@ -41,13 +41,25 @@ public enum ErrorMessageEnum {
     ACCESS_DENIED_DEACTIVATE_USER("003006", "Bạn chỉ có thể vô hiệu hoá tài khoản của nhân viên trong cơ sở bạn!"),
 
     /**
-     * Error message for authentication
+     * Error message for product
      */
     PRODUCT_NOT_EXIST("004001", "Sản phẩm không tồn tại!"),
 
     PRODUCT_CODE_NULL("004002", "Mã sản phẩm không đươc để trống!"),
 
-    PRODUCT_NOT_ACTIVE("004003", "Sản phẩm không hoạt động!");
+    PRODUCT_NOT_ACTIVE("004003", "Sản phẩm không hoạt động!"),
+
+    /**
+     * Error message for voucher
+     */
+    VOUCHER_NOT_EXIST("005001", "Voucher không tồn tại!"),
+
+    VOUCHER_NOT_VALID("005002", "Voucher không hợp lệ!"),
+
+    /**
+     * Error message for order
+     */
+    ORDER_EMPTY("006001", "Không có sản phẩm được order!"),;
 
     private String code;
 
