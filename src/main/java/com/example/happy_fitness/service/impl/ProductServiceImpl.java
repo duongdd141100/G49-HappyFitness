@@ -14,13 +14,14 @@ import com.example.happy_fitness.repository.ProductRepository;
 import com.example.happy_fitness.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -98,13 +99,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(Float id) {
-        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
-        finalProduct.setIsActive(false);
-        productRepo.save(finalProduct);
-        facilityProductRepo.saveAll(facilityProductRepo.findAllByProduct_Id(id).stream().map(x -> {
-            x.setStatus(FacilityProductStatusEnum.DEACTIVATE.name());
-            return x;
-        }).collect(Collectors.toList()));
+    @Transactional
+    public void delete(List<Float> ids) {
+        List<Product> products = productRepo.findAllById(ids);
+        if (CollectionUtils.isEmpty(products)) {
+            throw new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode());
+        }
+        products.forEach(x -> {
+            x.setIsActive(false);
+            x.getFacilityProducts().forEach(f -> {
+                f.setStatus(FacilityProductStatusEnum.DEACTIVATE.name());
+            });
+        });
+        productRepo.saveAll(products);
     }
 }

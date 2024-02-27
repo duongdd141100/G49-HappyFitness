@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delete(Float id) {
+    public void delete(List<Float> id) {
 
     }
 

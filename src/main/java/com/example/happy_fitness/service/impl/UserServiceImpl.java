@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Float id) {
+    public void delete(List<Float> id) {
 
     }
 }

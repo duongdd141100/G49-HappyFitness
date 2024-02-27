@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -75,7 +76,7 @@ public class ProductController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse<String>> deleteProduct(@PathVariable Float id) {
         try {
-            productService.delete(id);
+            productService.delete(Arrays.asList(id));
             return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.getReasonPhrase()));
         } catch (Exception e) {
             log.error(RequestMappingConstant.UPDATE_PRODUCT + e);

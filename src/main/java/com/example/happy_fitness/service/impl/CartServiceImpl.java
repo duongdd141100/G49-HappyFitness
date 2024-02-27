@@ -37,8 +37,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void delete(Float id) {
-
+    public void delete(List<Float> ids) {
+        cartRepo.deleteAllById(ids);
     }
 
     @Override

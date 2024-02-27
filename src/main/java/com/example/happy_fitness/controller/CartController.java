@@ -8,6 +8,7 @@ import com.example.happy_fitness.entity.Cart;
 import com.example.happy_fitness.service.CartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,6 +52,18 @@ public class CartController {
     public ResponseEntity<BaseResponse<String>> changeQuantity(@RequestBody List<CartDto> carts) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(cartService.changeQuantity(carts)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.CHANGE_QUANTITY + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @PostMapping("/delete")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<BaseResponse<String>> delete(@RequestBody List<Float> cartIds) {
+        try {
+            cartService.delete(cartIds);
+            return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.getReasonPhrase()));
         } catch (Exception e) {
             log.error(RequestMappingConstant.CHANGE_QUANTITY + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
