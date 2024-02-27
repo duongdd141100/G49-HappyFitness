@@ -62,4 +62,15 @@ public class CartServiceImpl implements CartService {
         }
         return HttpStatus.OK.getReasonPhrase();
     }
+
+    @Override
+    public String changeQuantity(List<CartDto> cartDtos) {
+        List<Cart> carts = cartRepo.findAllById(cartDtos.stream().map(CartDto::getId).toList());
+        carts.forEach(x -> {
+            x.setQuantity(cartDtos.stream()
+                    .filter(cartDto -> x.getId().equals(cartDto.getId())).findFirst().get().getQuantity());
+        });
+        cartRepo.saveAll(carts);
+        return HttpStatus.OK.getReasonPhrase();
+    }
 }
