@@ -18,10 +18,10 @@ public class Voucher extends BaseEntity {
     private String name;
 
     @Column(name = "percent_amount")
-    private String percentAmount;
+    private Integer percentAmount;
 
-    @Column(name = "money_amount")
-    private String moneyAmount;
+    @Column(name = "max_money_amount")
+    private Float maxMoneyAmount;
 
     @Column(name = "start_date")
     private Date startDate;

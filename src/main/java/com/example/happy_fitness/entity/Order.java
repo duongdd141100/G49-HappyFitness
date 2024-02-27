@@ -3,6 +3,8 @@ package com.example.happy_fitness.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "orders")
@@ -36,4 +38,10 @@ public class Order extends BaseEntity {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "price")
+    private Float price;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProducts;
 }
