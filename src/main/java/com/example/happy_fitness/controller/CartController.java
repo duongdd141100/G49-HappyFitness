@@ -45,4 +45,15 @@ public class CartController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/change-quantity")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<BaseResponse<String>> changeQuantity(@RequestBody List<CartDto> carts) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(cartService.changeQuantity(carts)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.CHANGE_QUANTITY + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
