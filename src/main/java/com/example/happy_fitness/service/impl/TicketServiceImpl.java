@@ -57,4 +57,11 @@ public class TicketServiceImpl implements TicketService {
             return x;
         }).toList();
     }
+
+    @Override
+    public Ticket findTicketDetail(Float id) {
+        Ticket ticket = ticketRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        ticket.setFacility(null);
+        return ticket;
+    }
 }

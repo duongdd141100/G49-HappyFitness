@@ -66,7 +66,12 @@ public enum ErrorMessageEnum {
      */
     FACILITY_EMPTY("007001", "Không có chi nhánh được chọn!"),
 
-    FACILITY_NOT_EXIST("007002", "Chi nhánh không tồn tại!"),;
+    FACILITY_NOT_EXIST("007002", "Chi nhánh không tồn tại!"),
+
+    /**
+     * Error message for tickets
+     */
+    TICKET_NOT_EXIST("008001", "Vé không tồn tại!"),;
 
     private String code;
 

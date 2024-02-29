@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TicketService extends BaseService<Ticket> {
     List<Ticket> findAllByFacilityId(Float facilityId);
+
+    Ticket findTicketDetail(Float id);
 }

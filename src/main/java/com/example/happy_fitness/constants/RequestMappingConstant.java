@@ -25,13 +25,15 @@ public class RequestMappingConstant {
     public static final String VIEW_ORDER_DETAIL = "/api/orders/{id}";
     public static final String CHANGE_QUANTITY = "/api/cart/change-quantity";
     public static final String CREATE_TICKET = "/api/tickets/create";
-    public static final String FIND_TICKET = "/api/tickets/**";
+    public static final String FIND_TICKET = "/api/tickets";
+    public static final String FIND_TICKET_DETAIL = "/api/tickets/**";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
             SIGN_UP,
             FORGET_PASSWORD,
             GET_PRODUCT,
-            FIND_TICKET
+            FIND_TICKET,
+            FIND_TICKET_DETAIL
     );
 }

@@ -34,12 +34,22 @@ public class TicketController {
         }
     }
 
-    @GetMapping("/{facilityId}")
-    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@PathVariable Float facilityId) {
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@RequestParam Float facilityId) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.findAllByFacilityId(facilityId)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_TICKET + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTicketDetail(@PathVariable Float id) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(ticketService.findTicketDetail(id)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.FIND_TICKET_DETAIL + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
