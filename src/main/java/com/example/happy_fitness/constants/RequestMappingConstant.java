@@ -20,7 +20,9 @@ public class RequestMappingConstant {
     public static final String UPDATE_PRODUCT = "/api/products/update";
     public static final String ADD_TO_CART = "/api/cart/add";
     public static final String VIEW_CART = "/api/cart";
-    public static final String ORDER = "/api/orders";
+    public static final String ORDER = "/api/orders/create";
+    public static final String VIEW_ORDER = "/api/orders";
+    public static final String VIEW_ORDER_DETAIL = "/api/orders/{id}";
     public static final String CHANGE_QUANTITY = "/api/cart/change-quantity";
 
     public static final List<String> FREE_API = Arrays.asList(
