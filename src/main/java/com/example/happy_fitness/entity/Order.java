@@ -31,6 +31,22 @@ import java.util.List;
                 }
         )
 )
+@SqlResultSetMapping(
+        name = "OrderDto",
+        classes = @ConstructorResult(
+                targetClass = com.example.happy_fitness.dto.OrderDto.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Float.class),
+                        @ColumnResult(name = "username", type = String.class),
+                        @ColumnResult(name = "status", type = String.class),
+                        @ColumnResult(name = "voucherCode", type = String.class),
+                        @ColumnResult(name = "voucherName", type = String.class),
+                        @ColumnResult(name = "totalPrice", type = Float.class),
+                        @ColumnResult(name = "discount", type = Float.class),
+                        @ColumnResult(name = "price", type = Float.class),
+                }
+        )
+)
 public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "voucher_id")

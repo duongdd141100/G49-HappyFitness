@@ -3,6 +3,8 @@ package com.example.happy_fitness.service.impl;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.FacilityProductStatusEnum;
 import com.example.happy_fitness.common.OrderStatusEnum;
+import com.example.happy_fitness.custom_repository.OrderCustomRepository;
+import com.example.happy_fitness.dto.OrderDto;
 import com.example.happy_fitness.entity.Cart;
 import com.example.happy_fitness.entity.Order;
 import com.example.happy_fitness.entity.OrderProduct;
@@ -14,6 +16,7 @@ import com.example.happy_fitness.repository.VoucherRepository;
 import com.example.happy_fitness.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +38,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepo;
+
+    @Autowired
+    private OrderCustomRepository orderCustomRepo;
 
     @Override
     public Order create(Order order) {
@@ -94,5 +100,14 @@ public class OrderServiceImpl implements OrderService {
         orderRepo.save(order);
         cartRepo.deleteAllById(cartIds);
         return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    public List<OrderDto> findOrders(UserDetails userDetails) {
+        return orderCustomRepo.findAll(userDetails.getUsername(),
+                userDetails.getAuthorities().stream().findFirst().get().getAuthority()).stream().map(x -> {
+                    x.setStatus(OrderStatusEnum.typeOf(x.getStatus()).getValue());
+                    return x;
+        }).toList();
     }
 }

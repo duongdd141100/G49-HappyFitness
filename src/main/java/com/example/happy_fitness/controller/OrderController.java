@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,17 @@ public class OrderController {
                                                       @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderService.order(cartIds, voucherCode)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.ORDER + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_CUSTOMER', 'ROLE_RECEPTIONIST')")
+    public ResponseEntity<BaseResponse<String>> findOrders(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(orderService.findOrders(userDetails)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.ORDER + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

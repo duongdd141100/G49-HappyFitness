@@ -12,4 +12,13 @@ public enum OrderStatusEnum {
     OrderStatusEnum(String value) {
         this.value = value;
     }
+
+    public static OrderStatusEnum typeOf(String name) {
+        for (OrderStatusEnum orderStatusEnum : OrderStatusEnum.values()) {
+            if (orderStatusEnum.name().equals(name)) {
+                return orderStatusEnum;
+            }
+        }
+        throw new IllegalArgumentException(name);
+    }
 }
