@@ -49,4 +49,12 @@ public class TicketServiceImpl implements TicketService {
     public void delete(List<Float> ids) {
 
     }
+
+    @Override
+    public List<Ticket> findAllByFacilityId(Float facilityId) {
+        return ticketRepo.findAllByFacility_Id(facilityId).stream().map(x -> {
+            x.setFacility(null);
+            return x;
+        }).toList();
+    }
 }

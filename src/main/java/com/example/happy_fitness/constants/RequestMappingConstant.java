@@ -15,7 +15,7 @@ public class RequestMappingConstant {
     public static final String RESET_PASSWORD = "/api/users/reset-password/{username}";
     public static final String DEACTIVATE = "/api/users/deactivate/{username}";
     public static final String REVENUE = "/api/dashboard/revenue";
-    public static final String GET_PRODUCT = "/api/products";
+    public static final String GET_PRODUCT = "/api/products/**";
     public static final String ADD_PRODUCT = "/api/products/add";
     public static final String UPDATE_PRODUCT = "/api/products/update";
     public static final String ADD_TO_CART = "/api/cart/add";
@@ -25,11 +25,13 @@ public class RequestMappingConstant {
     public static final String VIEW_ORDER_DETAIL = "/api/orders/{id}";
     public static final String CHANGE_QUANTITY = "/api/cart/change-quantity";
     public static final String CREATE_TICKET = "/api/tickets/create";
+    public static final String FIND_TICKET = "/api/tickets/**";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
             SIGN_UP,
             FORGET_PASSWORD,
-            GET_PRODUCT
+            GET_PRODUCT,
+            FIND_TICKET
     );
 }

@@ -11,10 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -31,6 +30,16 @@ public class TicketController {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.create(userDetails, ticket)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.CREATE_TICKET + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @GetMapping("/{facilityId}")
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@PathVariable Float facilityId) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(ticketService.findAllByFacilityId(facilityId)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.FIND_TICKET + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }

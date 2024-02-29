@@ -39,7 +39,8 @@ public class SecurityConfig {
                                     RequestMappingConstant.SIGN_UP,
                                     RequestMappingConstant.FORGET_PASSWORD).permitAll()
                             .requestMatchers(HttpMethod.GET,
-                                    RequestMappingConstant.GET_PRODUCT).permitAll()
+                                    RequestMappingConstant.GET_PRODUCT,
+                                    RequestMappingConstant.FIND_TICKET).permitAll()
                             .anyRequest().authenticated();
                 });
         return http.build();
