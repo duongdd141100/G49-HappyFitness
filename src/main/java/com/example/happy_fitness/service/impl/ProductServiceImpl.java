@@ -13,6 +13,7 @@ import com.example.happy_fitness.repository.FacilityRepository;
 import com.example.happy_fitness.repository.ProductRepository;
 import com.example.happy_fitness.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -62,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product create(Product product) {
+    public Product create(UserDetails userDetails, Product product) {
         if (!StringUtils.hasText(product.getName())
             || product.getCategory() == null
             || product.getCategory().getId() == null

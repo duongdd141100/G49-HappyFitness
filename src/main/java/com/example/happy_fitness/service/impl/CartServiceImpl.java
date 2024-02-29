@@ -11,6 +11,7 @@ import com.example.happy_fitness.repository.FacilityProductRepository;
 import com.example.happy_fitness.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class CartServiceImpl implements CartService {
     private FacilityProductRepository facilityProductRepo;
 
     @Override
-    public Cart create(Cart cart) {
+    public Cart create(UserDetails userDetails, Cart cart) {
         return null;
     }
 
