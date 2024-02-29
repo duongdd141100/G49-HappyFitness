@@ -1,6 +1,7 @@
 package com.example.happy_fitness.custom_repository;
 
 import com.example.happy_fitness.common.RoleEnum;
+import com.example.happy_fitness.dto.OrderDetailDto;
 import com.example.happy_fitness.dto.OrderDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -66,8 +67,30 @@ public class OrderCustomRepository {
             "        WHERE" +
             "            u.username = :username)";
 
+    private final String ORDER_DETAIL_SQL = "SELECT DISTINCT" +
+            "    p.code AS productCode," +
+            "    p.name AS productName," +
+            "    p.image_path AS image," +
+            "    op.unit_price AS unitPrice," +
+            "    op.quantity," +
+            "    f.name AS facility" +
+            " FROM" +
+            "    orders o" +
+            "        INNER JOIN" +
+            "    order_product op ON op.order_id = o.id" +
+            "        INNER JOIN" +
+            "    facility_product fp ON fp.id = op.facility_product_id" +
+            "        INNER JOIN" +
+            "    facilities f ON f.id = fp.facility_id" +
+            "        INNER JOIN" +
+            "    products p ON p.id = fp.product_id" +
+            "        INNER JOIN" +
+            "    users u ON u.facility_id = f.id" +
+            " WHERE" +
+            "    o.id = :orderId";
+
     public List<OrderDto> findAll(String username, String requesterRole) {
-        String sql = getSql(requesterRole) + " GROUP BY o.id , u.full_name";
+        String sql = getFindOrdersSql(requesterRole) + " GROUP BY o.id , u.full_name";
         Query query = entityManager.createNativeQuery(sql, "OrderDto");
         if (Arrays.asList(RoleEnum.ROLE_CUSTOMER.name(),
                 RoleEnum.ROLE_MANAGER.name(),
@@ -78,7 +101,7 @@ public class OrderCustomRepository {
         return query.getResultList();
     }
 
-    private String getSql(String requesterRole) {
+    private String getFindOrdersSql(String requesterRole) {
         if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
             return FIND_ORDER_SQL;
         } else if (RoleEnum.ROLE_CUSTOMER.name().equals(requesterRole)) {
@@ -86,5 +109,17 @@ public class OrderCustomRepository {
         } else {
             return FIND_ORDER_BY_MANAGER_SQL;
         }
+    }
+
+    public List<OrderDetailDto> findOrderDetail(Float id, String username, String requesterRole) {
+        String sql = Arrays.asList(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_CUSTOMER.name()).contains(requesterRole)
+                ? ORDER_DETAIL_SQL
+                : ORDER_DETAIL_SQL + " AND u.username = :username";
+        Query query = entityManager.createNativeQuery(sql, "OrderDetailDto");
+        query.setParameter("orderId", id);
+        if (!Arrays.asList(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_CUSTOMER.name()).contains(requesterRole)) {
+            query.setParameter("username", username);
+        }
+        return query.getResultList();
     }
 }

@@ -39,7 +39,19 @@ public class OrderController {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderService.findOrders(userDetails)));
         } catch (Exception e) {
-            log.error(RequestMappingConstant.ORDER + e);
+            log.error(RequestMappingConstant.VIEW_ORDER + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_CUSTOMER', 'ROLE_RECEPTIONIST')")
+    public ResponseEntity<BaseResponse<String>> findOrderDetail(@PathVariable Float id,
+                                                                @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(orderService.findOrderDetail(id, userDetails)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.VIEW_ORDER_DETAIL + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }

@@ -3,6 +3,20 @@ package com.example.happy_fitness.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+@SqlResultSetMapping(
+        name = "OrderDetailDto",
+        classes = @ConstructorResult(
+                targetClass = com.example.happy_fitness.dto.OrderDetailDto.class,
+                columns = {
+                        @ColumnResult(name = "productCode", type = String.class),
+                        @ColumnResult(name = "productName", type = String.class),
+                        @ColumnResult(name = "image", type = String.class),
+                        @ColumnResult(name = "unitPrice", type = Float.class),
+                        @ColumnResult(name = "quantity", type = Integer.class),
+                        @ColumnResult(name = "facility", type = String.class),
+                }
+        )
+)
 @Entity
 @Data
 @Table(name = "order_product")

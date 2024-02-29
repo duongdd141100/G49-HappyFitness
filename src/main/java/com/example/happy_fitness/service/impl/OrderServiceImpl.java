@@ -4,6 +4,7 @@ import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.FacilityProductStatusEnum;
 import com.example.happy_fitness.common.OrderStatusEnum;
 import com.example.happy_fitness.custom_repository.OrderCustomRepository;
+import com.example.happy_fitness.dto.OrderDetailDto;
 import com.example.happy_fitness.dto.OrderDto;
 import com.example.happy_fitness.entity.Cart;
 import com.example.happy_fitness.entity.Order;
@@ -109,5 +110,11 @@ public class OrderServiceImpl implements OrderService {
                     x.setStatus(OrderStatusEnum.typeOf(x.getStatus()).getValue());
                     return x;
         }).toList();
+    }
+
+    @Override
+    public List<OrderDetailDto> findOrderDetail(Float id, UserDetails userDetails) {
+        return orderCustomRepo.findOrderDetail(id, userDetails.getUsername(),
+                userDetails.getAuthorities().stream().findFirst().get().getAuthority());
     }
 }
