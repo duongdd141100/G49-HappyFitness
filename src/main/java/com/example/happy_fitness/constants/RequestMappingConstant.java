@@ -24,6 +24,7 @@ public class RequestMappingConstant {
     public static final String VIEW_ORDER = "/api/orders";
     public static final String VIEW_ORDER_DETAIL = "/api/orders/{id}";
     public static final String CHANGE_QUANTITY = "/api/cart/change-quantity";
+    public static final String CREATE_TICKET = "/api/tickets/create";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,

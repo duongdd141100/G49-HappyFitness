@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -52,9 +54,10 @@ public class ProductController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BaseResponse<String>> addProduct(@RequestBody Product product) {
+    public ResponseEntity<BaseResponse<String>> addProduct(@RequestBody Product product,
+                                                           @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(productService.create(product)));
+            return ResponseEntity.ok(BaseResponse.ok(productService.create(userDetails, product)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.ADD_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

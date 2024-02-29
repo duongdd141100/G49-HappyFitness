@@ -59,7 +59,14 @@ public enum ErrorMessageEnum {
     /**
      * Error message for order
      */
-    ORDER_EMPTY("006001", "Không có sản phẩm được order!"),;
+    ORDER_EMPTY("006001", "Không có sản phẩm được order!"),
+
+    /**
+     * Error message for facility
+     */
+    FACILITY_EMPTY("007001", "Không có chi nhánh được chọn!"),
+
+    FACILITY_NOT_EXIST("007002", "Chi nhánh không tồn tại!"),;
 
     private String code;
 
