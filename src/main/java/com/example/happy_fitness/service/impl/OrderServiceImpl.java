@@ -79,9 +79,13 @@ public class OrderServiceImpl implements OrderService {
             if (!FacilityProductStatusEnum.ACTIVE.name().equals(x.getFacilityProduct().getStatus())) {
                 throw new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_ACTIVE.getCode());
             }
+            if (x.getQuantity() > x.getFacilityProduct().getStockQuantity()) {
+                throw new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_ENOUGH.getCode());
+            }
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder(order);
             orderProduct.setFacilityProduct(x.getFacilityProduct());
+            x.getFacilityProduct().setStockQuantity(x.getFacilityProduct().getStockQuantity() - x.getQuantity());
             orderProduct.setQuantity(x.getQuantity());
             orderProduct.setUnitPrice(x.getFacilityProduct().getPrice());
             return orderProduct;

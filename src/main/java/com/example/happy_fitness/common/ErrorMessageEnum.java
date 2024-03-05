@@ -49,6 +49,8 @@ public enum ErrorMessageEnum {
 
     PRODUCT_NOT_ACTIVE("004003", "Sản phẩm không hoạt động!"),
 
+    PRODUCT_NOT_ENOUGH("004004", "Số lượng sản phẩm trong kho không đủ!"),
+
     /**
      * Error message for voucher
      */
