@@ -11,7 +11,11 @@ import java.util.Optional;
 public class CurrentAuditorConfiguration implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return Optional.of(user.getUsername());
+        try {
+            UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return Optional.of(user.getUsername());
+        } catch (Exception e) {
+            return Optional.of("System");
+        }
     }
 }
