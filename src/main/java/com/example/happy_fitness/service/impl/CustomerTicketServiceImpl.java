@@ -33,7 +33,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public CustomerTicket update(CustomerTicket customerTicket, Float id) {
+    public String update(CustomerTicket customerTicket, Float id) {
         return null;
     }
 

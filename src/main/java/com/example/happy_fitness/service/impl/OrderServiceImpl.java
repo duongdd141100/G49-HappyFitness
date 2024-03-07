@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order update(Order order, Float id) {
+    public String update(Order order, Float id) {
         return null;
     }
 

@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, Float id) {
+    public String update(User user, Float id) {
         return null;
     }
 

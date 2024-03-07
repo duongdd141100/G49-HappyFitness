@@ -13,6 +13,7 @@ import com.example.happy_fitness.repository.FacilityRepository;
 import com.example.happy_fitness.repository.ProductRepository;
 import com.example.happy_fitness.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(Product product, Float id) {
+    public String update(Product product, Float id) {
         if (!StringUtils.hasText(product.getName())
                 || product.getCategory() == null
                 || product.getCategory().getId() == null
@@ -96,7 +97,8 @@ public class ProductServiceImpl implements ProductService {
         finalProduct.setCategory(product.getCategory());
         finalProduct.setSupplier(product.getSupplier());
         finalProduct.setDescription(product.getDescription());
-        return productRepo.save(finalProduct);
+        productRepo.save(finalProduct);
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override

@@ -41,7 +41,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket update(Ticket ticket, Float id) {
+    public String update(Ticket ticket, Float id) {
         return null;
     }
 
