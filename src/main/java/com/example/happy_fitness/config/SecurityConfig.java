@@ -41,7 +41,8 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET,
                                     RequestMappingConstant.GET_PRODUCT,
                                     RequestMappingConstant.FIND_TICKET,
-                                    RequestMappingConstant.FIND_TICKET_DETAIL).permitAll()
+                                    RequestMappingConstant.FIND_TICKET_DETAIL,
+                                    RequestMappingConstant.FIND_VOUCHERS).permitAll()
                             .anyRequest().authenticated();
                 });
         return http.build();
