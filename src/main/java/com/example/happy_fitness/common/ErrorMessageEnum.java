@@ -73,7 +73,14 @@ public enum ErrorMessageEnum {
     /**
      * Error message for tickets
      */
-    TICKET_NOT_EXIST("008001", "Vé không tồn tại!"),;
+    TICKET_NOT_EXIST("008001", "Vé không tồn tại!"),
+
+    /**
+     * Error message for customer ticket
+     */
+    TICKET_UNEXPIRED("009001", "Vé của bạn chưa hết hạn!"),
+
+    HAS_TICKET_ACTIVE("009002", "Bạn còn vé đang hoạt động!"),;
 
     private String code;
 

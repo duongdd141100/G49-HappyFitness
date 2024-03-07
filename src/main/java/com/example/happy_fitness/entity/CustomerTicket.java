@@ -14,10 +14,6 @@ public class CustomerTicket extends BaseEntity {
     private User customer;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private User seller;
-
-    @ManyToOne
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 

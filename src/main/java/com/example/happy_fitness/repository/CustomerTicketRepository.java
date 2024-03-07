@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface CustomerTicketRepository extends JpaRepository<CustomerTicket, Float> {
     List<CustomerTicket> findAllByStatusIsTrue();
+
+    List<CustomerTicket> findAllByCustomer_IdAndStatusIsTrue(Float customerId);
 }
