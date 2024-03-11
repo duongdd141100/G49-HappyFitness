@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/products")
 @Slf4j
+@CrossOrigin
 public class ProductController {
     @Autowired
     private ProductService productService;

@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/orders")
 @Slf4j
+@CrossOrigin
 public class OrderController {
     @Autowired
     private OrderService orderService;

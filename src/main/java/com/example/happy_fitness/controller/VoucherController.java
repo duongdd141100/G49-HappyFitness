@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/vouchers")
 @Slf4j
+@CrossOrigin
 public class VoucherController {
     @Autowired
     private VoucherService voucherService;

@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tickets")
 @Slf4j
+@CrossOrigin
 public class TicketController {
     @Autowired
     private TicketService ticketService;

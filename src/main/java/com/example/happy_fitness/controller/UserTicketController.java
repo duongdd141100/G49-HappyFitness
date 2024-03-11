@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/user-ticket")
 @Slf4j
+@CrossOrigin
 public class UserTicketController {
     @Autowired
     private CustomerTicketService customerTicketService;
