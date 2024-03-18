@@ -126,7 +126,7 @@ CREATE TABLE `carts` (
   PRIMARY KEY (`id`),
   KEY `FK1h94geb1hg8rjm3hr5644q57r` (`facility_product_id`),
   CONSTRAINT `FK1h94geb1hg8rjm3hr5644q57r` FOREIGN KEY (`facility_product_id`) REFERENCES `facility_product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,6 +296,46 @@ LOCK TABLES `customer_pt_history` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `customer_ticket`
+--
+
+DROP TABLE IF EXISTS `customer_ticket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customer_ticket` (
+  `id` float NOT NULL AUTO_INCREMENT,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `updated_date` datetime(6) DEFAULT NULL,
+  `action` varchar(255) DEFAULT NULL,
+  `end_date` datetime(6) DEFAULT NULL,
+  `price` float DEFAULT NULL,
+  `start_date` datetime(6) DEFAULT NULL,
+  `status` bit(1) DEFAULT NULL,
+  `customer_id` float DEFAULT NULL,
+  `ticket_id` float DEFAULT NULL,
+  `voucher_id` float DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK8yos6r0d1xy47i05wsgisa7y2` (`customer_id`),
+  KEY `FKr7fkm604421xpfksky5dysxhs` (`ticket_id`),
+  KEY `FK3tjrwn7sjoishiff9q1pwp4am` (`voucher_id`),
+  CONSTRAINT `FK3tjrwn7sjoishiff9q1pwp4am` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`),
+  CONSTRAINT `FK8yos6r0d1xy47i05wsgisa7y2` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `FKr7fkm604421xpfksky5dysxhs` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_ticket`
+--
+
+LOCK TABLES `customer_ticket` WRITE;
+/*!40000 ALTER TABLE `customer_ticket` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer_ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `facilities`
 --
 
@@ -362,7 +402,7 @@ CREATE TABLE `facility_product` (
 
 LOCK TABLES `facility_product` WRITE;
 /*!40000 ALTER TABLE `facility_product` DISABLE KEYS */;
-INSERT INTO `facility_product` VALUES (17,'admin','2024-02-21 16:51:26.235000','admin','2024-02-22 09:30:43.268000',100000,'ACTIVE',3,1,11),(18,'admin','2024-02-21 16:51:26.238000','admin','2024-02-22 09:30:43.271000',200000,'ACTIVE',3,2,11);
+INSERT INTO `facility_product` VALUES (17,'admin','2024-02-21 16:51:26.235000','customer','2024-03-05 14:01:40.779000',100000,'ACTIVE',1,1,11),(18,'admin','2024-02-21 16:51:26.238000','admin','2024-02-22 09:30:43.271000',200000,'ACTIVE',3,2,11);
 /*!40000 ALTER TABLE `facility_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,7 +460,7 @@ CREATE TABLE `order_product` (
   KEY `FKl5mnj9n0di7k1v90yxnthkc73` (`order_id`),
   CONSTRAINT `FKgpyn8rv0t2ylkd15b5uub0xqq` FOREIGN KEY (`facility_product_id`) REFERENCES `facility_product` (`id`),
   CONSTRAINT `FKl5mnj9n0di7k1v90yxnthkc73` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -429,6 +469,7 @@ CREATE TABLE `order_product` (
 
 LOCK TABLES `order_product` WRITE;
 /*!40000 ALTER TABLE `order_product` DISABLE KEYS */;
+INSERT INTO `order_product` VALUES (12,'customer','2024-03-05 14:01:40.736000','customer','2024-03-05 14:01:40.736000',NULL,2,100000,17,18);
 /*!40000 ALTER TABLE `order_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -451,7 +492,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`),
   KEY `FKdimvsocblb17f45ikjr6xn1wj` (`voucher_id`),
   CONSTRAINT `FKdimvsocblb17f45ikjr6xn1wj` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -460,6 +501,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (18,'customer','2024-03-05 14:01:40.683000','customer','2024-03-05 14:01:40.683000','PROCESSING',NULL,200000);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -594,48 +636,6 @@ INSERT INTO `tickets` VALUES (1,'admin','2024-02-29 16:06:45.272000','admin','20
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_tickets`
---
-
-DROP TABLE IF EXISTS `user_tickets`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_tickets` (
-  `id` float NOT NULL AUTO_INCREMENT,
-  `created_by` varchar(255) DEFAULT NULL,
-  `created_date` datetime(6) DEFAULT NULL,
-  `updated_by` varchar(255) DEFAULT NULL,
-  `updated_date` datetime(6) DEFAULT NULL,
-  `action` varchar(255) DEFAULT NULL,
-  `end_date` datetime(6) DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `start_date` datetime(6) DEFAULT NULL,
-  `customer_id` float DEFAULT NULL,
-  `seller_id` float DEFAULT NULL,
-  `ticket_id` float DEFAULT NULL,
-  `voucher_id` float DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK6jgvlp0m0nevj7o0mlc295ebl` (`customer_id`),
-  KEY `FK1jeps7g2oj397q4pi3d19o3ue` (`seller_id`),
-  KEY `FK5m02ekua7b8pdma3kaft3ujll` (`ticket_id`),
-  KEY `FK1gg6rl9twif4504uq8m2742r0` (`voucher_id`),
-  CONSTRAINT `FK1gg6rl9twif4504uq8m2742r0` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`),
-  CONSTRAINT `FK1jeps7g2oj397q4pi3d19o3ue` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `FK5m02ekua7b8pdma3kaft3ujll` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`),
-  CONSTRAINT `FK6jgvlp0m0nevj7o0mlc295ebl` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_tickets`
---
-
-LOCK TABLES `user_tickets` WRITE;
-/*!40000 ALTER TABLE `user_tickets` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_tickets` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `users`
 --
 
@@ -699,7 +699,7 @@ CREATE TABLE `vouchers` (
   `start_date` datetime(6) DEFAULT NULL,
   `max_money_amount` float DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -708,7 +708,7 @@ CREATE TABLE `vouchers` (
 
 LOCK TABLES `vouchers` WRITE;
 /*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
-INSERT INTO `vouchers` VALUES (1,NULL,NULL,NULL,NULL,'VOUCHER_1',NULL,'2024-02-28 00:00:00.000000','Voucher 1',20,'2024-02-26 00:00:00.000000',100000);
+INSERT INTO `vouchers` VALUES (1,NULL,NULL,NULL,NULL,'VOUCHER_1',NULL,'2024-04-28 00:00:00.000000','Voucher 1',20,'2024-02-26 00:00:00.000000',100000),(2,'admin','2024-03-07 14:51:31.884000','admin','2024-03-07 14:53:26.553000','VOUCHER_20240307025131863','Voucher 2','2024-05-01 07:00:00.000000','Voucher 2',20,'2024-02-01 07:00:00.000000',70000);
 /*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -721,4 +721,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-04 11:32:55
+-- Dump completed on 2024-03-18 15:54:46
