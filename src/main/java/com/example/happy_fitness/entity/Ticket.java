@@ -19,6 +19,9 @@ public class Ticket extends BaseEntity {
     @Column(name = "price")
     private Float price;
 
+    @Column(name = "status")
+    private Boolean status;
+
     @Column(name = "description")
     private String description;
 

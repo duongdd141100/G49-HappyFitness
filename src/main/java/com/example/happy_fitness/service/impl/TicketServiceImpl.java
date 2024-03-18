@@ -3,11 +3,13 @@ package com.example.happy_fitness.service.impl;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.entity.Ticket;
+import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.FacilityRepository;
 import com.example.happy_fitness.repository.TicketRepository;
 import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +63,23 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket findTicketDetail(Float id) {
         Ticket ticket = ticketRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
-        ticket.setFacility(null);
+        ticket.getFacility().setManager(null);
         return ticket;
+    }
+
+    @Override
+    public String deactivate(UserDetails userDetails, Float id) {
+        Ticket ticket = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        if (RoleEnum.ROLE_ADMIN.name().equals(userDetails.getAuthorities().stream().findFirst().get().getAuthority())) {
+            ticket.setStatus(false);
+        } else {
+            User user = userRepo.findByUsername(userDetails.getUsername());
+            if (!user.getFacility().getId().equals(ticket.getFacility().getId())) {
+                throw new RuntimeException(ErrorMessageEnum.CANNOT_DEACTIVATE_TICKET.getCode());
+            }
+            ticket.setStatus(false);
+        }
+        return HttpStatus.OK.getReasonPhrase();
     }
 }
