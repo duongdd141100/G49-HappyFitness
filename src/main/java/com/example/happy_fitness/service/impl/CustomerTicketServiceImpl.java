@@ -4,6 +4,7 @@ import com.example.happy_fitness.common.CustomerTickeActionEnum;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.entity.CustomerTicket;
 import com.example.happy_fitness.entity.Ticket;
+import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.entity.Voucher;
 import com.example.happy_fitness.repository.CustomerTicketRepository;
 import com.example.happy_fitness.repository.TicketRepository;
@@ -96,6 +97,10 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     public String buy(Float id, String voucherCode, UserDetails userDetails) {
         Ticket ticket = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        User user = userRepo.findByUsername(userDetails.getUsername());
+        if (!CollectionUtils.isEmpty(customerTicketRepo.findAllByCustomer_IdAndStatusIsTrue(user.getId()))) {
+            throw new RuntimeException(ErrorMessageEnum.HAS_TICKET_ACTIVE.getCode());
+        }
         Voucher voucher = null;
         if (StringUtils.hasText(voucherCode)) {
             voucher = voucherRepo.findByCode(voucherCode)
@@ -107,7 +112,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         }
         CustomerTicket newCustomerTicket = new CustomerTicket();
         LocalDate localEndDate = LocalDate.now().plusMonths(ticket.getMonthDuration());
-        newCustomerTicket.setCustomer(userRepo.findByUsername(userDetails.getUsername()));
+        newCustomerTicket.setCustomer(user);
         newCustomerTicket.setTicket(ticket);
         newCustomerTicket.setStatus(true);
         newCustomerTicket.setStartDate(new Date());
