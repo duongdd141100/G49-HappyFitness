@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "user_tickets")
+@Table(name = "customer_ticket")
 public class CustomerTicket extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id")

@@ -44,7 +44,14 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public String update(Ticket ticket, Float id) {
-        return null;
+        Ticket ticketOrigin = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        ticketOrigin.setName(ticket.getName());
+        ticketOrigin.setPrice(ticket.getPrice());
+        ticketOrigin.setDescription(ticket.getDescription());
+        ticketOrigin.setMonthDuration(ticket.getMonthDuration());
+        ticketRepo.save(ticketOrigin);
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override

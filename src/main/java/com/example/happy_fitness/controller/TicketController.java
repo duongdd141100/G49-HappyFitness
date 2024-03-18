@@ -66,4 +66,14 @@ public class TicketController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<BaseResponse<String>> update(@PathVariable Float id, @RequestBody Ticket ticket) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(ticketService.update(ticket, id)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.FIND_TICKET_DETAIL + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
