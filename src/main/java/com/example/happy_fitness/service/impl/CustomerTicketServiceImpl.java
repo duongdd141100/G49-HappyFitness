@@ -3,8 +3,11 @@ package com.example.happy_fitness.service.impl;
 import com.example.happy_fitness.common.CustomerTickeActionEnum;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.entity.CustomerTicket;
+import com.example.happy_fitness.entity.Ticket;
 import com.example.happy_fitness.entity.Voucher;
 import com.example.happy_fitness.repository.CustomerTicketRepository;
+import com.example.happy_fitness.repository.TicketRepository;
+import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.repository.VoucherRepository;
 import com.example.happy_fitness.service.CustomerTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,12 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
 
     @Autowired
     private VoucherRepository voucherRepo;
+
+    @Autowired
+    private TicketRepository ticketRepo;
+
+    @Autowired
+    private UserRepository userRepo;
 
     @Override
     public CustomerTicket create(UserDetails userDetails, CustomerTicket customerTicket) {
@@ -71,6 +80,41 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         newCustomerTicket.setAction(CustomerTickeActionEnum.EXTEND.name());
         newCustomerTicket.setVoucher(voucher);
         Float price = customerTicket.getTicket().getPrice();
+        if (voucher != null) {
+            Float discount = price * voucher.getPercentAmount() / 100;
+            newCustomerTicket.setPrice(discount > voucher.getMaxMoneyAmount()
+                    ? price - voucher.getMaxMoneyAmount()
+                    : price - discount);
+        } else {
+            newCustomerTicket.setPrice(price);
+        }
+        customerTicketRepo.save(newCustomerTicket);
+        return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    public String buy(Float id, String voucherCode, UserDetails userDetails) {
+        Ticket ticket = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        Voucher voucher = null;
+        if (StringUtils.hasText(voucherCode)) {
+            voucher = voucherRepo.findByCode(voucherCode)
+                    .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.VOUCHER_NOT_EXIST.getCode()));
+            Date now = new Date();
+            if (voucher.getStartDate().after(now) || voucher.getEndDate().before(now)) {
+                throw new RuntimeException(ErrorMessageEnum.VOUCHER_NOT_VALID.getCode());
+            }
+        }
+        CustomerTicket newCustomerTicket = new CustomerTicket();
+        LocalDate localEndDate = LocalDate.now().plusMonths(ticket.getMonthDuration());
+        newCustomerTicket.setCustomer(userRepo.findByUsername(userDetails.getUsername()));
+        newCustomerTicket.setTicket(ticket);
+        newCustomerTicket.setStatus(true);
+        newCustomerTicket.setStartDate(new Date());
+        newCustomerTicket.setEndDate(Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        newCustomerTicket.setAction(CustomerTickeActionEnum.BUY_NEW.name());
+        newCustomerTicket.setVoucher(voucher);
+        Float price = ticket.getPrice();
         if (voucher != null) {
             Float discount = price * voucher.getPercentAmount() / 100;
             newCustomerTicket.setPrice(discount > voucher.getMaxMoneyAmount()

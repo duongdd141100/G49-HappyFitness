@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,12 +23,25 @@ public class UserTicketController {
 
     @PostMapping("/extend/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Ticket>> create(@PathVariable Float id,
+    public ResponseEntity<BaseResponse<Ticket>> extend(@PathVariable Float id,
                                                        @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(customerTicketService.extend(id, voucherCode)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.EXTEND_TICKET + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @PostMapping("/buy/{id}")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<BaseResponse<Ticket>> buy(@PathVariable Float id,
+                                                    @RequestParam(required = false) String voucherCode,
+                                                    @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(customerTicketService.buy(id, voucherCode, userDetails)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.BUY_TICKET + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
