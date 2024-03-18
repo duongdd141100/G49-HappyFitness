@@ -28,6 +28,7 @@ public class RequestMappingConstant {
     public static final String FIND_TICKET = "/api/tickets";
     public static final String FIND_TICKET_DETAIL = "/api/tickets/**";
     public static final String EXTEND_TICKET = "/api/user-ticket/extend";
+    public static final String BUY_TICKET = "/api/user-ticket/buy";
     public static final String UPDATE_FACILITY_PRODUCT = "/api/facility-product/update";
     public static final String FIND_VOUCHERS = "/api/vouchers";
 
