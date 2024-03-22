@@ -6,6 +6,7 @@ import com.example.happy_fitness.constants.RequestMappingConstant;
 import com.example.happy_fitness.dto.ProductDto;
 import com.example.happy_fitness.entity.Product;
 import com.example.happy_fitness.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,9 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping("")
     public ResponseEntity<BaseResponse<List<ProductDto>>> getProduct(
@@ -55,10 +60,11 @@ public class ProductController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BaseResponse<String>> addProduct(@RequestBody Product product,
+    public ResponseEntity<BaseResponse<String>> addProduct(@RequestParam("product") String productStr,
+                                                           @RequestParam(name = "image", required = false) MultipartFile image,
                                                            @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(productService.create(userDetails, product)));
+            return ResponseEntity.ok(BaseResponse.ok(productService.createCustom(userDetails, objectMapper.readValue(productStr, Product.class), image)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.ADD_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

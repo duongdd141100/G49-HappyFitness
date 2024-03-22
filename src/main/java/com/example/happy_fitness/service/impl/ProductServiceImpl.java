@@ -12,6 +12,7 @@ import com.example.happy_fitness.repository.FacilityProductRepository;
 import com.example.happy_fitness.repository.FacilityRepository;
 import com.example.happy_fitness.repository.ProductRepository;
 import com.example.happy_fitness.service.ProductService;
+import com.example.happy_fitness.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +41,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private FacilityProductRepository facilityProductRepo;
+
+    public static final String PRODUCT_IMG_FOLDER = "image/product/";
+    public static final String IMAGE_PATH = "/image/";
 
     @Override
     public List<ProductDto> findProducts(Float facilityId, String status, Float categoryId, Float supplierId, Float minPrice, Float maxPrice) {
@@ -61,6 +67,33 @@ public class ProductServiceImpl implements ProductService {
                     x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
                     return x;
                 }).get();
+    }
+
+    @Override
+    public String createCustom(UserDetails userDetails, Product product, MultipartFile image) throws IOException {
+        if (!StringUtils.hasText(product.getName())
+                || product.getCategory() == null
+                || product.getCategory().getId() == null
+                || product.getSupplier() == null
+                || product.getSupplier().getId() == null) {
+            throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
+        product.setCode("P_" + formatter.format(new Date()));
+        product.setIsActive(true);
+        Product finalProduct = productRepo.save(product);
+        List<Facility> facilities = facilityRepo.findAll();
+        if (image != null) {
+            String fileName = product.getCode() + "_" + image.getOriginalFilename();
+            FileUploadUtil.saveFile(PRODUCT_IMG_FOLDER, fileName, image);
+            product.setImagePath(IMAGE_PATH + fileName);
+        } else {
+            product.setImagePath("");
+        }
+        facilityProductRepo.saveAll(facilities.stream().map(x -> new FacilityProduct(x, finalProduct, 0, 0.0F,
+                        FacilityProductStatusEnum.COMING_SOON.name()))
+                .toList());
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
