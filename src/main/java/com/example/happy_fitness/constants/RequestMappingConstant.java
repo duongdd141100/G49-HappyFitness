@@ -48,6 +48,8 @@ public class RequestMappingConstant {
             IMAGE,
             FIND_FACILITY,
             FIND_CATEGORY,
-            FIND_SUPPLIER
+            FIND_SUPPLIER,
+            "/vnpay_jsp/vnpay_return.jsp",
+            "/api/payment/info"
     );
 }

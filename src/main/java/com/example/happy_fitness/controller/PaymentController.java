@@ -2,6 +2,7 @@ package com.example.happy_fitness.controller;
 
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.config.VNPayConfig;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import java.util.*;
 @RequestMapping("/api/payment")
 public class PaymentController {
     @GetMapping("/create")
-    public ResponseEntity<?> createPayment(@RequestParam Long amount) throws UnsupportedEncodingException {
+    public ResponseEntity<?> createPayment(@RequestParam Long amount, HttpServletRequest req) throws UnsupportedEncodingException {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", "2.1.0");
@@ -37,8 +38,9 @@ public class PaymentController {
 //        } else {
 //            vnp_Params.put("vnp_Locale", "vn");
 //        }
-//        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
-//        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+        String vnp_IpAddr = VNPayConfig.getIpAddress(req);
+        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -83,5 +85,14 @@ public class PaymentController {
 //        job.addProperty("data", paymentUrl);
 //        Gson gson = new Gson();
 //        resp.getWriter().write(gson.toJson(job));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> paymentInfo(@RequestParam("vnp_ResponseCode") String code) {
+        if (code.equals("00")) {
+            return ResponseEntity.ok("OK");
+        } else {
+            return ResponseEntity.badRequest().body("Payment failed!");
+        }
     }
 }
