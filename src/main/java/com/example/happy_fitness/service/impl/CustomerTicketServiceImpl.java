@@ -131,4 +131,14 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         customerTicketRepo.save(newCustomerTicket);
         return HttpStatus.OK.getReasonPhrase();
     }
+
+    @Override
+    public List<CustomerTicket> findByUsername(String username) {
+        return customerTicketRepo.findAllByCustomer_UsernameOrderByUpdatedDateDesc(username)
+                .stream().map(x -> {
+                    x.setCustomer(null);
+                    x.getTicket().getFacility().setManager(null);
+                    return x;
+                }).toList();
+    }
 }
