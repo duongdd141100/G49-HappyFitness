@@ -45,4 +45,15 @@ public class UserTicketController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @GetMapping("")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<BaseResponse<Ticket>> findAll(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(customerTicketService.findByUsername(userDetails.getUsername())));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.TICKET_HISTORY + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
