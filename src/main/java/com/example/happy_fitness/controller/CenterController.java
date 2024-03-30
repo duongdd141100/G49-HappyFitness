@@ -1,15 +1,12 @@
-package src.main.java.com.example.happy_fitness.controller;
+package com.example.happy_fitness.controller;
 
-import java.util.List;
-
+import com.example.happy_fitness.entity.Facility;
+import com.example.happy_fitness.service.CenterService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.blog.springboot.model.Blog;
-import net.blog.springboot.model.Center;
-import net.blog.springboot.service.BlogService;
-import net.blog.springboot.service.CenterService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/center")
@@ -22,7 +19,7 @@ public class CenterController {
 	}
 	
 	@GetMapping
-	public List<Center> getAllCenter(){
+	public List<Facility> getAllCenter(){
 		return centerService.getAllCenter();
 	}
 }

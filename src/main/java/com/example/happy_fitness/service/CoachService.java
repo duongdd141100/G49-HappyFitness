@@ -1,11 +1,10 @@
-package src.main.java.com.example.happy_fitness.service;
+package com.example.happy_fitness.service;
+
+import com.example.happy_fitness.entity.User;
 
 import java.util.List;
 
-import net.blog.springboot.model.Center;
-import net.blog.springboot.model.Coach;
-
 public interface CoachService {
-	List<Coach> getAllCoach();
-	Coach getCoachById(long id);
+	List<User> getAllCoach();
+	User getCoachById(Float id);
 }

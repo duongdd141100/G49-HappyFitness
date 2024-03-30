@@ -1,34 +1,29 @@
-package src.main.java.com.example.happy_fitness.service.impl;
+package com.example.happy_fitness.service.impl;
 
 import java.util.List;
 
+import com.example.happy_fitness.common.RoleEnum;
+import com.example.happy_fitness.entity.User;
+import com.example.happy_fitness.exception.ResourceNotFoundExeption;
+import com.example.happy_fitness.repository.UserRepository;
+import com.example.happy_fitness.service.CoachService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.blog.springboot.exception.ResourceNotFoundExeption;
-import net.blog.springboot.model.Coach;
-import net.blog.springboot.repository.CenterRepository;
-import net.blog.springboot.repository.CoachRepository;
-import net.blog.springboot.service.CoachService;
 @Service
 public class CoachServiceImpl implements CoachService {
 
+	@Autowired
+	private UserRepository userRepo;
 	
-	private CoachRepository coachRepository;
-	
-	
-	public CoachServiceImpl(CoachRepository coachRepository) {
-		super();
-		this.coachRepository = coachRepository;
+	@Override
+	public List<User> getAllCoach() {
+		return userRepo.findAllByStatusIsTrueAndRole_Id(RoleEnum.ROLE_PERSONAL_TRAINER.getId());
 	}
 
 	@Override
-	public List<Coach> getAllCoach() {
-		return coachRepository.findAll();
-	}
-
-	@Override
-	public Coach getCoachById(long id) {
-		return coachRepository.findById(id).orElseThrow(()-> 
+	public User getCoachById(Float id) {
+		return userRepo.findById(id).orElseThrow(()->
 		new ResourceNotFoundExeption("Coach", "ID", id));
 	}
 

@@ -1,31 +1,26 @@
-package src.main.java.com.example.happy_fitness.service.impl;
+package com.example.happy_fitness.service.impl;
+
+import com.example.happy_fitness.entity.Facility;
+import com.example.happy_fitness.repository.FacilityRepository;
+import com.example.happy_fitness.service.CenterService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import net.blog.springboot.model.Center;
-import net.blog.springboot.repository.BlogRepository;
-import net.blog.springboot.repository.CenterRepository;
-import net.blog.springboot.service.CenterService;
 @Service
 public class CenterServiceImpl implements CenterService {
 
-	
-	private CenterRepository centerRepository;
+	@Autowired
+	private FacilityRepository facilityRepo;
 
-	public CenterServiceImpl(CenterRepository centerRepository) {
-		super();
-		this.centerRepository = centerRepository;
+	@Override
+	public List<Facility> getAllCenter() {
+		return facilityRepo.findAll();
 	}
 
 	@Override
-	public List<Center> getAllCenter() {
-		return centerRepository.findAll();
-	}
-
-	@Override
-	public Center getCenterById(long id) {
+	public Facility getCenterById(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
