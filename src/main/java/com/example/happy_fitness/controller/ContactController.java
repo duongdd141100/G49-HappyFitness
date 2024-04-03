@@ -1,7 +1,6 @@
 package com.example.happy_fitness.controller;
 
 import com.example.happy_fitness.entity.Facility;
-import com.example.happy_fitness.service.ContactService;
 import com.example.happy_fitness.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
