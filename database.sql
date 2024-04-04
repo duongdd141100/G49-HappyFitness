@@ -55,11 +55,13 @@ CREATE TABLE `blog` (
   `created_by` varchar(255) DEFAULT NULL,
   `created_date` datetime(6) DEFAULT NULL,
   `updated_by` varchar(255) DEFAULT NULL,
-  `updated_date` datetime(6) DEFAULT NULL,
+  `updated_date` date DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL,
   `file_path` varchar(255) DEFAULT NULL,
   `like_count` int DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
+  `create_by` varchar(255) DEFAULT NULL,
+  `create_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -323,7 +325,7 @@ CREATE TABLE `customer_ticket` (
   CONSTRAINT `FK3tjrwn7sjoishiff9q1pwp4am` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`),
   CONSTRAINT `FK8yos6r0d1xy47i05wsgisa7y2` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKr7fkm604421xpfksky5dysxhs` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -332,6 +334,7 @@ CREATE TABLE `customer_ticket` (
 
 LOCK TABLES `customer_ticket` WRITE;
 /*!40000 ALTER TABLE `customer_ticket` DISABLE KEYS */;
+INSERT INTO `customer_ticket` VALUES (1,'customer','2024-03-25 14:41:38.691000','customer','2024-03-25 14:41:38.691000','BUY_NEW','2024-04-25 00:00:00.000000',300000,'2024-03-25 14:41:38.659000',_binary '\0',6,1,NULL),(2,'customer','2024-03-25 15:07:54.776000','customer','2024-03-25 15:07:54.776000','BUY_NEW','2024-06-25 00:00:00.000000',500000,'2024-03-25 15:07:54.746000',_binary '\0',6,2,1),(3,'customer','2024-03-25 15:10:16.871000','customer','2024-03-25 15:10:16.871000','EXTEND','2024-04-25 00:00:00.000000',240000,'2024-03-25 15:10:16.871000',_binary '',6,1,1);
 /*!40000 ALTER TABLE `customer_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,7 +360,7 @@ CREATE TABLE `facilities` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_iaubb6ycs66q30o47xnmofpp` (`manager_id`),
   CONSTRAINT `FKaw0cotng6ld66odgwahggid4l` FOREIGN KEY (`manager_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +369,7 @@ CREATE TABLE `facilities` (
 
 LOCK TABLES `facilities` WRITE;
 /*!40000 ALTER TABLE `facilities` DISABLE KEYS */;
-INSERT INTO `facilities` VALUES (1,NULL,NULL,NULL,NULL,'30 Cầu Giấy','0253688688','Happy Fitness Cầu Giấy',NULL,NULL,1),(2,NULL,NULL,NULL,NULL,'25 Giải Phóng','0253678678','Happy Fitness Giải Phóng',NULL,NULL,2);
+INSERT INTO `facilities` VALUES (1,NULL,NULL,NULL,NULL,'30 Cầu Giấy','0253688688','Happy Fitness Cầu Giấy','2024-04-03 22:00:00.000000','2024-04-03 08:00:00.000000',1),(2,NULL,NULL,NULL,NULL,'25 Giải Phóng','0253678678','Happy Fitness Giải Phóng','2024-04-03 22:00:00.000000','2024-04-03 08:00:00.000000',2),(3,NULL,NULL,NULL,NULL,'Hòa Lạc','0253678678','Happy Fitness Hòa Lạc','2024-04-03 22:00:00.000000','2024-04-03 08:00:00.000000',7);
 /*!40000 ALTER TABLE `facilities` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,7 +396,7 @@ CREATE TABLE `facility_product` (
   KEY `FKa1yh6mf2ydv3bq97qxhslxdx0` (`product_id`),
   CONSTRAINT `FKa1yh6mf2ydv3bq97qxhslxdx0` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `FKsrx26olfppkbx9wy3pwmseywc` FOREIGN KEY (`facility_id`) REFERENCES `facilities` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -402,7 +405,7 @@ CREATE TABLE `facility_product` (
 
 LOCK TABLES `facility_product` WRITE;
 /*!40000 ALTER TABLE `facility_product` DISABLE KEYS */;
-INSERT INTO `facility_product` VALUES (17,'admin','2024-02-21 16:51:26.235000','customer','2024-03-05 14:01:40.779000',100000,'ACTIVE',1,1,11),(18,'admin','2024-02-21 16:51:26.238000','admin','2024-02-22 09:30:43.271000',200000,'ACTIVE',3,2,11);
+INSERT INTO `facility_product` VALUES (17,'admin','2024-02-21 16:51:26.235000','customer','2024-03-05 14:01:40.779000',100000,'ACTIVE',1,1,11),(18,'admin','2024-02-21 16:51:26.238000','admin','2024-02-22 09:30:43.271000',200000,'ACTIVE',3,2,11),(19,'admin','2024-04-04 11:12:32.868000','admin','2024-04-04 11:12:32.868000',0,'COMING_SOON',0,1,12),(20,'admin','2024-04-04 11:12:32.918000','admin','2024-04-04 11:12:32.918000',0,'COMING_SOON',0,2,12),(21,'admin','2024-04-04 11:12:32.920000','admin','2024-04-04 11:12:32.920000',0,'COMING_SOON',0,3,12);
 /*!40000 ALTER TABLE `facility_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,7 +534,7 @@ CREATE TABLE `products` (
   KEY `FK6i174ixi9087gcvvut45em7fd` (`supplier_id`),
   CONSTRAINT `FK6i174ixi9087gcvvut45em7fd` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
   CONSTRAINT `FKog2rp4qthbtt2lfyhfo32lsw9` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -540,7 +543,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (11,'admin','2024-02-21 16:51:26.150000','admin','2024-02-22 08:56:42.290000','P_20240221045126123','máy chạyyyy',NULL,'Máy chạy',2,2,_binary '\0');
+INSERT INTO `products` VALUES (11,'admin','2024-02-21 16:51:26.150000','admin','2024-02-22 08:56:42.290000','P_20240221045126123','máy chạyyyy',NULL,'Máy chạy',2,2,_binary '\0'),(12,'admin','2024-04-04 11:12:32.677000','admin','2024-04-04 11:12:32.922000','P_20240404111232650',NULL,'/image/P_20240404111232650_Screen Shot 2024-01-25 at 16.42.12.png','thuc pham chuc nang',1,1,_binary '');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -619,6 +622,7 @@ CREATE TABLE `tickets` (
   `name` varchar(255) DEFAULT NULL,
   `price` float DEFAULT NULL,
   `facility_id` float DEFAULT NULL,
+  `status` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKjt9q8juybq5f2c56m4e7joxy4` (`facility_id`),
   CONSTRAINT `FKjt9q8juybq5f2c56m4e7joxy4` FOREIGN KEY (`facility_id`) REFERENCES `facilities` (`id`)
@@ -631,7 +635,7 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (1,'admin','2024-02-29 16:06:45.272000','admin','2024-02-29 16:06:45.272000','T_1M','',1,'Vé 1 tháng',300000,1),(2,'manager_caugiay','2024-02-29 16:08:23.610000','manager_caugiay','2024-02-29 16:08:23.610000','T_3M','',3,'Vé 3 tháng',600000,1);
+INSERT INTO `tickets` VALUES (1,'admin','2024-02-29 16:06:45.272000','admin','2024-02-29 16:06:45.272000','T_1M','',1,'Vé 1 tháng',300000,1,NULL),(2,'manager_caugiay','2024-02-29 16:08:23.610000','manager_caugiay','2024-02-29 16:08:23.610000','T_3M','',3,'Vé 3 tháng',600000,1,NULL);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -665,7 +669,7 @@ CREATE TABLE `users` (
   KEY `FKp56c1712k691lhsyewcssf40f` (`role_id`),
   CONSTRAINT `FKp56c1712k691lhsyewcssf40f` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   CONSTRAINT `FKpl5qpsn7qmnvp22slbem3lvu6` FOREIGN KEY (`facility_id`) REFERENCES `facilities` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -674,7 +678,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,NULL,NULL,NULL,NULL,NULL,NULL,'managercaugiay@gmail.com','Quản lý chi nhánh Cầu Giấy',NULL,'$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,NULL,'manager_caugiay',1,2,_binary ''),(2,NULL,NULL,NULL,NULL,NULL,NULL,'managergiaiphong@gmail.com','Quản lý chi nhánh Giải Phóng',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','manager_giaiphong',2,2,_binary ''),(3,NULL,NULL,NULL,NULL,NULL,'2000-11-14 07:00:00.000000','letancaugiay@gmail.com','Lễ tân Cầu Giấy',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','user_caugiay',1,4,_binary ''),(4,NULL,NULL,NULL,NULL,NULL,'2000-11-14 07:00:00.000000','letangiaiphong@gmail.com','Lễ tân Giải Phóng',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','user_giaiphong',2,4,_binary ''),(5,NULL,NULL,NULL,NULL,NULL,'2000-11-14 07:00:00.000000','admin@gmail.com','Admin',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','admin',NULL,1,_binary ''),(6,NULL,NULL,NULL,NULL,NULL,NULL,'customer@gmail.com','Customer',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','customer',NULL,3,_binary '');
+INSERT INTO `users` VALUES (1,NULL,NULL,NULL,NULL,NULL,NULL,'managercaugiay@gmail.com','Quản lý chi nhánh Cầu Giấy',NULL,'$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,NULL,'manager_caugiay',1,2,_binary ''),(2,NULL,NULL,NULL,NULL,NULL,NULL,'managergiaiphong@gmail.com','Quản lý chi nhánh Giải Phóng',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','manager_giaiphong',2,2,_binary ''),(3,NULL,NULL,NULL,NULL,NULL,'2000-11-14 07:00:00.000000','letancaugiay@gmail.com','Lễ tân Cầu Giấy',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','user_caugiay',1,4,_binary ''),(4,NULL,NULL,NULL,NULL,NULL,'2000-11-14 07:00:00.000000','letangiaiphong@gmail.com','Lễ tân Giải Phóng',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','user_giaiphong',2,4,_binary ''),(5,NULL,NULL,NULL,NULL,NULL,'2000-11-14 07:00:00.000000','admin@gmail.com','Admin',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','admin',NULL,1,_binary ''),(6,NULL,NULL,NULL,NULL,NULL,NULL,'customer@gmail.com','Customer',_binary '','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','customer',NULL,3,_binary ''),(7,NULL,NULL,NULL,NULL,NULL,NULL,'managerhoalac@gmail.com','Quản lý chi nhánh Hòa Lạc',_binary '\0','$2a$10$ATGqmunGcMpD5SCnbSKJ1.9M3kMmR2nXPNVJCsFWwtaL62ybAj.2q',NULL,'0912345678','manager_hoalac',3,2,_binary '');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -721,4 +725,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-18 15:54:46
+-- Dump completed on 2024-04-04 13:37:04
