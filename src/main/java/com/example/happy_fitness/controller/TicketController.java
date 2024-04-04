@@ -68,7 +68,7 @@ public class TicketController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<BaseResponse<String>> update(@PathVariable Float id, @RequestBody Ticket ticket) {
+    public ResponseEntity<BaseResponse<String>> update(@PathVariable Float id, @RequestBody Ticket ticket, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.update(ticket, id, userDetails)));
         } catch (Exception e) {

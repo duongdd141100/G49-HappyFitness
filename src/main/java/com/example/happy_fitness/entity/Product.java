@@ -13,6 +13,7 @@ import java.util.List;
         classes = @ConstructorResult(
                 targetClass = com.example.happy_fitness.dto.ProductDto.class,
                 columns = {
+                        @ColumnResult(name = "productId", type = Float.class),
                         @ColumnResult(name = "facilityProductId", type = Float.class),
                         @ColumnResult(name = "code", type = String.class),
                         @ColumnResult(name = "name", type = String.class),

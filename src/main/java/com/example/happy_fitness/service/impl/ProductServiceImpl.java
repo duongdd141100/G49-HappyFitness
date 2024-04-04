@@ -122,6 +122,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void active(Float id) {
+        Product product = productRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
+        if (product.getIsActive()) {
+            throw new RuntimeException();
+        }
+        product.setIsActive(true);
+        product.getFacilityProducts().forEach(x -> {
+            x.setStatus(FacilityProductStatusEnum.COMING_SOON.name());
+        });
+        productRepo.save(product);
+    }
+
+    @Override
     public Product create(UserDetails userDetails, Product product) {
         return null;
     }

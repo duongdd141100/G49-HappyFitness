@@ -95,4 +95,16 @@ public class ProductController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/active/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<BaseResponse<String>> active(@PathVariable Float id) {
+        try {
+            productService.active(id);
+            return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.getReasonPhrase()));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.UPDATE_PRODUCT + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }

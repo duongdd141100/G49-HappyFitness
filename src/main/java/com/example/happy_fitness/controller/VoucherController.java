@@ -46,7 +46,8 @@ public class VoucherController {
     @GetMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse<String>> update(@PathVariable Float id,
-                                                       @RequestBody Voucher voucher) {
+                                                       @RequestBody Voucher voucher,
+                                                       @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(voucherService.update(voucher, id, userDetails)));
         } catch (Exception e) {

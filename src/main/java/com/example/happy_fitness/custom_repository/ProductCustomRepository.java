@@ -16,6 +16,7 @@ public class ProductCustomRepository {
     private EntityManager entityManager;
 
     private final String GET_PRODUCT_QUERY = " SELECT " +
+            "    p.id AS productId," +
             "    fp.id as facilityProductId," +
             "    p.code," +
             "    p.name," +

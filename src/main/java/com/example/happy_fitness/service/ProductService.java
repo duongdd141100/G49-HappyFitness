@@ -16,4 +16,6 @@ public interface ProductService extends BaseService<Product> {
     String createCustom(UserDetails userDetails, Product product, MultipartFile image) throws IOException;
 
     String updateCustom(Product product, Float id, MultipartFile image) throws IOException;
+
+    void active(Float id);
 }
