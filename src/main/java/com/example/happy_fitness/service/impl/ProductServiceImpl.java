@@ -126,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
         if (product.getIsActive()) {
-            throw new RuntimeException();
+            throw new RuntimeException(ErrorMessageEnum.PRODUCT_ACTIVE.getCode());
         }
         product.setIsActive(true);
         product.getFacilityProducts().forEach(x -> {
