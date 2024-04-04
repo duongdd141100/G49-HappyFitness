@@ -97,27 +97,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product create(UserDetails userDetails, Product product) {
-        if (!StringUtils.hasText(product.getName())
-            || product.getCategory() == null
-            || product.getCategory().getId() == null
-            || product.getSupplier() == null
-            || product.getSupplier().getId() == null) {
-            throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
-        }
-        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
-        product.setCode("P_" + formatter.format(new Date()));
-        product.setIsActive(true);
-        Product finalProduct = productRepo.save(product);
-        List<Facility> facilities = facilityRepo.findAll();
-        facilityProductRepo.saveAll(facilities.stream().map(x -> new FacilityProduct(x, finalProduct, 0, 0.0F,
-                FacilityProductStatusEnum.COMING_SOON.name()))
-                .toList());
-        return finalProduct;
-    }
-
-    @Override
-    public String update(Product product, Float id) {
+    public String updateCustom(Product product, Float id, MultipartFile image) throws IOException {
         if (!StringUtils.hasText(product.getName())
                 || product.getCategory() == null
                 || product.getCategory().getId() == null
@@ -130,8 +110,25 @@ public class ProductServiceImpl implements ProductService {
         finalProduct.setCategory(product.getCategory());
         finalProduct.setSupplier(product.getSupplier());
         finalProduct.setDescription(product.getDescription());
+        if (image != null) {
+            String fileName = product.getCode() + "_" + image.getOriginalFilename();
+            FileUploadUtil.saveFile(PRODUCT_IMG_FOLDER, fileName, image);
+            finalProduct.setImagePath(IMAGE_PATH + fileName);
+        } else {
+            finalProduct.setImagePath("");
+        }
         productRepo.save(finalProduct);
         return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    public Product create(UserDetails userDetails, Product product) {
+        return null;
+    }
+
+    @Override
+    public String update(Product product, Float id) {
+        return null;
     }
 
     @Override

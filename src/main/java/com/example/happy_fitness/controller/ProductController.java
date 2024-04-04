@@ -73,9 +73,11 @@ public class ProductController {
 
     @PostMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BaseResponse<Product>> updateProduct(@RequestBody Product product, @PathVariable Float id) {
+    public ResponseEntity<BaseResponse<Product>> updateProduct(@RequestParam("product") String productStr,
+                                                               @RequestParam(name = "image", required = false) MultipartFile image,
+                                                               @PathVariable Float id) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(productService.update(product, id)));
+            return ResponseEntity.ok(BaseResponse.ok(productService.updateCustom(objectMapper.readValue(productStr, Product.class), id, image)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.UPDATE_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
