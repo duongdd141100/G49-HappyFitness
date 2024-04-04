@@ -2,7 +2,9 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.PropertyBean;
+import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.entity.MailTemplate;
+import com.example.happy_fitness.entity.Role;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.MailTemplateRepository;
 import com.example.happy_fitness.repository.UserRepository;
@@ -72,13 +74,16 @@ public class AuthServiceImpl implements AuthService {
                 user.getUsername(),
                 user.getPassword(),
                 user.getPhoneNumber(),
+                user.getAddress(),
                 user.getEmail()).stream().allMatch(StringUtils::hasText)
                 && user.getGender() != null
-                && user.getDob() != null
-                && user.getRole().getId() != null) {
+                && user.getDob() != null) {
             if (userRepo.findByUsername(user.getUsername()) != null) {
                 throw new RuntimeException(ErrorMessageEnum.USERNAME_EXIST.getCode());
             }
+            Role role = new Role();
+            role.setId(RoleEnum.ROLE_CUSTOMER.getId());
+            user.setRole(role);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepo.save(user);
         }
