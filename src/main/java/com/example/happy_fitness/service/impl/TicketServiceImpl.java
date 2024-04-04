@@ -43,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public String update(Ticket ticket, Float id) {
+    public String update(Ticket ticket, Float id, UserDetails userDetails) {
         Ticket ticketOrigin = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         ticketOrigin.setName(ticket.getName());

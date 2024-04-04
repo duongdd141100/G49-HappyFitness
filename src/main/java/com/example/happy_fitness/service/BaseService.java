@@ -7,7 +7,7 @@ import java.util.List;
 public interface BaseService<T> {
     T create(UserDetails userDetails, T t);
 
-    String update(T t, Float id);
+    String update(T t, Float id, UserDetails userDetails);
 
     void delete(List<Float> ids);
 }

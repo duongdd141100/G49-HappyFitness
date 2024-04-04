@@ -127,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String update(Product product, Float id) {
+    public String update(Product product, Float id, UserDetails userDetails) {
         return null;
     }
 

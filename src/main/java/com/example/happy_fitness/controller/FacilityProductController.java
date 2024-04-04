@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,9 +24,10 @@ public class FacilityProductController {
     @PostMapping("/update/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<BaseResponse<String>> order(@PathVariable Float id,
-                                                      @RequestBody FacilityProduct facilityProduct) {
+                                                      @RequestBody FacilityProduct facilityProduct,
+                                                      @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(facilityProductService.update(facilityProduct, id)));
+            return ResponseEntity.ok(BaseResponse.ok(facilityProductService.update(facilityProduct, id, userDetails)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.UPDATE_FACILITY_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

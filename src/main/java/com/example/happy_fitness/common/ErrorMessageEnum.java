@@ -81,7 +81,12 @@ public enum ErrorMessageEnum {
      */
     TICKET_UNEXPIRED("009001", "Vé của bạn chưa hết hạn!"),
 
-    HAS_TICKET_ACTIVE("009002", "Bạn còn vé đang hoạt động!"),;
+    HAS_TICKET_ACTIVE("009002", "Bạn còn vé đang hoạt động!"),
+
+    /**
+     * Error message for update facility product
+     */
+    ERROR_UPDATE_FACILITY_PRODUCT("010001", "Bạn không thể chỉnh sửa sản phẩm của cơ sở khác!"),;
 
     private String code;
 

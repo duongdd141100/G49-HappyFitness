@@ -21,7 +21,7 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public String update(Facility facility, Float id) {
+    public String update(Facility facility, Float id, UserDetails userDetails) {
         return null;
     }
 

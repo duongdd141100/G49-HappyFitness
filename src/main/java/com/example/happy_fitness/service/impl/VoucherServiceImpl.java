@@ -27,7 +27,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public String update(Voucher voucher, Float id) {
+    public String update(Voucher voucher, Float id, UserDetails userDetails) {
         Voucher voucherOrigin = voucherRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.VOUCHER_NOT_EXIST.getCode()));
         voucherOrigin.setName(voucher.getName());

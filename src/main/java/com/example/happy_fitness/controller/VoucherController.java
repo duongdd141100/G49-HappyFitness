@@ -48,7 +48,7 @@ public class VoucherController {
     public ResponseEntity<BaseResponse<String>> update(@PathVariable Float id,
                                                        @RequestBody Voucher voucher) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(voucherService.update(voucher, id)));
+            return ResponseEntity.ok(BaseResponse.ok(voucherService.update(voucher, id, userDetails)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_VOUCHERS + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
