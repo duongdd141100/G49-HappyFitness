@@ -32,7 +32,10 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public List<Facility> findAll() {
-        return facilityRepo.findAll();
+        return facilityRepo.findAll().stream().map(x -> {
+            x.setManager(null);
+            return x;
+        }).toList();
     }
 
     @Override

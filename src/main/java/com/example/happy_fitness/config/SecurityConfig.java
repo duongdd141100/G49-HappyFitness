@@ -43,7 +43,8 @@ public class SecurityConfig {
                                     RequestMappingConstant.FIND_TICKET,
                                     RequestMappingConstant.FIND_TICKET_DETAIL,
                                     RequestMappingConstant.FIND_VOUCHERS,
-                                    RequestMappingConstant.IMAGE).permitAll()
+                                    RequestMappingConstant.IMAGE,
+                                    RequestMappingConstant.FIND_FACILITY).permitAll()
                             .anyRequest().authenticated();
                 });
         return http.build();
