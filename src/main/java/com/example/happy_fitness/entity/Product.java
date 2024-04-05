@@ -19,6 +19,7 @@ import java.util.List;
                         @ColumnResult(name = "name", type = String.class),
                         @ColumnResult(name = "imagePath", type = String.class),
                         @ColumnResult(name = "category", type = String.class),
+                        @ColumnResult(name = "supplierId", type = Float.class),
                         @ColumnResult(name = "supplier", type = String.class),
                         @ColumnResult(name = "price", type = Float.class),
                         @ColumnResult(name = "facility", type = String.class),
