@@ -15,4 +15,5 @@ public class ProductDto {
     private String facility;
     private String status;
     private Integer stockQuantity;
+    private String description;
 }

@@ -24,6 +24,7 @@ import java.util.List;
                         @ColumnResult(name = "facility", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "stockQuantity", type = Integer.class),
+                        @ColumnResult(name = "description", type = String.class),
                 }
         )
 )

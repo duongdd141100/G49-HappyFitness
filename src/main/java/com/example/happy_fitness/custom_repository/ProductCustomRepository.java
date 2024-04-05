@@ -26,7 +26,8 @@ public class ProductCustomRepository {
             "    fp.price," +
             "    f.name as facility," +
             "    fp.status," +
-            "    fp.stock_quantity AS stockQuantity" +
+            "    fp.stock_quantity AS stockQuantity," +
+            "    p.description" +
             " FROM" +
             "    facility_product fp" +
             "        INNER JOIN" +
