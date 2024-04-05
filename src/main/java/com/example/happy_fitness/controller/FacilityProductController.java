@@ -21,13 +21,14 @@ public class FacilityProductController {
     @Autowired
     private FacilityProductService facilityProductService;
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<BaseResponse<String>> order(@PathVariable Float id,
+    public ResponseEntity<BaseResponse<String>> order(@RequestParam Float productId,
+                                                      @RequestParam Float facilityId,
                                                       @RequestBody FacilityProduct facilityProduct,
                                                       @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(facilityProductService.update(facilityProduct, id, userDetails)));
+            return ResponseEntity.ok(BaseResponse.ok(facilityProductService.updateCustom(facilityProduct, productId, facilityId, userDetails)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.UPDATE_FACILITY_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

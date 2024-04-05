@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface FacilityProductRepository extends JpaRepository<FacilityProduct, Float> {
     List<FacilityProduct> findAllByProduct_Id(Float productId);
+    FacilityProduct findByFacility_IdAndProduct_Id(Float facilityId, Float productId);
 }

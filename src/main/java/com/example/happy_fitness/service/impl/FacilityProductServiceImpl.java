@@ -47,4 +47,19 @@ public class FacilityProductServiceImpl implements FacilityProductService {
     public void delete(List<Float> ids) {
 
     }
+
+    @Override
+    public String updateCustom(FacilityProduct facilityProduct, Float productId, Float facilityId, UserDetails userDetails) {
+        User requester = userRepo.findByUsername(userDetails.getUsername());
+        if (RoleEnum.ROLE_MANAGER.getId().equals(requester.getRole().getId())
+                && !facilityProduct.getFacility().getId().equals(requester.getFacility().getId())) {
+            throw new RuntimeException(ErrorMessageEnum.ERROR_UPDATE_FACILITY_PRODUCT.getCode());
+        }
+        FacilityProduct facilityProductOrigin = facilityProductRepo.findByFacility_IdAndProduct_Id(facilityId, productId);
+        facilityProductOrigin.setStockQuantity(facilityProduct.getStockQuantity());
+        facilityProductOrigin.setStatus(facilityProduct.getStatus());
+        facilityProductOrigin.setPrice(facilityProduct.getPrice());
+        facilityProductRepo.save(facilityProductOrigin);
+        return HttpStatus.OK.getReasonPhrase();
+    }
 }
