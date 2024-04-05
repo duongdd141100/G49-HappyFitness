@@ -142,7 +142,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String update(Product product, Float id, UserDetails userDetails) {
-        return null;
+        if (!StringUtils.hasText(product.getName())
+                || product.getCategory() == null
+                || product.getCategory().getId() == null
+                || product.getSupplier() == null
+                || product.getSupplier().getId() == null) {
+            throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
+        }
+        Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
+        finalProduct.setName(product.getName());
+        finalProduct.setCategory(product.getCategory());
+        finalProduct.setSupplier(product.getSupplier());
+        finalProduct.setDescription(product.getDescription());
+        productRepo.save(finalProduct);
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
