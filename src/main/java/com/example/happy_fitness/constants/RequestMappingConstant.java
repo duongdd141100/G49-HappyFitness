@@ -34,6 +34,7 @@ public class RequestMappingConstant {
     public static final String TICKET_HISTORY = "/api/user-ticket";
     public static final String IMAGE = "/image/**";
     public static final String FIND_FACILITY = "/api/facilities";
+    public static final String FIND_CATEGORY = "/api/categories";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
@@ -44,6 +45,7 @@ public class RequestMappingConstant {
             FIND_TICKET_DETAIL,
             FIND_VOUCHERS,
             IMAGE,
-            FIND_FACILITY
+            FIND_FACILITY,
+            FIND_CATEGORY
     );
 }
