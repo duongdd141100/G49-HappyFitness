@@ -45,7 +45,8 @@ public class SecurityConfig {
                                     RequestMappingConstant.FIND_VOUCHERS,
                                     RequestMappingConstant.IMAGE,
                                     RequestMappingConstant.FIND_FACILITY,
-                                    RequestMappingConstant.FIND_CATEGORY).permitAll()
+                                    RequestMappingConstant.FIND_CATEGORY,
+                                    RequestMappingConstant.FIND_SUPPLIER).permitAll()
                             .anyRequest().authenticated();
                 });
         return http.build();
