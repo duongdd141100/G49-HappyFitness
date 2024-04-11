@@ -38,7 +38,7 @@ public class TicketServiceImpl implements TicketService {
             }
         }
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
-        ticket.setCode("P_" + formatter.format(new Date()));
+        ticket.setCode("T_" + formatter.format(new Date()));
         ticket.setFacility(facilityRepo.findById(ticket.getFacility().getId())
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.FACILITY_NOT_EXIST.getCode())));
         ticket.setStatus(true);
