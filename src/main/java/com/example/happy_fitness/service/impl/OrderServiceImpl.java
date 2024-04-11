@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -49,18 +50,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String update(Order order, Float id, UserDetails userDetails) {
+    public String update(Order order, BigInteger id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<Float> id) {
+    public void delete(List<BigInteger> id) {
 
     }
 
     @Override
     @Transactional
-    public String order(List<Float> cartIds, String voucherCode) {
+    public String order(List<BigInteger> cartIds, String voucherCode) {
         if (CollectionUtils.isEmpty(cartIds)) {
             throw new RuntimeException(ErrorMessageEnum.ORDER_EMPTY.getCode());
         }
@@ -117,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDetailDto> findOrderDetail(Float id, UserDetails userDetails) {
+    public List<OrderDetailDto> findOrderDetail(BigInteger id, UserDetails userDetails) {
         return orderCustomRepo.findOrderDetail(id, userDetails.getUsername(),
                 userDetails.getAuthorities().stream().findFirst().get().getAuthority());
     }

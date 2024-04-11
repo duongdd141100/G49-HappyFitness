@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     public static final String IMAGE_PATH = "/image/";
 
     @Override
-    public List<ProductDto> findProducts(Float facilityId, String status, Float categoryId, Float supplierId, Float minPrice, Float maxPrice) {
+    public List<ProductDto> findProducts(BigInteger facilityId, String status, BigInteger categoryId, BigInteger supplierId, Float minPrice, Float maxPrice) {
         return productCustomRepo.findProduct(facilityId, status, categoryId, supplierId, minPrice, maxPrice)
                 .stream().map(x -> {
                     x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findProductDetail(Float facilityId, String code) {
+    public ProductDto findProductDetail(BigInteger facilityId, String code) {
         if (!StringUtils.hasText(code)) {
             throw new RuntimeException(ErrorMessageEnum.PRODUCT_CODE_NULL.getCode());
         }
@@ -97,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String updateCustom(Product product, Float id, MultipartFile image) throws IOException {
+    public String updateCustom(Product product, BigInteger id, MultipartFile image) throws IOException {
         if (!StringUtils.hasText(product.getName())
                 || product.getCategory() == null
                 || product.getCategory().getId() == null
@@ -122,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void active(Float id) {
+    public void active(BigInteger id) {
         Product product = productRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
         if (product.getIsActive()) {
@@ -141,7 +142,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String update(Product product, Float id, UserDetails userDetails) {
+    public String update(Product product, BigInteger id, UserDetails userDetails) {
         if (!StringUtils.hasText(product.getName())
                 || product.getCategory() == null
                 || product.getCategory().getId() == null
@@ -160,7 +161,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void delete(List<Float> ids) {
+    public void delete(List<BigInteger> ids) {
         List<Product> products = productRepo.findAllById(ids);
         if (CollectionUtils.isEmpty(products)) {
             throw new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode());

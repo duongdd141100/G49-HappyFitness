@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -20,12 +21,12 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public String update(Supplier supplier, Float id, UserDetails userDetails) {
+    public String update(Supplier supplier, BigInteger id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<Float> ids) {
+    public void delete(List<BigInteger> ids) {
 
     }
 

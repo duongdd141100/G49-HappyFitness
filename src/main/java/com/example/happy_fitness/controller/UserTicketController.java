@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+
 @RestController
 @RequestMapping("/api/user-ticket")
 @Slf4j
@@ -23,7 +25,7 @@ public class UserTicketController {
 
     @PostMapping("/extend/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Ticket>> extend(@PathVariable Float id,
+    public ResponseEntity<BaseResponse<Ticket>> extend(@PathVariable BigInteger id,
                                                        @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(customerTicketService.extend(id, voucherCode)));
@@ -35,7 +37,7 @@ public class UserTicketController {
 
     @PostMapping("/buy/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Ticket>> buy(@PathVariable Float id,
+    public ResponseEntity<BaseResponse<Ticket>> buy(@PathVariable BigInteger id,
                                                     @RequestParam(required = false) String voucherCode,
                                                     @AuthenticationPrincipal UserDetails userDetails) {
         try {

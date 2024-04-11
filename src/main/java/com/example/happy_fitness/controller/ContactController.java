@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class ContactController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Facility> getBlogById(@PathVariable("id") Float coachId){
+	public ResponseEntity<Facility> getBlogById(@PathVariable("id") BigInteger coachId){
 		return new ResponseEntity<Facility>(facilityService.findById(coachId), HttpStatus.OK);
 	}
 }

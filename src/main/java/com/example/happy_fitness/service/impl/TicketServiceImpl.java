@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -43,7 +44,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public String update(Ticket ticket, Float id, UserDetails userDetails) {
+    public String update(Ticket ticket, BigInteger id, UserDetails userDetails) {
         Ticket ticketOrigin = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         ticketOrigin.setName(ticket.getName());
@@ -55,12 +56,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void delete(List<Float> ids) {
+    public void delete(List<BigInteger> ids) {
 
     }
 
     @Override
-    public List<Ticket> findAllByFacilityId(Float facilityId) {
+    public List<Ticket> findAllByFacilityId(BigInteger facilityId) {
         return ticketRepo.findAllByFacility_Id(facilityId).stream().map(x -> {
             x.setFacility(null);
             return x;
@@ -68,14 +69,14 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket findTicketDetail(Float id) {
+    public Ticket findTicketDetail(BigInteger id) {
         Ticket ticket = ticketRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         ticket.getFacility().setManager(null);
         return ticket;
     }
 
     @Override
-    public String deactivate(UserDetails userDetails, Float id) {
+    public String deactivate(UserDetails userDetails, BigInteger id) {
         Ticket ticket = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         if (RoleEnum.ROLE_ADMIN.name().equals(userDetails.getAuthorities().stream().findFirst().get().getAuthority())) {

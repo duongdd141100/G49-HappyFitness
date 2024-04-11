@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -43,17 +44,17 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public String update(CustomerTicket customerTicket, Float id, UserDetails userDetails) {
+    public String update(CustomerTicket customerTicket, BigInteger id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<Float> ids) {
+    public void delete(List<BigInteger> ids) {
 
     }
 
     @Override
-    public String extend(Float id, String voucherCode) {
+    public String extend(BigInteger id, String voucherCode) {
         CustomerTicket customerTicket = customerTicketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         if (customerTicket.getStatus()) {
@@ -94,7 +95,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public String buy(Float id, String voucherCode, UserDetails userDetails) {
+    public String buy(BigInteger id, String voucherCode, UserDetails userDetails) {
         Ticket ticket = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         User user = userRepo.findByUsername(userDetails.getUsername());

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public String update(Voucher voucher, Float id, UserDetails userDetails) {
+    public String update(Voucher voucher, BigInteger id, UserDetails userDetails) {
         Voucher voucherOrigin = voucherRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.VOUCHER_NOT_EXIST.getCode()));
         voucherOrigin.setName(voucher.getName());
@@ -41,7 +42,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public void delete(List<Float> ids) {
+    public void delete(List<BigInteger> ids) {
 
     }
 

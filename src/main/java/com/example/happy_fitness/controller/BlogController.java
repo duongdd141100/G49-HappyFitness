@@ -1,5 +1,6 @@
 package com.example.happy_fitness.controller;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -44,18 +45,18 @@ public class BlogController {
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<Blog> getBlogById(@PathVariable("id") long blogId){
+	public ResponseEntity<Blog> getBlogById(@PathVariable("id") BigInteger blogId){
 		return new ResponseEntity<Blog>(blogService.getBlogById(blogId), HttpStatus.OK);
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity<Blog> updateBlog(@PathVariable("id") long id
+	public ResponseEntity<Blog> updateBlog(@PathVariable("id") BigInteger id
 												  ,@RequestBody Blog blog){
 		return new ResponseEntity<Blog>(blogService.updateBlog(blog, id), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")
-	public ResponseEntity<String> deleteEmployee(@PathVariable("id") long id){
+	public ResponseEntity<String> deleteEmployee(@PathVariable("id") BigInteger id){
 		// delete employee from DB
 		blogService.deleteBlog(id);
 		return new ResponseEntity<String>("Blog deleted successfully!.", HttpStatus.OK);

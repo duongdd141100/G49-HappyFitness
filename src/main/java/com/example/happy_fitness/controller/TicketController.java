@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -36,7 +37,7 @@ public class TicketController {
     }
 
     @GetMapping("")
-    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@RequestParam Float facilityId) {
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@RequestParam BigInteger facilityId) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.findAllByFacilityId(facilityId)));
         } catch (Exception e) {
@@ -46,7 +47,7 @@ public class TicketController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse<List<Ticket>>> findTicketDetail(@PathVariable Float id) {
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTicketDetail(@PathVariable BigInteger id) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.findTicketDetail(id)));
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class TicketController {
 
     @PostMapping("/deactivate/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<BaseResponse<List<Ticket>>> findTicketDetail(@PathVariable Float id,
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTicketDetail(@PathVariable BigInteger id,
                                                                        @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.deactivate(userDetails, id)));
@@ -68,7 +69,8 @@ public class TicketController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<BaseResponse<String>> update(@PathVariable Float id, @RequestBody Ticket ticket, @AuthenticationPrincipal UserDetails userDetails) {
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<BaseResponse<String>> update(@PathVariable BigInteger id, @RequestBody Ticket ticket, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.update(ticket, id, userDetails)));
         } catch (Exception e) {

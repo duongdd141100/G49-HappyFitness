@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<BaseResponse<List<ProductDto>>> getProduct(
-            @RequestParam Float facilityId,
+            @RequestParam BigInteger facilityId,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) Float categoryId,
-            @RequestParam(required = false) Float supplierId,
+            @RequestParam(required = false) BigInteger categoryId,
+            @RequestParam(required = false) BigInteger supplierId,
             @RequestParam(required = false) Float minPrice,
             @RequestParam(required = false) Float maxPrice
     ) {
@@ -49,7 +50,7 @@ public class ProductController {
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<BaseResponse<List<ProductDto>>> getProductDetail(@PathVariable String code, @RequestParam Float facilityId) {
+    public ResponseEntity<BaseResponse<List<ProductDto>>> getProductDetail(@PathVariable String code, @RequestParam BigInteger facilityId) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(productService.findProductDetail(facilityId, code)));
         } catch (Exception e) {
@@ -78,7 +79,7 @@ public class ProductController {
 //            @RequestParam("product") String productStr,
 //            @RequestParam(name = "image", required = false) MultipartFile image,
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable Float id) {
+            @PathVariable BigInteger id) {
         try {
 //            return ResponseEntity.ok(BaseResponse.ok(productService.updateCustom(objectMapper.readValue(productStr, Product.class), id, image)));
             return ResponseEntity.ok(BaseResponse.ok(productService.update(product, id, userDetails)));
@@ -90,7 +91,7 @@ public class ProductController {
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BaseResponse<String>> deleteProduct(@PathVariable Float id) {
+    public ResponseEntity<BaseResponse<String>> deleteProduct(@PathVariable BigInteger id) {
         try {
             productService.delete(Arrays.asList(id));
             return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.getReasonPhrase()));
@@ -102,7 +103,7 @@ public class ProductController {
 
     @PostMapping("/active/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BaseResponse<String>> active(@PathVariable Float id) {
+    public ResponseEntity<BaseResponse<String>> active(@PathVariable BigInteger id) {
         try {
             productService.active(id);
             return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.getReasonPhrase()));

@@ -1,5 +1,6 @@
 package com.example.happy_fitness.service.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public Blog getBlogById(long id) {
+	public Blog getBlogById(BigInteger id) {
 //		Optional<Blog> blog = blogRepository.findById(id);
 //		if(blog.isPresent()) {
 //			return blog.get();
@@ -52,7 +53,7 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public Blog updateBlog(Blog blog, long id) {
+	public Blog updateBlog(Blog blog, BigInteger id) {
 		Blog existingBlog = blogRepository.findById(id).orElseThrow(
 				() -> new ResourceNotFoundExeption("Blog", "Id", id));
 		
@@ -70,7 +71,7 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public void deleteBlog(long id) {
+	public void deleteBlog(BigInteger id) {
 		blogRepository.findById(id).orElseThrow(() ->
 		new ResourceNotFoundExeption("Blog", "Id", id));
 blogRepository.deleteById(id);

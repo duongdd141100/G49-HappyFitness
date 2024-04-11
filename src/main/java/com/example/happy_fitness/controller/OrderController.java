@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class OrderController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<String>> order(@RequestBody List<Float> cartIds,
+    public ResponseEntity<BaseResponse<String>> order(@RequestBody List<BigInteger> cartIds,
                                                       @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderService.order(cartIds, voucherCode)));
@@ -47,7 +48,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_CUSTOMER', 'ROLE_RECEPTIONIST')")
-    public ResponseEntity<BaseResponse<String>> findOrderDetail(@PathVariable Float id,
+    public ResponseEntity<BaseResponse<String>> findOrderDetail(@PathVariable BigInteger id,
                                                                 @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderService.findOrderDetail(id, userDetails)));

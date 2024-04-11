@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+
 @RestController
 @RequestMapping("/api/facility-product")
 @Slf4j
@@ -23,8 +25,8 @@ public class FacilityProductController {
 
     @PostMapping("/update")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<BaseResponse<String>> order(@RequestParam Float productId,
-                                                      @RequestParam Float facilityId,
+    public ResponseEntity<BaseResponse<String>> order(@RequestParam BigInteger productId,
+                                                      @RequestParam BigInteger facilityId,
                                                       @RequestBody FacilityProduct facilityProduct,
                                                       @AuthenticationPrincipal UserDetails userDetails) {
         try {
