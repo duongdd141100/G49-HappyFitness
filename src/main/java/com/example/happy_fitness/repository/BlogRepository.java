@@ -5,10 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.happy_fitness.entity.Blog;
 
-import java.math.BigInteger;
-
-
 @Repository
-public interface BlogRepository extends JpaRepository<Blog, BigInteger> {
+public interface BlogRepository extends JpaRepository<Blog, Long> {
 
 }

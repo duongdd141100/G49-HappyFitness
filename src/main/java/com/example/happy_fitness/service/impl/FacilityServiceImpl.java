@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -22,12 +21,12 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public String update(Facility facility, BigInteger id, UserDetails userDetails) {
+    public String update(Facility facility, Long id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<BigInteger> ids) {
+    public void delete(List<Long> ids) {
 
     }
 
@@ -40,7 +39,7 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public Facility findById(BigInteger coachId) {
+    public Facility findById(Long coachId) {
         return facilityRepo.findById(coachId).get();
     }
 }

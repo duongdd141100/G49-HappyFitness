@@ -2,21 +2,19 @@ package com.example.happy_fitness.common;
 
 import lombok.Getter;
 
-import java.math.BigInteger;
-
 @Getter
 public enum RoleEnum {
-    ROLE_ADMIN(BigInteger.valueOf(1), "Admin"),
-    ROLE_MANAGER(BigInteger.valueOf(2), "Manager"),
-    ROLE_CUSTOMER(BigInteger.valueOf(3), "Customer"),
-    ROLE_RECEPTIONIST(BigInteger.valueOf(4), "Receptionist"),
-    ROLE_PERSONAL_TRAINER(BigInteger.valueOf(5), "Personal Trainer");
+    ROLE_ADMIN(1L, "Admin"),
+    ROLE_MANAGER(2L, "Manager"),
+    ROLE_CUSTOMER(3L, "Customer"),
+    ROLE_RECEPTIONIST(4L, "Receptionist"),
+    ROLE_PERSONAL_TRAINER(5L, "Personal Trainer");
 
-    private final BigInteger id;
+    private final Long id;
 
     private final String value;
 
-    RoleEnum(BigInteger id, String value) {
+    RoleEnum(Long id, String value) {
         this.id = id;
         this.value = value;
     }

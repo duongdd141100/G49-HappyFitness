@@ -13,8 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
-
 @RestController
 @RequestMapping("/api/vouchers")
 @Slf4j
@@ -47,7 +45,7 @@ public class VoucherController {
 
     @GetMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<BaseResponse<String>> update(@PathVariable BigInteger id,
+    public ResponseEntity<BaseResponse<String>> update(@PathVariable Long id,
                                                        @RequestBody Voucher voucher,
                                                        @AuthenticationPrincipal UserDetails userDetails) {
         try {

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -28,7 +27,7 @@ public class CoachController {
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<User> getBlogById(@PathVariable("id") BigInteger coachId){
+	public ResponseEntity<User> getBlogById(@PathVariable("id") Long coachId){
 		return new ResponseEntity<User>(coachService.getCoachById(coachId), HttpStatus.OK);
 	}
 }

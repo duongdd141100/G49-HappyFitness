@@ -1,6 +1,5 @@
 package com.example.happy_fitness.service.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import com.example.happy_fitness.common.RoleEnum;
@@ -23,7 +22,7 @@ public class CoachServiceImpl implements CoachService {
 	}
 
 	@Override
-	public User getCoachById(BigInteger id) {
+	public User getCoachById(Long id) {
 		return userRepo.findById(id).orElseThrow(()->
 		new ResourceNotFoundExeption("Coach", "ID", id));
 	}

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -41,7 +40,7 @@ public class ProductCustomRepository {
             "        INNER JOIN" +
             "    facilities f ON f.id = fp.facility_id";
 
-    public List<ProductDto> findProduct(BigInteger facilityId, String status, BigInteger categoryId, BigInteger supplierId, Float minPrice, Float maxPrice) {
+    public List<ProductDto> findProduct(Long facilityId, String status, Long categoryId, Long supplierId, Float minPrice, Float maxPrice) {
         String sql = GET_PRODUCT_QUERY + getCondition(status, categoryId, supplierId, minPrice, maxPrice);
         Query query = entityManager.createNativeQuery(sql, "ProductDto");
         query.setParameter("facilityId", facilityId);
@@ -66,7 +65,7 @@ public class ProductCustomRepository {
         return query.getResultList();
     }
 
-    private String getCondition(String status, BigInteger categoryId, BigInteger supplierId, Float minPrice, Float maxPrice) {
+    private String getCondition(String status, Long categoryId, Long supplierId, Float minPrice, Float maxPrice) {
         String condition = " WHERE f.id = :facilityId";
         if (StringUtils.hasText(status)) {
             condition += " AND fp.status = :status";
@@ -89,7 +88,7 @@ public class ProductCustomRepository {
         return condition;
     }
 
-    public ProductDto findProductDetail(BigInteger facilityId, String code) {
+    public ProductDto findProductDetail(Long facilityId, String code) {
         String sql = GET_PRODUCT_QUERY + " WHERE p.code = :code AND f.id = :facilityId";
         Query query = entityManager.createNativeQuery(sql, "ProductDto");
         query.setParameter("code", code);

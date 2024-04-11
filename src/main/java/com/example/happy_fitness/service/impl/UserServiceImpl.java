@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -151,12 +150,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String update(User user, BigInteger id, UserDetails userDetails) {
+    public String update(User user, Long id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<BigInteger> id) {
+    public void delete(List<Long> id) {
 
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -29,7 +28,7 @@ public class FacilityProductServiceImpl implements FacilityProductService {
     }
 
     @Override
-    public String update(FacilityProduct facilityProduct, BigInteger id, UserDetails userDetails) {
+    public String update(FacilityProduct facilityProduct, Long id, UserDetails userDetails) {
         User requester = userRepo.findByUsername(userDetails.getUsername());
         if (RoleEnum.ROLE_MANAGER.getId().equals(requester.getRole().getId())
             && !facilityProduct.getFacility().getId().equals(requester.getFacility().getId())) {
@@ -45,12 +44,12 @@ public class FacilityProductServiceImpl implements FacilityProductService {
     }
 
     @Override
-    public void delete(List<BigInteger> ids) {
+    public void delete(List<Long> ids) {
 
     }
 
     @Override
-    public String updateCustom(FacilityProduct facilityProduct, BigInteger productId, BigInteger facilityId, UserDetails userDetails) {
+    public String updateCustom(FacilityProduct facilityProduct, Long productId, Long facilityId, UserDetails userDetails) {
         User requester = userRepo.findByUsername(userDetails.getUsername());
         if (RoleEnum.ROLE_MANAGER.getId().equals(requester.getRole().getId())
                 && !facilityProduct.getFacility().getId().equals(requester.getFacility().getId())) {

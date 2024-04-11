@@ -8,7 +8,6 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,7 +111,7 @@ public class OrderCustomRepository {
         }
     }
 
-    public List<OrderDetailDto> findOrderDetail(BigInteger id, String username, String requesterRole) {
+    public List<OrderDetailDto> findOrderDetail(Long id, String username, String requesterRole) {
         String sql = Arrays.asList(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_CUSTOMER.name()).contains(requesterRole)
                 ? ORDER_DETAIL_SQL
                 : ORDER_DETAIL_SQL + " AND u.username = :username";

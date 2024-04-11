@@ -2,6 +2,7 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.RoleEnum;
+import com.example.happy_fitness.constants.Constants;
 import com.example.happy_fitness.entity.Ticket;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.FacilityRepository;
@@ -13,7 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,14 +39,15 @@ public class TicketServiceImpl implements TicketService {
                     throw new RuntimeException(ErrorMessageEnum.FACILITY_NOT_EXIST.getCode());
                 }
             }
-        } else {
-            ticket.setFacility(userRepo.findByUsername(userDetails.getUsername()).getFacility());
         }
+        SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
+        ticket.setCode("P_" + formatter.format(new Date()));
+        ticket.setFacility(userRepo.findByUsername(userDetails.getUsername()).getFacility());
         return ticketRepo.save(ticket);
     }
 
     @Override
-    public String update(Ticket ticket, BigInteger id, UserDetails userDetails) {
+    public String update(Ticket ticket, Long id, UserDetails userDetails) {
         Ticket ticketOrigin = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         ticketOrigin.setName(ticket.getName());
@@ -56,12 +59,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void delete(List<BigInteger> ids) {
+    public void delete(List<Long> ids) {
 
     }
 
     @Override
-    public List<Ticket> findAllByFacilityId(BigInteger facilityId) {
+    public List<Ticket> findAllByFacilityId(Long facilityId) {
         return ticketRepo.findAllByFacility_Id(facilityId).stream().map(x -> {
             x.setFacility(null);
             return x;
@@ -69,14 +72,14 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket findTicketDetail(BigInteger id) {
+    public Ticket findTicketDetail(Long id) {
         Ticket ticket = ticketRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         ticket.getFacility().setManager(null);
         return ticket;
     }
 
     @Override
-    public String deactivate(UserDetails userDetails, BigInteger id) {
+    public String deactivate(UserDetails userDetails, Long id) {
         Ticket ticket = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         if (RoleEnum.ROLE_ADMIN.name().equals(userDetails.getAuthorities().stream().findFirst().get().getAuthority())) {

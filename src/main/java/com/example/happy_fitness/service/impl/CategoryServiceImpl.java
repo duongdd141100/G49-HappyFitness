@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -21,12 +20,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String update(Category category, BigInteger id, UserDetails userDetails) {
+    public String update(Category category, Long id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<BigInteger> ids) {
+    public void delete(List<Long> ids) {
 
     }
 

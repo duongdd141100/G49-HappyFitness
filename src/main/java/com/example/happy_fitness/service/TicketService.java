@@ -3,13 +3,12 @@ package com.example.happy_fitness.service;
 import com.example.happy_fitness.entity.Ticket;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigInteger;
 import java.util.List;
 
 public interface TicketService extends BaseService<Ticket> {
-    List<Ticket> findAllByFacilityId(BigInteger facilityId);
+    List<Ticket> findAllByFacilityId(Long facilityId);
 
-    Ticket findTicketDetail(BigInteger id);
+    Ticket findTicketDetail(Long id);
 
-    String deactivate(UserDetails userDetails, BigInteger id);
+    String deactivate(UserDetails userDetails, Long id);
 }

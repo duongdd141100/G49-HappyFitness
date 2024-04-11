@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -34,12 +33,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String update(Cart cart, BigInteger id, UserDetails userDetails) {
+    public String update(Cart cart, Long id, UserDetails userDetails) {
         return null;
     }
 
     @Override
-    public void delete(List<BigInteger> ids) {
+    public void delete(List<Long> ids) {
         cartRepo.deleteAllById(ids);
     }
 

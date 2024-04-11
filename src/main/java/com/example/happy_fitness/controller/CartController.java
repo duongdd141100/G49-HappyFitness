@@ -15,7 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -62,7 +61,7 @@ public class CartController {
 
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<String>> delete(@RequestBody List<BigInteger> cartIds) {
+    public ResponseEntity<BaseResponse<String>> delete(@RequestBody List<Long> cartIds) {
         try {
             cartService.delete(cartIds);
             return ResponseEntity.ok(BaseResponse.ok(HttpStatus.OK.getReasonPhrase()));

@@ -4,14 +4,13 @@ import com.example.happy_fitness.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, BigInteger>  {
+public interface UserRepository extends JpaRepository<User, Long>  {
     User findByUsername(String username);
 
     Boolean existsByEmail(String email);
 
-    List<User> findAllByStatusIsTrueAndRole_Id(BigInteger roleId);
+    List<User> findAllByStatusIsTrueAndRole_Id(Long roleId);
 }
