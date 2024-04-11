@@ -36,7 +36,7 @@ public class TicketController {
     }
 
     @GetMapping("")
-    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@RequestParam Long facilityId) {
+    public ResponseEntity<BaseResponse<List<Ticket>>> findTickets(@RequestParam(required = false) Long facilityId) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.findAllByFacilityId(facilityId)));
         } catch (Exception e) {

@@ -16,7 +16,7 @@ public class FacilityServiceImpl implements FacilityService {
     private FacilityRepository facilityRepo;
 
     @Override
-    public Facility create(UserDetails userDetails, Facility facility) {
+    public String create(UserDetails userDetails, Facility facility) {
         return null;
     }
 

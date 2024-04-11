@@ -15,7 +15,7 @@ public class SupplierServiceImpl implements SupplierService {
     private SupplierRepository supplierRepo;
 
     @Override
-    public Supplier create(UserDetails userDetails, Supplier supplier) {
+    public String create(UserDetails userDetails, Supplier supplier) {
         return null;
     }
 

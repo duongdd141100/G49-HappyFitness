@@ -136,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product create(UserDetails userDetails, Product product) {
+    public String create(UserDetails userDetails, Product product) {
         return null;
     }
 

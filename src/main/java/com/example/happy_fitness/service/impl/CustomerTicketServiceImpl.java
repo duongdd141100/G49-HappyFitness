@@ -38,7 +38,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     private UserRepository userRepo;
 
     @Override
-    public CustomerTicket create(UserDetails userDetails, CustomerTicket customerTicket) {
+    public String create(UserDetails userDetails, CustomerTicket customerTicket) {
         return null;
     }
 

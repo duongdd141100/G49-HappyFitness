@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(UserDetails userDetails, User user) {
+    public String create(UserDetails userDetails, User user) {
         return null;
     }
 

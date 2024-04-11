@@ -15,7 +15,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepo;
 
     @Override
-    public Category create(UserDetails userDetails, Category category) {
+    public String create(UserDetails userDetails, Category category) {
         return null;
     }
 

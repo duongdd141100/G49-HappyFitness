@@ -20,10 +20,11 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherRepository voucherRepo;
 
     @Override
-    public Voucher create(UserDetails userDetails, Voucher voucher) {
+    public String create(UserDetails userDetails, Voucher voucher) {
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
         voucher.setCode("VOUCHER_" + formatter.format(new Date()));
-        return voucherRepo.save(voucher);
+        voucherRepo.save(voucher);
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class FacilityProductServiceImpl implements FacilityProductService {
     private UserRepository userRepo;
 
     @Override
-    public FacilityProduct create(UserDetails userDetails, FacilityProduct facilityProduct) {
+    public String create(UserDetails userDetails, FacilityProduct facilityProduct) {
         return null;
     }
 

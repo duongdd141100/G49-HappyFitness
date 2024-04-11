@@ -3,6 +3,7 @@ package com.example.happy_fitness.service.impl;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.constants.Constants;
+import com.example.happy_fitness.entity.Facility;
 import com.example.happy_fitness.entity.Ticket;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.FacilityRepository;
@@ -30,20 +31,19 @@ public class TicketServiceImpl implements TicketService {
     private UserRepository userRepo;
 
     @Override
-    public Ticket create(UserDetails userDetails, Ticket ticket) {
+    public String create(UserDetails userDetails, Ticket ticket) {
         if (RoleEnum.ROLE_ADMIN.name().equals(userDetails.getAuthorities().stream().findFirst().get().getAuthority())) {
             if (ticket.getFacility() == null || ticket.getFacility().getId() == null) {
                 throw new RuntimeException(ErrorMessageEnum.FACILITY_EMPTY.getCode());
-            } else {
-                if (!facilityRepo.existsById(ticket.getFacility().getId())) {
-                    throw new RuntimeException(ErrorMessageEnum.FACILITY_NOT_EXIST.getCode());
-                }
             }
         }
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_YYYY_MM_DD_HH_MM_SS_SSS);
         ticket.setCode("P_" + formatter.format(new Date()));
-        ticket.setFacility(userRepo.findByUsername(userDetails.getUsername()).getFacility());
-        return ticketRepo.save(ticket);
+        ticket.setFacility(facilityRepo.findById(ticket.getFacility().getId())
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.FACILITY_NOT_EXIST.getCode())));
+        ticket.setStatus(true);
+        ticketRepo.save(ticket);
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
@@ -65,8 +65,11 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> findAllByFacilityId(Long facilityId) {
-        return ticketRepo.findAllByFacility_Id(facilityId).stream().map(x -> {
-            x.setFacility(null);
+        return (facilityId == null
+                ? ticketRepo.findAll()
+                : ticketRepo.findAllByFacility_Id(facilityId))
+                .stream().map(x -> {
+            x.getFacility().setManager(null);
             return x;
         }).toList();
     }
