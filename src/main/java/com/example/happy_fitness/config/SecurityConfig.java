@@ -46,7 +46,9 @@ public class SecurityConfig {
                                     RequestMappingConstant.IMAGE,
                                     RequestMappingConstant.FIND_FACILITY,
                                     RequestMappingConstant.FIND_CATEGORY,
-                                    RequestMappingConstant.FIND_SUPPLIER).permitAll()
+                                    RequestMappingConstant.FIND_SUPPLIER,
+                                    "/vnpay_jsp/vnpay_return.jsp",
+                                    "/api/payment/info").permitAll()
                             .anyRequest().authenticated();
                 });
         return http.build();
