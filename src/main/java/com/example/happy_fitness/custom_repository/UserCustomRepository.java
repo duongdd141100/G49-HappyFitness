@@ -32,7 +32,7 @@ public class UserCustomRepository {
             "    users u" +
             "        INNER JOIN" +
             "    roles r ON u.role_id = r.id" +
-            "        INNER JOIN" +
+            "        LEFT JOIN" +
             "    facilities f ON u.facility_id = f.id";
 
     public List<UserDto> findAllByCondition(User requester, String username, String fullName, String email, Boolean gender, Float roleId) {

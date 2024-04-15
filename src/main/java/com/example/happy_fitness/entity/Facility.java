@@ -3,6 +3,7 @@ package com.example.happy_fitness.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
@@ -13,10 +14,10 @@ public class Facility extends BaseEntity {
     private String name;
 
     @Column(name = "work_start_time")
-    private Date workStartTime;
+    private LocalTime workStartTime;
 
     @Column(name = "work_end_time")
-    private Date workEndTime;
+    private LocalTime workEndTime;
 
     @Column(name = "hotline")
     private String hotline;

@@ -13,7 +13,7 @@ import java.util.Date;
         classes = @ConstructorResult(
                 targetClass = com.example.happy_fitness.dto.UserDto.class,
                 columns = {
-                        @ColumnResult(name = "id", type = Float.class),
+                        @ColumnResult(name = "id", type = Long.class),
                         @ColumnResult(name = "username", type = String.class),
                         @ColumnResult(name = "fullName", type = String.class),
                         @ColumnResult(name = "email", type = String.class),
