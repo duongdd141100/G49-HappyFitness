@@ -13,13 +13,13 @@ import java.util.List;
         classes = @ConstructorResult(
                 targetClass = com.example.happy_fitness.dto.ProductDto.class,
                 columns = {
-                        @ColumnResult(name = "productId", type = Float.class),
-                        @ColumnResult(name = "facilityProductId", type = Float.class),
+                        @ColumnResult(name = "productId", type = Long.class),
+                        @ColumnResult(name = "facilityProductId", type = Long.class),
                         @ColumnResult(name = "code", type = String.class),
                         @ColumnResult(name = "name", type = String.class),
                         @ColumnResult(name = "imagePath", type = String.class),
                         @ColumnResult(name = "category", type = String.class),
-                        @ColumnResult(name = "supplierId", type = Float.class),
+                        @ColumnResult(name = "supplierId", type = Long.class),
                         @ColumnResult(name = "supplier", type = String.class),
                         @ColumnResult(name = "price", type = Float.class),
                         @ColumnResult(name = "facility", type = String.class),

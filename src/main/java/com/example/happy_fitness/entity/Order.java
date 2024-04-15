@@ -36,7 +36,7 @@ import java.util.List;
         classes = @ConstructorResult(
                 targetClass = com.example.happy_fitness.dto.OrderDto.class,
                 columns = {
-                        @ColumnResult(name = "id", type = Float.class),
+                        @ColumnResult(name = "id", type = Long.class),
                         @ColumnResult(name = "username", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "voucherCode", type = String.class),
