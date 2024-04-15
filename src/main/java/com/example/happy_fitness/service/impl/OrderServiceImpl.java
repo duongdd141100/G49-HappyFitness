@@ -92,6 +92,7 @@ public class OrderServiceImpl implements OrderService {
         }).toList());
         order.setVoucher(voucher);
         order.setStatus(OrderStatusEnum.PROCESSING.name());
+        order.setPaid(false);
         Float orderPrice = Float.parseFloat(String.valueOf(
                 order.getOrderProducts().stream().mapToDouble(x -> x.getUnitPrice() * x.getQuantity()).sum()));
         if (voucher != null) {

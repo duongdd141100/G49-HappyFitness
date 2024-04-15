@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class OrderDto {
-    private Float id;
+    private Long id;
     private String username;
     private String status;
     private String voucherCode;
@@ -12,4 +12,5 @@ public class OrderDto {
     private Float totalPrice;
     private Float discount;
     private Float price;
+    private Boolean paid;
 }

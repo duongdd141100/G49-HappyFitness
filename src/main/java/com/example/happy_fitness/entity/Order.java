@@ -44,6 +44,7 @@ import java.util.List;
                         @ColumnResult(name = "totalPrice", type = Float.class),
                         @ColumnResult(name = "discount", type = Float.class),
                         @ColumnResult(name = "price", type = Float.class),
+                        @ColumnResult(name = "paid", type = Boolean.class),
                 }
         )
 )

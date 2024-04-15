@@ -24,12 +24,13 @@ public class OrderCustomRepository {
             "    v.name AS voucherName," +
             "    SUM(op.unit_price * quantity) AS totalPrice," +
             "    SUM(op.unit_price * quantity) - o.price AS discount," +
-            "    o.price" +
+            "    o.price," +
+            "    o.paid" +
             " FROM" +
             "    orders o" +
             "        INNER JOIN" +
             "    order_product op ON o.id = op.order_id" +
-            "        INNER JOIN" +
+            "        LEFT JOIN" +
             "    vouchers v ON v.id = o.voucher_id" +
             "        INNER JOIN" +
             "    users u ON u.username = o.created_by";
@@ -42,12 +43,13 @@ public class OrderCustomRepository {
             "    v.name AS voucherName," +
             "    SUM(op.unit_price * quantity) AS totalPrice," +
             "    SUM(op.unit_price * quantity) - o.price AS discount," +
-            "    o.price" +
+            "    o.price," +
+            "    o.paid" +
             " FROM" +
             "    orders o" +
             "        INNER JOIN" +
             "    order_product op ON o.id = op.order_id" +
-            "        INNER JOIN" +
+            "        LEFT JOIN" +
             "    vouchers v ON v.id = o.voucher_id" +
             "        INNER JOIN" +
             "    users u ON u.username = o.created_by" +
