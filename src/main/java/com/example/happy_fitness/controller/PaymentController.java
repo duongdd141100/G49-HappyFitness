@@ -2,7 +2,9 @@ package com.example.happy_fitness.controller;
 
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.config.VNPayConfig;
+import com.example.happy_fitness.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +20,11 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
+    @Autowired
+    private PaymentService paymentService;
+
     @GetMapping("/create")
-    public ResponseEntity<?> createPayment(@RequestParam Long amount, HttpServletRequest req) throws UnsupportedEncodingException {
+    public ResponseEntity<BaseResponse<String>> createPayment(@RequestParam Long amount, HttpServletRequest req) throws UnsupportedEncodingException {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", "2.1.0");
@@ -78,7 +83,7 @@ public class PaymentController {
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
-        return ResponseEntity.ok(paymentUrl);
+        return ResponseEntity.ok(BaseResponse.ok(paymentUrl));
 //        com.google.gson.JsonObject job = new JsonObject();
 //        job.addProperty("code", "00");
 //        job.addProperty("message", "success");
@@ -88,11 +93,13 @@ public class PaymentController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> paymentInfo(@RequestParam("vnp_ResponseCode") String code) {
-        if (code.equals("00")) {
-            return ResponseEntity.ok("OK");
-        } else {
-            return ResponseEntity.badRequest().body("Payment failed!");
+    public ResponseEntity<BaseResponse<String>> paymentInfo(
+            @RequestParam String responseCode,
+            @RequestParam Long orderId) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(paymentService.updateInfo(responseCode, orderId)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(BaseResponse.fail(e.getMessage()));
         }
     }
 }

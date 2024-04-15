@@ -58,6 +58,9 @@ public class Order extends BaseEntity {
     @Column(name = "price")
     private Float price;
 
+    @Column(name = "paid")
+    private Boolean paid;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts;
 }

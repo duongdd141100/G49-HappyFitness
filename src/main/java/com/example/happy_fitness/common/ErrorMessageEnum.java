@@ -65,6 +65,8 @@ public enum ErrorMessageEnum {
      */
     ORDER_EMPTY("006001", "Không có sản phẩm được order!"),
 
+    ORDER_NOT_EXIST("006002", "Đơn hàng không tồn tại!"),
+
     /**
      * Error message for facility
      */
