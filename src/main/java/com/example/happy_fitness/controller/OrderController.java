@@ -36,9 +36,12 @@ public class OrderController {
 
     @GetMapping("")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_CUSTOMER', 'ROLE_RECEPTIONIST')")
-    public ResponseEntity<BaseResponse<String>> findOrders(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<BaseResponse<String>> findOrders(@AuthenticationPrincipal UserDetails userDetails,
+                                                           @RequestParam(required = false) Boolean isPaid,
+                                                           @RequestParam(required = false) Boolean isDelivered,
+                                                           @RequestParam(required = false) Long facilityId) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(orderService.findOrders(userDetails)));
+            return ResponseEntity.ok(BaseResponse.ok(orderService.findOrders(userDetails, isPaid, isDelivered, facilityId)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.VIEW_ORDER + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

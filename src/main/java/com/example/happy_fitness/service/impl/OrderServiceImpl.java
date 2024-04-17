@@ -109,9 +109,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findOrders(UserDetails userDetails) {
+    public List<OrderDto> findOrders(UserDetails userDetails, Boolean isPaid, Boolean isDelivered, Long facilityId) {
         return orderCustomRepo.findAll(userDetails.getUsername(),
-                userDetails.getAuthorities().stream().findFirst().get().getAuthority()).stream().map(x -> {
+                userDetails.getAuthorities().stream().findFirst().get().getAuthority(), isPaid, isDelivered, facilityId).stream().map(x -> {
                     x.setStatus(OrderStatusEnum.typeOf(x.getStatus()).getValue());
                     return x;
         }).toList();

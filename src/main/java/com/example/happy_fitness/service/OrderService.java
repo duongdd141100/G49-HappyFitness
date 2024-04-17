@@ -10,7 +10,7 @@ import java.util.List;
 public interface OrderService extends BaseService<Order> {
     String order(List<Long> carts, String voucherCode);
 
-    List<OrderDto> findOrders(UserDetails userDetails);
+    List<OrderDto> findOrders(UserDetails userDetails, Boolean isPaid, Boolean isDelivered, Long facilityId);
 
     List<OrderDetailDto> findOrderDetail(Long id, UserDetails userDetails);
 }

@@ -1,5 +1,6 @@
 package com.example.happy_fitness.custom_repository;
 
+import com.example.happy_fitness.common.OrderStatusEnum;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.dto.OrderDetailDto;
 import com.example.happy_fitness.dto.OrderDto;
@@ -7,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +35,9 @@ public class OrderCustomRepository {
             "        LEFT JOIN" +
             "    vouchers v ON v.id = o.voucher_id" +
             "        INNER JOIN" +
-            "    users u ON u.username = o.created_by";
+            "    users u ON u.username = o.created_by" +
+            "        INNER JOIN" +
+            "    facility_product fp ON fp.id = op.facility_product_id";
     
     private final String FIND_ORDER_BY_MANAGER_SQL = "SELECT" +
             "    o.id," +
@@ -91,8 +95,8 @@ public class OrderCustomRepository {
             " WHERE" +
             "    o.id = :orderId";
 
-    public List<OrderDto> findAll(String username, String requesterRole) {
-        String sql = getFindOrdersSql(requesterRole) + " GROUP BY o.id , u.full_name";
+    public List<OrderDto> findAll(String username, String requesterRole, Boolean isPaid, Boolean isDelivered, Long facilityId) {
+        String sql = getFindOrdersSql(requesterRole, isPaid, isDelivered, facilityId) + " GROUP BY o.id , u.full_name";
         Query query = entityManager.createNativeQuery(sql, "OrderDto");
         if (Arrays.asList(RoleEnum.ROLE_CUSTOMER.name(),
                 RoleEnum.ROLE_MANAGER.name(),
@@ -100,16 +104,41 @@ public class OrderCustomRepository {
                 .contains(requesterRole)) {
             query.setParameter("username", username);
         }
+        if (isPaid != null) {
+            query.setParameter("isPaid", isPaid);
+        }
+        if (isDelivered != null) {
+            query.setParameter("status", isDelivered ? OrderStatusEnum.SUCCESSFULLY.name() : OrderStatusEnum.PROCESSING.name());
+        }
+        if (facilityId != null && RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
+            query.setParameter("facilityId", facilityId);
+        }
         return query.getResultList();
     }
 
-    private String getFindOrdersSql(String requesterRole) {
+    private String getFindOrdersSql(String requesterRole, Boolean isPaid, Boolean isDelivered, Long facilityId) {
+        String condition = "";
         if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
-            return FIND_ORDER_SQL;
+            if (isPaid != null) {
+                condition += " AND o.paid = :isPaid";
+            }
+            if (isDelivered != null) {
+                condition += " AND o.status = :status";
+            }
+            if (facilityId != null) {
+                condition += " AND fp.facility_id = :facilityId";
+            }
+            return FIND_ORDER_SQL + (StringUtils.hasText(condition) ? " WHERE" + condition.substring(4) : "");
         } else if (RoleEnum.ROLE_CUSTOMER.name().equals(requesterRole)) {
             return FIND_ORDER_SQL + " WHERE u.username = :username";
         } else {
-            return FIND_ORDER_BY_MANAGER_SQL;
+            if (isPaid != null) {
+                condition += " AND o.paid = :isPaid";
+            }
+            if (isDelivered != null) {
+                condition += " AND o.status = :status";
+            }
+            return FIND_ORDER_BY_MANAGER_SQL + condition;
         }
     }
 
