@@ -22,9 +22,11 @@ public class ProductCustomRepository {
             "    p.name," +
             "    p.image_path AS imagePath," +
             "    c.name AS category," +
+            "    c.id AS categoryId," +
             "    s.name AS supplier," +
-            "    fp.price," +
+            "    f.id as facilityId," +
             "    f.name as facility," +
+            "    fp.price," +
             "    fp.status," +
             "    fp.stock_quantity AS stockQuantity," +
             "    p.description," +

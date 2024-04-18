@@ -63,10 +63,7 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             throw new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode());
         }
-        return Optional.of(product).map(x -> {
-                    x.setStatus(FacilityProductStatusEnum.typeOf(x.getStatus()).getValue());
-                    return x;
-                }).get();
+        return product;
     }
 
     @Override
@@ -151,6 +148,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Product finalProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException(ErrorMessageEnum.PRODUCT_NOT_EXIST.getCode()));
         finalProduct.setName(product.getName());
+        finalProduct.setImagePath(product.getImagePath());
         finalProduct.setCategory(product.getCategory());
         finalProduct.setSupplier(product.getSupplier());
         finalProduct.setDescription(product.getDescription());

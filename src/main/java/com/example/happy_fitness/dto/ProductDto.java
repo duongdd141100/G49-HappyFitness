@@ -9,10 +9,12 @@ public class ProductDto {
     private String code;
     private String name;
     private String imagePath;
+    private Long categoryId;
     private String category;
     private Long supplierId;
     private String supplier;
     private Float price;
+    private Long facilityId;
     private String facility;
     private String status;
     private Integer stockQuantity;

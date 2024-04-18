@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         if (StringUtils.hasText(issuer)) {
             User user = userRepo.findByUsername(issuer);
             if (user.getFacility() != null) {
-                user.getFacility().getManager().setFacility(null);
+                user.getFacility().getManager().getFacility().setManager(null);
             }
             return user;
         }
