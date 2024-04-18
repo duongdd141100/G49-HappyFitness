@@ -41,7 +41,7 @@ public class ProductCustomRepository {
             "    facilities f ON f.id = fp.facility_id";
 
     public List<ProductDto> findProduct(Long facilityId, String status, Long categoryId, Long supplierId, Float minPrice, Float maxPrice) {
-        String sql = GET_PRODUCT_QUERY + getCondition(status, categoryId, supplierId, minPrice, maxPrice);
+        String sql = GET_PRODUCT_QUERY + getCondition(status, categoryId, supplierId, minPrice, maxPrice) + " ORDER BY p.id DESC";
         Query query = entityManager.createNativeQuery(sql, "ProductDto");
         query.setParameter("facilityId", facilityId);
         if (StringUtils.hasText(status)) {
