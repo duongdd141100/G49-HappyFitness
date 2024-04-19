@@ -23,23 +23,23 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(token)) {
-            try {
-                SecurityContextHolder.getContext().setAuthentication(userAuthProvider.validateToken(token.split(" ")[1]));
-            } catch (Exception e) {
-                throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
+        if (!RequestMappingConstant.FREE_API.stream().anyMatch(x -> {
+            if (x.equals(request.getServletPath())) {
+                return true;
             }
-        } else {
-            if (!RequestMappingConstant.FREE_API.stream().anyMatch(x -> {
-                if (x.equals(request.getServletPath())) {
-                    return true;
+            if (x.endsWith("/**") && request.getServletPath().startsWith(x.substring(0, x.indexOf("/**")))) {
+                return true;
+            }
+            return false;
+        })) {
+            String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (StringUtils.hasText(token)) {
+                try {
+                    SecurityContextHolder.getContext().setAuthentication(userAuthProvider.validateToken(token.split(" ")[1]));
+                } catch (Exception e) {
+                    throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
                 }
-                if (x.endsWith("/**") && request.getServletPath().startsWith(x.substring(0, x.indexOf("/**")))) {
-                    return true;
-                }
-                return false;
-            })) {
+            } else {
                 throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
             }
         }
