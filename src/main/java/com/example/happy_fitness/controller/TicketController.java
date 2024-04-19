@@ -57,10 +57,21 @@ public class TicketController {
 
     @PostMapping("/deactivate/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<BaseResponse<List<Ticket>>> findTicketDetail(@PathVariable Long id,
+    public ResponseEntity<BaseResponse<List<Ticket>>> deactivate(@PathVariable Long id,
                                                                        @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(ticketService.deactivate(userDetails, id)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.FIND_TICKET_DETAIL + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+    @PostMapping("/active/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<BaseResponse<List<Ticket>>> active(@PathVariable Long id,
+                                                                       @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(ticketService.active(userDetails, id)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_TICKET_DETAIL + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

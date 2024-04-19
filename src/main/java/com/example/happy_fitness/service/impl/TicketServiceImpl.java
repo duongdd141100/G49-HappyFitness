@@ -97,4 +97,21 @@ public class TicketServiceImpl implements TicketService {
         ticketRepo.save(ticket);
         return HttpStatus.OK.getReasonPhrase();
     }
+
+    @Override
+    public String active(UserDetails userDetails, Long id) {
+        Ticket ticket = ticketRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        if (RoleEnum.ROLE_ADMIN.name().equals(userDetails.getAuthorities().stream().findFirst().get().getAuthority())) {
+            ticket.setStatus(true);
+        } else {
+            User user = userRepo.findByUsername(userDetails.getUsername());
+            if (!user.getFacility().getId().equals(ticket.getFacility().getId())) {
+                throw new RuntimeException(ErrorMessageEnum.CANNOT_ACTIVE_TICKET.getCode());
+            }
+            ticket.setStatus(true);
+        }
+        ticketRepo.save(ticket);
+        return HttpStatus.OK.getReasonPhrase();
+    }
 }

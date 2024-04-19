@@ -79,6 +79,7 @@ public enum ErrorMessageEnum {
      */
     TICKET_NOT_EXIST("008001", "Vé không tồn tại!"),
     CANNOT_DEACTIVATE_TICKET("008002", "Bạn không thể vô hiệu hoá vé của cơ sở khác!"),
+    CANNOT_ACTIVE_TICKET("008003", "Bạn không thể kích hoạt vé của cơ sở khác!"),
 
     /**
      * Error message for customer ticket

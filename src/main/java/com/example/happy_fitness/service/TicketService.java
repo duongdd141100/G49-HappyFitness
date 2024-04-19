@@ -11,4 +11,6 @@ public interface TicketService extends BaseService<Ticket> {
     Ticket findTicketDetail(Long id);
 
     String deactivate(UserDetails userDetails, Long id);
+
+    String active(UserDetails userDetails, Long id);
 }
