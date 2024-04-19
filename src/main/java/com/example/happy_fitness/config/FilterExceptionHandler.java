@@ -28,7 +28,8 @@ public class FilterExceptionHandler extends OncePerRequestFilter {
         } catch (Exception e) {
             e.printStackTrace();
             SecurityContextHolder.clearContext();
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(objectMapper.writeValueAsString(
                     BaseResponse.unAuthentication(ErrorMessageEnum.typeOf(e.getMessage()).getMessage())));
         }
