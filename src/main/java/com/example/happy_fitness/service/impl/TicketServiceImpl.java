@@ -94,6 +94,7 @@ public class TicketServiceImpl implements TicketService {
             }
             ticket.setStatus(false);
         }
+        ticketRepo.save(ticket);
         return HttpStatus.OK.getReasonPhrase();
     }
 }

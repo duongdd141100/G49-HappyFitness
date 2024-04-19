@@ -80,13 +80,13 @@ public class ProductServiceImpl implements ProductService {
         product.setIsActive(true);
         Product finalProduct = productRepo.save(product);
         List<Facility> facilities = facilityRepo.findAll();
-        if (image != null) {
-            String fileName = product.getCode() + "_" + image.getOriginalFilename();
-            FileUploadUtil.saveFile(PRODUCT_IMG_FOLDER, fileName, image);
-            product.setImagePath(IMAGE_PATH + fileName);
-        } else {
-            product.setImagePath("");
-        }
+//        if (image != null) {
+//            String fileName = product.getCode() + "_" + image.getOriginalFilename();
+//            FileUploadUtil.saveFile(PRODUCT_IMG_FOLDER, fileName, image);
+//            product.setImagePath(IMAGE_PATH + fileName);
+//        } else {
+//            product.setImagePath("");
+//        }
         facilityProductRepo.saveAll(facilities.stream().map(x -> new FacilityProduct(x, finalProduct, 0, 0.0F,
                         FacilityProductStatusEnum.COMING_SOON.name()))
                 .toList());
