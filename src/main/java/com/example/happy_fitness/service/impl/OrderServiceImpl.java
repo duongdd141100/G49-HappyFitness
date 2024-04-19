@@ -16,7 +16,6 @@ import com.example.happy_fitness.repository.OrderRepository;
 import com.example.happy_fitness.repository.VoucherRepository;
 import com.example.happy_fitness.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Float order(List<Long> cartIds, String voucherCode) {
+    public Order order(List<Long> cartIds, String voucherCode) {
         if (CollectionUtils.isEmpty(cartIds)) {
             throw new RuntimeException(ErrorMessageEnum.ORDER_EMPTY.getCode());
         }
@@ -103,9 +102,11 @@ public class OrderServiceImpl implements OrderService {
         } else {
             order.setPrice(orderPrice);
         }
-        orderRepo.save(order);
+
         cartRepo.deleteAllById(cartIds);
-        return order.getPrice();
+        Order orderSaved = orderRepo.save(order);
+        orderSaved.setOrderProducts(null);
+        return orderSaved;
     }
 
     @Override

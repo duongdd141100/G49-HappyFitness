@@ -3,6 +3,7 @@ package com.example.happy_fitness.controller;
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.constants.RequestMappingConstant;
+import com.example.happy_fitness.entity.Order;
 import com.example.happy_fitness.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class OrderController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Float>> order(@RequestBody List<Long> cartIds,
-                                                      @RequestParam(required = false) String voucherCode) {
+    public ResponseEntity<BaseResponse<Order>> order(@RequestBody List<Long> cartIds,
+                                                     @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderService.order(cartIds, voucherCode)));
         } catch (Exception e) {
