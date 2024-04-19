@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
 
 public interface OrderService extends BaseService<Order> {
-    String order(List<Long> carts, String voucherCode);
+    Float order(List<Long> carts, String voucherCode);
 
     List<OrderDto> findOrders(UserDetails userDetails, Boolean isPaid, Boolean isDelivered, Long facilityId);
 

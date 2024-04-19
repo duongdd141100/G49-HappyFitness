@@ -24,7 +24,7 @@ public class OrderController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<String>> order(@RequestBody List<Long> cartIds,
+    public ResponseEntity<BaseResponse<Float>> order(@RequestBody List<Long> cartIds,
                                                       @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderService.order(cartIds, voucherCode)));

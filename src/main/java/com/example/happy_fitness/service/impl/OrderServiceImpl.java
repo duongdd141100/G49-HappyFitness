@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public String order(List<Long> cartIds, String voucherCode) {
+    public Float order(List<Long> cartIds, String voucherCode) {
         if (CollectionUtils.isEmpty(cartIds)) {
             throw new RuntimeException(ErrorMessageEnum.ORDER_EMPTY.getCode());
         }
@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
         }
         orderRepo.save(order);
         cartRepo.deleteAllById(cartIds);
-        return HttpStatus.OK.getReasonPhrase();
+        return order.getPrice();
     }
 
     @Override
