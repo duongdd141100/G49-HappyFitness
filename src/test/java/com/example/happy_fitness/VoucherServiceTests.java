@@ -64,7 +64,7 @@ public class VoucherServiceTests {
         voucher.setName("name");
         List<Voucher> vouchers = Arrays.asList(voucher);
         Mockito.when(voucherRepository.findAll()).thenReturn(vouchers);
-        List<Voucher> result = voucherService.findAll();
+        List<Voucher> result = voucherService.findAll(id);
         Assertions.assertEquals(result.size() , vouchers.size());
     }
 }
