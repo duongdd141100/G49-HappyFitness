@@ -90,7 +90,10 @@ public enum ErrorMessageEnum {
     /**
      * Error message for update facility product
      */
-    ERROR_UPDATE_FACILITY_PRODUCT("010001", "Bạn không thể chỉnh sửa sản phẩm của cơ sở khác!"),;
+    ERROR_UPDATE_FACILITY_PRODUCT("010001", "Bạn không thể chỉnh sửa sản phẩm của cơ sở khác!"),
+
+    ERROR_UPDATE_FACILITY_PRODUCT_PRICE_INVALID("010002", "Giá sản phẩm không hợp lệ!"),
+    ERROR_UPDATE_FACILITY_PRODUCT_STOCK_INVALID("010003", "Số lượng tồn kho không hợp lệ!"),;
 
     private String code;
 

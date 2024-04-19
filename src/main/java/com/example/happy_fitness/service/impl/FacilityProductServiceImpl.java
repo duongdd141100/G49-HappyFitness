@@ -55,6 +55,12 @@ public class FacilityProductServiceImpl implements FacilityProductService {
                 && !facilityProduct.getFacility().getId().equals(requester.getFacility().getId())) {
             throw new RuntimeException(ErrorMessageEnum.ERROR_UPDATE_FACILITY_PRODUCT.getCode());
         }
+        if (facilityProduct.getPrice() < 0 || facilityProduct.getPrice() > 2000000) {
+            throw new RuntimeException(ErrorMessageEnum.ERROR_UPDATE_FACILITY_PRODUCT_PRICE_INVALID.getCode());
+        }
+        if (facilityProduct.getStockQuantity() < 0 || facilityProduct.getStockQuantity() > 10000) {
+            throw new RuntimeException(ErrorMessageEnum.ERROR_UPDATE_FACILITY_PRODUCT.getCode());
+        }
         FacilityProduct facilityProductOrigin = facilityProductRepo.findByFacility_IdAndProduct_Id(facilityId, productId);
         facilityProductOrigin.setStockQuantity(facilityProduct.getStockQuantity());
         facilityProductOrigin.setStatus(facilityProduct.getStatus());

@@ -73,13 +73,15 @@ public class UserServiceImpl implements UserService {
                 user.getUsername(),
                 user.getPassword(),
                 user.getPhoneNumber(),
-                user.getEmail()).allMatch(StringUtils::hasText)
+                user.getEmail(),
+                user.getAddress()).allMatch(StringUtils::hasText)
                 && user.getGender() != null
                 && user.getDob() != null
                 && user.getRole().getId() != null) {
             if (userRepo.findByUsername(user.getUsername()) != null) {
                 throw new RuntimeException(ErrorMessageEnum.USERNAME_EXIST.getCode());
             }
+            user.setStatus(true);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepo.save(user);
         }
