@@ -24,14 +24,23 @@ public class VoucherController {
     @GetMapping("")
     public ResponseEntity<BaseResponse<String>> findAll() {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(voucherService.findAll()));
+            return ResponseEntity.ok(BaseResponse.ok(voucherService.findAll(null)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.FIND_VOUCHERS + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponse<String>> detail(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(voucherService.findAll(id)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_VOUCHERS + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse<String>> create(@AuthenticationPrincipal UserDetails userDetails,
                                                        @RequestBody Voucher voucher) {
@@ -43,7 +52,7 @@ public class VoucherController {
         }
     }
 
-    @GetMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BaseResponse<String>> update(@PathVariable Long id,
                                                        @RequestBody Voucher voucher,

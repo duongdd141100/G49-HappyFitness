@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +48,10 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public List<Voucher> findAll() {
-        return voucherRepo.findAll();
+    public List<Voucher> findAll(Long id) {
+        return id == null
+                ? voucherRepo.findAll()
+                : Arrays.asList(voucherRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.VOUCHER_NOT_EXIST.getCode())));
     }
 }
