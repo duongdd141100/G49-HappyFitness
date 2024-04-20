@@ -1,6 +1,7 @@
 package com.example.happy_fitness.controller;
 
 import com.example.happy_fitness.common.BaseResponse;
+import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.config.VNPayConfig;
 import com.example.happy_fitness.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -99,7 +100,18 @@ public class PaymentController {
         try {
             return ResponseEntity.ok(BaseResponse.ok(paymentService.updateInfo(responseCode, orderId)));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(BaseResponse.fail(e.getMessage()));
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
+
+    @PostMapping("/ticket-info")
+    public ResponseEntity<BaseResponse<String>> paymentTicketInfo(
+            @RequestParam String responseCode,
+            @RequestParam Long ticketId) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(paymentService.updateTicketInfo(responseCode, ticketId)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
 }

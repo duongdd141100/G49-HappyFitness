@@ -35,4 +35,7 @@ public class CustomerTicket extends BaseEntity {
 
     @Column(name = "status")
     private Boolean status;
+
+    @Column(name = "paid")
+    private Boolean paid;
 }

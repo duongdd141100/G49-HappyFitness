@@ -3,6 +3,7 @@ package com.example.happy_fitness.controller;
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.constants.RequestMappingConstant;
+import com.example.happy_fitness.entity.CustomerTicket;
 import com.example.happy_fitness.entity.Ticket;
 import com.example.happy_fitness.service.CustomerTicketService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +36,9 @@ public class UserTicketController {
 
     @PostMapping("/buy/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Ticket>> buy(@PathVariable Long id,
-                                                    @RequestParam(required = false) String voucherCode,
-                                                    @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<BaseResponse<CustomerTicket>> buy(@PathVariable Long id,
+                                                            @RequestParam(required = false) String voucherCode,
+                                                            @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(customerTicketService.buy(id, voucherCode, userDetails)));
         } catch (Exception e) {

@@ -94,7 +94,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public String buy(Long id, String voucherCode, UserDetails userDetails) {
+    public CustomerTicket buy(Long id, String voucherCode, UserDetails userDetails) {
         Ticket ticket = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         User user = userRepo.findByUsername(userDetails.getUsername());
@@ -114,11 +114,12 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         LocalDate localEndDate = LocalDate.now().plusMonths(ticket.getMonthDuration());
         newCustomerTicket.setCustomer(user);
         newCustomerTicket.setTicket(ticket);
-        newCustomerTicket.setStatus(true);
+        newCustomerTicket.setStatus(false);
         newCustomerTicket.setStartDate(new Date());
         newCustomerTicket.setEndDate(Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         newCustomerTicket.setAction(CustomerTickeActionEnum.BUY_NEW.name());
         newCustomerTicket.setVoucher(voucher);
+        newCustomerTicket.setPaid(false);
         Float price = ticket.getPrice();
         if (voucher != null) {
             Float discount = price * voucher.getPercentAmount() / 100;
@@ -128,8 +129,9 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         } else {
             newCustomerTicket.setPrice(price);
         }
-        customerTicketRepo.save(newCustomerTicket);
-        return HttpStatus.OK.getReasonPhrase();
+        newCustomerTicket = customerTicketRepo.save(newCustomerTicket);
+        newCustomerTicket.getTicket().setFacility(null);
+        return newCustomerTicket;
     }
 
     @Override
