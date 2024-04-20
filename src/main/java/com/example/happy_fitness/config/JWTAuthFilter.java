@@ -28,7 +28,17 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             try {
                 SecurityContextHolder.getContext().setAuthentication(userAuthProvider.validateToken(token.split(" ")[1]));
             } catch (Exception e) {
-                throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
+                if (!RequestMappingConstant.FREE_API.stream().anyMatch(x -> {
+                    if (x.equals(request.getServletPath())) {
+                        return true;
+                    }
+                    if (x.endsWith("/**") && request.getServletPath().startsWith(x.substring(0, x.indexOf("/**")))) {
+                        return true;
+                    }
+                    return false;
+                })) {
+                    throw new RuntimeException(ErrorMessageEnum.TOKEN_INVALID.getCode());
+                }
             }
         } else {
             if (!RequestMappingConstant.FREE_API.stream().anyMatch(x -> {

@@ -12,7 +12,6 @@ import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.repository.VoucherRepository;
 import com.example.happy_fitness.service.CustomerTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -53,7 +52,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public String extend(Long id, String voucherCode) {
+    public CustomerTicket extend(Long id, String voucherCode) {
         CustomerTicket customerTicket = customerTicketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
         if (customerTicket.getStatus()) {
@@ -89,8 +88,9 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         } else {
             newCustomerTicket.setPrice(price);
         }
-        customerTicketRepo.save(newCustomerTicket);
-        return HttpStatus.OK.getReasonPhrase();
+        newCustomerTicket = customerTicketRepo.save(newCustomerTicket);
+        newCustomerTicket.getTicket().setFacility(null);
+        return newCustomerTicket;
     }
 
     @Override

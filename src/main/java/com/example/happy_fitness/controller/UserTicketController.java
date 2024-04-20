@@ -24,7 +24,7 @@ public class UserTicketController {
 
     @PostMapping("/extend/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<Ticket>> extend(@PathVariable Long id,
+    public ResponseEntity<BaseResponse<CustomerTicket>> extend(@PathVariable Long id,
                                                        @RequestParam(required = false) String voucherCode) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(customerTicketService.extend(id, voucherCode)));
