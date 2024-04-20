@@ -73,6 +73,9 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         List<Cart> carts = cartRepo.findAllById(cartIds);
+        if (carts.isEmpty()) {
+            throw new RuntimeException(ErrorMessageEnum.ORDER_EMPTY.getCode());
+        }
         Order order = new Order();
         order.setOrderProducts(carts.stream().map(x -> {
             if (!FacilityProductStatusEnum.ACTIVE.name().equals(x.getFacilityProduct().getStatus())) {

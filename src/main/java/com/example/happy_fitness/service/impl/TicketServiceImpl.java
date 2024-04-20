@@ -50,6 +50,12 @@ public class TicketServiceImpl implements TicketService {
     public String update(Ticket ticket, Long id, UserDetails userDetails) {
         Ticket ticketOrigin = ticketRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.TICKET_NOT_EXIST.getCode()));
+        User requester = userRepo.findByUsername(userDetails.getUsername());
+        if (RoleEnum.ROLE_MANAGER.getId() == requester.getRole().getId()
+        && requester.getFacility().getId() != ticket.getFacility().getId()) {
+            throw new RuntimeException(ErrorMessageEnum.CANNOT_UPDATE_TICKET.getCode());
+        }
+        ticketOrigin.setFacility(ticket.getFacility());
         ticketOrigin.setName(ticket.getName());
         ticketOrigin.setPrice(ticket.getPrice());
         ticketOrigin.setDescription(ticket.getDescription());
