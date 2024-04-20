@@ -25,6 +25,7 @@ public class PaymentController {
     @GetMapping("/create")
     public ResponseEntity<BaseResponse<String>> createPayment(@RequestParam Long amount,
                                                               @RequestParam(required = false) Long orderId,
+                                                              @RequestParam(required = false) Long ticketId,
                                                               HttpServletRequest req) throws UnsupportedEncodingException {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         Map<String, String> vnp_Params = new HashMap<>();
@@ -45,7 +46,9 @@ public class PaymentController {
 //            vnp_Params.put("vnp_Locale", "vn");
 //        }
         String vnp_IpAddr = VNPayConfig.getIpAddress(req);
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl + (orderId != null ? "/" + orderId : ""));
+        vnp_Params.put("vnp_ReturnUrl", orderId != null
+                ? VNPayConfig.vnp_ReturnUrlOrder + orderId
+                : VNPayConfig.vnp_ReturnUrlCustomerTicket + ticketId);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
