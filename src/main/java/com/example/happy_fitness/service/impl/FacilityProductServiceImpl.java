@@ -52,7 +52,7 @@ public class FacilityProductServiceImpl implements FacilityProductService {
     public String updateCustom(FacilityProduct facilityProduct, Long productId, Long facilityId, UserDetails userDetails) {
         User requester = userRepo.findByUsername(userDetails.getUsername());
         if (RoleEnum.ROLE_MANAGER.getId().equals(requester.getRole().getId())
-                && !facilityProduct.getFacility().getId().equals(requester.getFacility().getId())) {
+                && !facilityId.equals(requester.getFacility().getId())) {
             throw new RuntimeException(ErrorMessageEnum.ERROR_UPDATE_FACILITY_PRODUCT.getCode());
         }
         if (facilityProduct.getPrice() < 0 || facilityProduct.getPrice() > 2000000) {
