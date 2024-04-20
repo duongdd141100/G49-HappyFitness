@@ -96,7 +96,7 @@ public class OrderCustomRepository {
             "    o.id = :orderId";
 
     public List<OrderDto> findAll(String username, String requesterRole, Boolean isPaid, Boolean isDelivered, Long facilityId) {
-        String sql = getFindOrdersSql(requesterRole, isPaid, isDelivered, facilityId) + " GROUP BY o.id , u.full_name";
+        String sql = getFindOrdersSql(requesterRole, isPaid, isDelivered, facilityId) + " GROUP BY o.id , u.full_name ORDER BY o.id DESC";
         Query query = entityManager.createNativeQuery(sql, "OrderDto");
         if (Arrays.asList(RoleEnum.ROLE_CUSTOMER.name(),
                 RoleEnum.ROLE_MANAGER.name(),
