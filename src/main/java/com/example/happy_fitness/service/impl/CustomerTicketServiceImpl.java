@@ -74,7 +74,8 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         LocalDate localEndDate = LocalDate.now().plusMonths(customerTicket.getTicket().getMonthDuration());
         newCustomerTicket.setCustomer(customerTicket.getCustomer());
         newCustomerTicket.setTicket(customerTicket.getTicket());
-        newCustomerTicket.setStatus(true);
+        newCustomerTicket.setStatus(false);
+        newCustomerTicket.setPaid(false);
         newCustomerTicket.setStartDate(new Date());
         newCustomerTicket.setEndDate(Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         newCustomerTicket.setAction(CustomerTickeActionEnum.EXTEND.name());
