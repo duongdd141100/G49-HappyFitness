@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 @Service
@@ -81,8 +82,19 @@ public class UserServiceImpl implements UserService {
             if (userRepo.findByUsername(user.getUsername()) != null) {
                 throw new RuntimeException(ErrorMessageEnum.USERNAME_EXIST.getCode());
             }
+            if (!Pattern.compile("^[A-Za-z]\\w{5,29}$").matcher(user.getUsername()).matches()) {
+                throw new RuntimeException(ErrorMessageEnum.USERNAME_INVALID.getCode());
+            }
+            String phoneNumber = user.getPhoneNumber().trim();
+            if (phoneNumber.length() < 10
+                    || !Pattern.compile("\\d+").matcher(phoneNumber).matches()) {
+                throw new RuntimeException(ErrorMessageEnum.PHONE_NUMBER_INVALID.getCode());
+            }
+            user.setPhoneNumber(phoneNumber);
+            user.setUsername(user.getUsername().toLowerCase().trim());
             user.setStatus(true);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setEmail(user.getEmail().toLowerCase());
             return userRepo.save(user);
         }
         throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());

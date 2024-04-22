@@ -17,6 +17,8 @@ public enum ErrorMessageEnum {
     USERNAME_EXIST("001006", "Tên người dùng đã tồn tại! Vui lòng nhập tên người dùng khác!"),
 
     USERNAME_NOT_EXIST("001007", "Tên người dùng không tồn tại!"),
+    USERNAME_INVALID("001008", "Tên người dùng không hợp lệ!"),
+    PHONE_NUMBER_INVALID("001009", "Số điện thoại không hợp lệ!"),
 
     /**
      * Error message for email

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -81,10 +82,21 @@ public class AuthServiceImpl implements AuthService {
             if (userRepo.findByUsername(user.getUsername()) != null) {
                 throw new RuntimeException(ErrorMessageEnum.USERNAME_EXIST.getCode());
             }
+            if (!Pattern.compile("^[A-Za-z]\\w{5,29}$").matcher(user.getUsername()).matches()) {
+                throw new RuntimeException(ErrorMessageEnum.USERNAME_INVALID.getCode());
+            }
+            String phoneNumber = user.getPhoneNumber().trim();
+            if (phoneNumber.length() < 10
+                    || !Pattern.compile("\\d+").matcher(phoneNumber).matches()) {
+                throw new RuntimeException(ErrorMessageEnum.PHONE_NUMBER_INVALID.getCode());
+            }
             Role role = new Role();
             role.setId(RoleEnum.ROLE_CUSTOMER.getId());
+            user.setUsername(user.getUsername().toLowerCase());
             user.setRole(role);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setEmail(user.getEmail().toLowerCase());
+            user.setPhoneNumber(phoneNumber);
             return userRepo.save(user);
         }
         throw new RuntimeException(ErrorMessageEnum.LACK_OF_INFORMATION.getCode());
