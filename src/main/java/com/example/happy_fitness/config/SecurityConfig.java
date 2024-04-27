@@ -47,6 +47,7 @@ public class SecurityConfig {
                                     RequestMappingConstant.FIND_FACILITY,
                                     RequestMappingConstant.FIND_CATEGORY,
                                     RequestMappingConstant.FIND_SUPPLIER,
+                                    RequestMappingConstant.FIND_TRAIN_TIME,
                                     "/vnpay_jsp/vnpay_return.jsp",
                                     "/api/payment/info").permitAll()
                             .anyRequest().authenticated();

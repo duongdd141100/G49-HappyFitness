@@ -36,6 +36,7 @@ public class RequestMappingConstant {
     public static final String FIND_FACILITY = "/api/facilities";
     public static final String FIND_CATEGORY = "/api/categories";
     public static final String FIND_SUPPLIER = "/api/suppliers";
+    public static final String FIND_TRAIN_TIME = "/api/train-time";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
@@ -50,6 +51,7 @@ public class RequestMappingConstant {
             FIND_CATEGORY,
             FIND_SUPPLIER,
             "/vnpay_jsp/vnpay_return.jsp",
-            "/api/payment/info"
+            "/api/payment/info",
+            FIND_TRAIN_TIME
     );
 }
