@@ -95,9 +95,14 @@ public enum ErrorMessageEnum {
      * Error message for update facility product
      */
     ERROR_UPDATE_FACILITY_PRODUCT("010001", "Bạn không thể chỉnh sửa sản phẩm của cơ sở khác!"),
-
     ERROR_UPDATE_FACILITY_PRODUCT_PRICE_INVALID("010002", "Giá sản phẩm không hợp lệ!"),
-    ERROR_UPDATE_FACILITY_PRODUCT_STOCK_INVALID("010003", "Số lượng tồn kho không hợp lệ!"),;
+    ERROR_UPDATE_FACILITY_PRODUCT_STOCK_INVALID("010003", "Số lượng tồn kho không hợp lệ!"),
+
+    /**
+     * Error message for booking
+     */
+    SCHEDULE_EXIST("011001", "Bạn đã có lịch tập cho thời gian bạn đã chọn!"),
+    PT_BUSY("011002", "Không còn huấn luyện viên trong khung giờ này!"),;
 
     private String code;
 

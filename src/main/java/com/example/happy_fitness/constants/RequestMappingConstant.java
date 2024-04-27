@@ -37,6 +37,7 @@ public class RequestMappingConstant {
     public static final String FIND_CATEGORY = "/api/categories";
     public static final String FIND_SUPPLIER = "/api/suppliers";
     public static final String FIND_TRAIN_TIME = "/api/train-time";
+    public static final String BOOKING = "/api/booking/create";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
