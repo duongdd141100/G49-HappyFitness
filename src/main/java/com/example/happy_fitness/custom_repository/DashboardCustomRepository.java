@@ -28,7 +28,7 @@ public class DashboardCustomRepository {
             "            YEAR(start_date) AS year," +
             "            SUM(price) AS revenue" +
             "    FROM" +
-            "        user_tickets" +
+            "        customer_ticket" +
             "    GROUP BY month , year UNION SELECT " +
             "        MONTH(created_date) AS month," +
             "            YEAR(created_date) AS year," +
