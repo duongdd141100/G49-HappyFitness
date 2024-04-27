@@ -32,4 +32,16 @@ public class BookingController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/update")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<BaseResponse<Schedule>> update(@AuthenticationPrincipal UserDetails userDetails,
+                                                         @RequestBody Schedule schedule) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(scheduleService.update(schedule, schedule.getId(), userDetails)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.BOOKING + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }
