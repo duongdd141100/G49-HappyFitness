@@ -2,10 +2,8 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.CustomerTickeActionEnum;
 import com.example.happy_fitness.common.ErrorMessageEnum;
-import com.example.happy_fitness.entity.CustomerTicket;
-import com.example.happy_fitness.entity.Ticket;
-import com.example.happy_fitness.entity.User;
-import com.example.happy_fitness.entity.Voucher;
+import com.example.happy_fitness.common.RoleEnum;
+import com.example.happy_fitness.entity.*;
 import com.example.happy_fitness.repository.CustomerTicketRepository;
 import com.example.happy_fitness.repository.TicketRepository;
 import com.example.happy_fitness.repository.UserRepository;
@@ -19,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -136,9 +135,21 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public List<CustomerTicket> findByUsername(String username) {
-        return customerTicketRepo.findAllByCustomer_UsernameOrderByUpdatedDateDesc(username)
-                .stream().map(x -> {
+    public List<CustomerTicket> findByUsername(UserDetails userDetails) {
+        List<CustomerTicket> customerTickets = null;
+        String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
+        if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
+            customerTickets = customerTicketRepo.findAll();
+        }
+        if (Arrays.asList(RoleEnum.ROLE_MANAGER.name(), RoleEnum.ROLE_RECEPTIONIST.name()).contains(requesterRole)) {
+            User requester = userRepo.findByUsername(userDetails.getUsername());
+            customerTickets = customerTicketRepo.findAllByTicket_FacilityOrderByUpdatedDateDesc(requester.getFacility());
+        }
+        if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
+            User requester = userRepo.findByUsername(userDetails.getUsername());
+            customerTickets = customerTicketRepo.findAllByCustomer_UsernameOrderByUpdatedDateDesc(requester.getUsername());
+        }
+        return customerTickets.stream().map(x -> {
                     x.setCustomer(null);
                     x.getTicket().getFacility().setManager(null);
                     return x;

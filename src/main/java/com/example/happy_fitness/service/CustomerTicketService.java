@@ -10,5 +10,5 @@ public interface CustomerTicketService extends BaseService<CustomerTicket> {
 
     CustomerTicket buy(Long id, String voucherCode, UserDetails userDetails);
 
-    List<CustomerTicket> findByUsername(String username);
+    List<CustomerTicket> findByUsername(UserDetails username);
 }
