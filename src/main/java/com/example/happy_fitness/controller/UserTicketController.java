@@ -49,9 +49,12 @@ public class UserTicketController {
 
     @GetMapping("")
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_RECEPTIONIST')")
-    public ResponseEntity<BaseResponse<Ticket>> findAll(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<BaseResponse<CustomerTicket>> findAll(@AuthenticationPrincipal UserDetails userDetails,
+                                                                @RequestParam(required = false) Long facilityId,
+                                                                @RequestParam(required = false) Boolean isActive,
+                                                                @RequestParam(required = false) Boolean isUsing) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(customerTicketService.findByUsername(userDetails)));
+            return ResponseEntity.ok(BaseResponse.ok(customerTicketService.findByUsername(userDetails, facilityId, isActive, isUsing)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.TICKET_HISTORY + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

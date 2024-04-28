@@ -17,9 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CustomerTicketServiceImpl implements CustomerTicketService {
@@ -135,24 +133,36 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
     }
 
     @Override
-    public List<CustomerTicket> findByUsername(UserDetails userDetails) {
+    public List<CustomerTicket> findByUsername(UserDetails userDetails, Long facilityId, Boolean isActive, Boolean isUsing) {
         List<CustomerTicket> customerTickets = null;
         String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
         if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
             customerTickets = customerTicketRepo.findAll();
-        }
-        if (Arrays.asList(RoleEnum.ROLE_MANAGER.name(), RoleEnum.ROLE_RECEPTIONIST.name()).contains(requesterRole)) {
+        } else if (Arrays.asList(RoleEnum.ROLE_MANAGER.name(), RoleEnum.ROLE_RECEPTIONIST.name()).contains(requesterRole)) {
             User requester = userRepo.findByUsername(userDetails.getUsername());
             customerTickets = customerTicketRepo.findAllByTicket_FacilityOrderByUpdatedDateDesc(requester.getFacility());
-        }
-        if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
+        } else if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
             User requester = userRepo.findByUsername(userDetails.getUsername());
             customerTickets = customerTicketRepo.findAllByCustomer_UsernameOrderByUpdatedDateDesc(requester.getUsername());
+        } else {
+            return new ArrayList<>();
         }
+        if (facilityId != null) {
+            customerTickets = customerTickets.stream()
+                    .filter(x -> x.getTicket().getFacility().getId().equals(facilityId)).toList();
+        }
+        if (isActive != null) {
+            customerTickets = customerTickets.stream()
+                    .filter(x -> x.getStatus().equals(isActive)).toList();
+        }
+        if (isUsing != null) {
+            customerTickets = customerTickets.stream()
+                    .filter(x -> x.getStatus().equals(isUsing)).toList();
+        }
+        customerTickets.sort(Comparator.comparing(CustomerTicket::getStatus, Comparator.reverseOrder()));
         return customerTickets.stream().map(x -> {
-                    x.setCustomer(null);
-                    x.getTicket().getFacility().setManager(null);
-                    return x;
-                }).toList();
+            x.getTicket().getFacility().setManager(null);
+            return x;
+        }).toList();
     }
 }
