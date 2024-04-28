@@ -50,7 +50,7 @@ public class UserAuthProvider {
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRole().getName().toUpperCase())
+                .roles(user.getRole().getName().toUpperCase().replaceAll(" ", "_"))
                 .build();
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }

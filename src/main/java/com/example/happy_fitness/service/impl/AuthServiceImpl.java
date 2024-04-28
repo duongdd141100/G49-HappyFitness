@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
                 return org.springframework.security.core.userdetails.User
                         .withUsername(realUser.getUsername())
                         .password(realUser.getPassword())
-                        .roles(realUser.getRole().getName().toUpperCase())
+                        .roles(realUser.getRole().getName().toUpperCase().replaceAll(" ", "_"))
                         .build();
             }
         }
