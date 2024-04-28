@@ -10,6 +10,7 @@ import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.repository.VoucherRepository;
 import com.example.happy_fitness.service.CustomerTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -164,5 +165,13 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
             x.getTicket().getFacility().setManager(null);
             return x;
         }).toList();
+    }
+
+    @Override
+    public String using(String customerUsername) {
+        CustomerTicket customerTicket = customerTicketRepo.findByCustomer_UsernameAndStatusIsTrue(customerUsername);
+        customerTicket.setIsUsing(!customerTicket.getIsUsing());
+        customerTicketRepo.save(customerTicket);
+        return HttpStatus.OK.getReasonPhrase();
     }
 }

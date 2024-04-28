@@ -16,4 +16,6 @@ public interface CustomerTicketRepository extends JpaRepository<CustomerTicket, 
     List<CustomerTicket> findAllByCustomer_UsernameOrderByUpdatedDateDesc(String username);
 
     List<CustomerTicket> findAllByTicket_FacilityOrderByUpdatedDateDesc(Facility facility);
+
+    CustomerTicket findByCustomer_UsernameAndStatusIsTrue(String customerUsername);
 }

@@ -60,4 +60,15 @@ public class UserTicketController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/using/{customerUsername}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_RECEPTIONIST')")
+    public ResponseEntity<BaseResponse<String>> using(@PathVariable String customerUsername) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(customerTicketService.using(customerUsername)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.CHANGE_CUSTOMER_TICKET_USING + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }

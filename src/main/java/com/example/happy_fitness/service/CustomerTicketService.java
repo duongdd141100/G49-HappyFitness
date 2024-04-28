@@ -11,4 +11,6 @@ public interface CustomerTicketService extends BaseService<CustomerTicket> {
     CustomerTicket buy(Long id, String voucherCode, UserDetails userDetails);
 
     List<CustomerTicket> findByUsername(UserDetails username, Long facilityId, Boolean isActive, Boolean isUsing);
+
+    String using(String customerUsername);
 }
