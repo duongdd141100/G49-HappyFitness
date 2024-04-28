@@ -13,9 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -78,5 +76,31 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void delete(List<Long> ids) {
         scheduleRepo.deleteAllById(ids);
+    }
+
+    @Override
+    public List<Schedule> findAll(UserDetails userDetails) {
+        List<Schedule> schedules = null;
+        String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
+        if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
+            schedules = scheduleRepo.findAll();
+        }
+        if (Arrays.asList(RoleEnum.ROLE_MANAGER.name(), RoleEnum.ROLE_RECEPTIONIST.name()).contains(requesterRole)) {
+            User requester = userRepo.findByUsername(userDetails.getUsername());
+            schedules = scheduleRepo.findAllByFacility(requester.getFacility());
+        }
+        if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
+            User requester = userRepo.findByUsername(userDetails.getUsername());
+            schedules = scheduleRepo.findAllByCustomer(requester);
+        }
+        if (RoleEnum.ROLE_PERSONAL_TRAINER.name().contains(requesterRole)) {
+            User requester = userRepo.findByUsername(userDetails.getUsername());
+            schedules = scheduleRepo.findAllByPt(requester);
+        }
+        return schedules.stream().map(x -> {
+            x.getPt().setFacility(null);
+            x.getFacility().setManager(null);
+            return x;
+        }).toList();
     }
 }
