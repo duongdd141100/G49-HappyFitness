@@ -21,6 +21,9 @@ public class Schedule extends BaseEntity{
     @Column(name = "train_date")
     private LocalDate trainDate;
 
+    @Column(name = "status")
+    private Boolean status;
+
     @ManyToOne
     @JoinColumn(name = "train_time_id")
     private TrainTime trainTime;

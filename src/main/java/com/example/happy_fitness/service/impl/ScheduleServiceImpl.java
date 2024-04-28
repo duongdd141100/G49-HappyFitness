@@ -75,7 +75,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void delete(List<Long> ids) {
-        scheduleRepo.deleteAllById(ids);
+        Schedule schedule = scheduleRepo.findById(ids.get(0)).get();
+        schedule.setStatus(false);
+        scheduleRepo.save(schedule);
     }
 
     @Override

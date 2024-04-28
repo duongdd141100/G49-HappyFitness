@@ -48,7 +48,7 @@ public class BookingController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/cancel/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     public ResponseEntity<BaseResponse<Schedule>> delete(@PathVariable Long id) {
         try {
