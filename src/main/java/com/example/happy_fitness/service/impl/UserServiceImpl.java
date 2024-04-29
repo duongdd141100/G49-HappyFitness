@@ -2,13 +2,17 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.PropertyBean;
+import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.constants.Constants;
 import com.example.happy_fitness.custom_repository.UserCustomRepository;
+import com.example.happy_fitness.dto.FreePtRequestBodyDto;
 import com.example.happy_fitness.dto.UserDto;
 import com.example.happy_fitness.entity.MailTemplate;
+import com.example.happy_fitness.entity.TrainSchedule;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.MailTemplateRepository;
 import com.example.happy_fitness.repository.RoleRepository;
+import com.example.happy_fitness.repository.TrainScheduleRepository;
 import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.service.EmailService;
 import com.example.happy_fitness.service.UserService;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -51,6 +56,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PropertyBean propertyBean;
+
+    @Autowired
+    private TrainScheduleRepository trainScheduleRepo;
 
     @Override
     public List<UserDto> findAllByCondition(String requesterUsername, String username, String fullName, String email, Boolean gender, Float roleId) {
@@ -156,6 +164,21 @@ public class UserServiceImpl implements UserService {
         user.setStatus(false);
         userRepo.save(user);
         return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    public List<User> findFreePt(FreePtRequestBodyDto freePtRequestBodyDto) {
+        List<TrainSchedule> trainSchedulesExist = trainScheduleRepo
+                .findAllByTrainTime_IdAndClazz_Pt_Facility_IdAndDayOfWeekIn(freePtRequestBodyDto.getTrainTimeId(), freePtRequestBodyDto.getFacilityId(), freePtRequestBodyDto.getDayOfWeeks());
+        List<User> busyPt = trainSchedulesExist
+                .stream()
+                .filter(x -> x.getClazz().getStatus().equals("ACTIVE"))
+                .map(x -> x.getClazz().getPt()).toList();
+        return userRepo.findAllByRole_IdAndFacility_Id(RoleEnum.ROLE_PERSONAL_TRAINER.getId(), freePtRequestBodyDto.getFacilityId())
+                .stream().filter(x -> !busyPt.contains(x)).map(x -> {
+                    x.setFacility(null);
+                    return x;
+                }).toList();
     }
 
     @Override

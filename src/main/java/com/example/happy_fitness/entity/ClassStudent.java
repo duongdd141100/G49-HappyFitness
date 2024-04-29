@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "classes")
+@Table(name = "class_student")
 public class ClassStudent extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "student_id")

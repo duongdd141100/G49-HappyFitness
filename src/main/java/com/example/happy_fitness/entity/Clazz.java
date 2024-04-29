@@ -13,6 +13,9 @@ public class Clazz extends BaseEntity {
     @Column(name = "remain_slot")
     private String remainSlot;
 
+    @Column(name = "status")
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "package_id")
     private Package aPackage;

@@ -8,7 +8,7 @@ import lombok.Data;
 @Table(name = "train_schedule")
 public class TrainSchedule extends BaseEntity {
     @Column(name = "day_of_week")
-    private String dayOfWeek;
+    private Integer dayOfWeek;
 
     @ManyToOne
     @JoinColumn(name = "train_time_id")
