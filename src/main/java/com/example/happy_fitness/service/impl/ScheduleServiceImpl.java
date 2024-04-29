@@ -3,8 +3,10 @@ package com.example.happy_fitness.service.impl;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.entity.Schedule;
+import com.example.happy_fitness.entity.TrainTime;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.repository.ScheduleRepository;
+import com.example.happy_fitness.repository.TrainTimeRepository;
 import com.example.happy_fitness.repository.UserRepository;
 import com.example.happy_fitness.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -22,6 +26,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private TrainTimeRepository trainTimeRepo;
 
     @Override
     public String create(UserDetails userDetails, Schedule schedule) {
@@ -35,6 +42,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .stream().filter(x -> !busyPt.contains(x)).toList();
         if (availablePt.isEmpty()) {
             throw new RuntimeException(ErrorMessageEnum.PT_BUSY.getCode());
+        }
+        if (schedule.getTrainDate().equals(LocalDate.now())) {
+            TrainTime trainTime = trainTimeRepo.findById(schedule.getTrainTime().getId()).get();
+            if (trainTime.getStartTime().isBefore(LocalTime.now())) {
+                throw new RuntimeException(ErrorMessageEnum.TRAIN_TIME_INVALID.getCode());
+            }
         }
         Random random = new Random();
         schedule.setPt(availablePt.get(random.nextInt(availablePt.size())));
@@ -61,6 +74,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                     .stream().filter(x -> !busyPt.contains(x)).toList();
             if (availablePt.isEmpty()) {
                 throw new RuntimeException(ErrorMessageEnum.PT_BUSY.getCode());
+            }
+            if (schedule.getTrainDate().equals(LocalDate.now())) {
+                TrainTime trainTime = trainTimeRepo.findById(schedule.getTrainTime().getId()).get();
+                if (trainTime.getStartTime().isBefore(LocalTime.now())) {
+                    throw new RuntimeException(ErrorMessageEnum.TRAIN_TIME_INVALID.getCode());
+                }
             }
             Random random = new Random();
             originSchedule.getFacility().setId(schedule.getId());
