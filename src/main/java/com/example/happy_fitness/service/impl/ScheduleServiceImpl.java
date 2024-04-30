@@ -103,4 +103,15 @@ public class ScheduleServiceImpl implements ScheduleService {
             return x;
         }).toList();
     }
+
+    @Override
+    public String attend(Long scheduleId, UserDetails userDetails) {
+        TrainHistory trainHistory = trainHistoryRepo.findById(scheduleId).get();
+        if (!LocalDate.now().isEqual(trainHistory.getTrainDate())) {
+            throw new RuntimeException(ErrorMessageEnum.ATTEND_FAILED_INVALID_DATE.getCode());
+        }
+        trainHistory.setStatus("ATTENDED");
+        trainHistoryRepo.save(trainHistory);
+        return HttpStatus.OK.getReasonPhrase();
+    }
 }

@@ -46,4 +46,16 @@ public class ScheduleController {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
     }
+
+    @PostMapping("/attend/{scheduleId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_PERSONAL_TRAINER')")
+    public ResponseEntity<BaseResponse<String>> attend(@AuthenticationPrincipal UserDetails userDetails,
+                                                       @PathVariable Long scheduleId) {
+        try {
+            return ResponseEntity.ok(BaseResponse.ok(scheduleService.attend(scheduleId, userDetails)));
+        } catch (Exception e) {
+            log.error(RequestMappingConstant.ATTEND + e);
+            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+        }
+    }
 }

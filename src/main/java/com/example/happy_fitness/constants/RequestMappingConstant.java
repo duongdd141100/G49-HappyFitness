@@ -40,6 +40,7 @@ public class RequestMappingConstant {
     public static final String BOOKING = "/api/booking/create";
     public static final String CHANGE_CUSTOMER_TICKET_USING = "/api/user-ticket/using";
     public static final String FIND_PACKAGE = "/api/packages";
+    public static final String ATTEND = "/api/schedule/attend";
 
     public static final List<String> FREE_API = Arrays.asList(
             SIGN_IN,
