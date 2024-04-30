@@ -3,7 +3,7 @@ package com.example.happy_fitness.controller;
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.constants.RequestMappingConstant;
-import com.example.happy_fitness.dto.FreePtRequestBodyDto;
+import com.example.happy_fitness.dto.BookingRequestBodyDto;
 import com.example.happy_fitness.dto.UserDto;
 import com.example.happy_fitness.entity.User;
 import com.example.happy_fitness.service.UserService;
@@ -17,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -107,7 +106,7 @@ public class UserController {
 
     @GetMapping("/free-pt")
     public ResponseEntity<BaseResponse<List<UserDto>>> findFreePt(
-            @RequestBody FreePtRequestBodyDto freePtRequestBodyDto,
+            @RequestBody BookingRequestBodyDto freePtRequestBodyDto,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         try {

@@ -3,6 +3,8 @@ package com.example.happy_fitness.controller;
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.config.VNPayConfig;
+import com.example.happy_fitness.dto.BookingRequestBodyDto;
+import com.example.happy_fitness.repository.PackageRepository;
 import com.example.happy_fitness.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +22,45 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @GetMapping("/create")
-    public ResponseEntity<BaseResponse<String>> createPayment(@RequestParam Long amount,
+    @Autowired
+    private PackageRepository packageRepo;
+
+    @PostMapping("/create")
+    public ResponseEntity<BaseResponse<String>> createPayment(@RequestParam(required = false) Long amount,
                                                               @RequestParam(required = false) Long orderId,
                                                               @RequestParam(required = false) Long ticketId,
+                                                              @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto,
                                                               HttpServletRequest req) throws UnsupportedEncodingException {
         Map<String, String> baseParams = VNPayConfig.getBaseParams(req);
-        baseParams.put("vnp_Amount", String.valueOf(amount * 100));
+//        if (amount)
+//        baseParams.put("vnp_Amount", amount != null
+//                ? String.valueOf(amount * 100)
+//                : String.valueOf(Long.parseLong(String.valueOf(packageRepo.findById(bookingRequestBodyDto.getPackageId()).get().getPrice() * 100))));
+//                : String.valueOf(100000f * 100));
 
-        baseParams.put("vnp_ReturnUrl", orderId != null
-                ? VNPayConfig.vnp_ReturnUrlOrder + orderId
-                : VNPayConfig.vnp_ReturnUrlCustomerTicket + ticketId);
+        if (orderId != null) {
+            baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + "/" + orderId);
+            baseParams.put("vnp_Amount", String.valueOf(amount * 100));
+        } else if (ticketId != null) {
+            baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlCustomerTicket + ticketId);
+            baseParams.put("vnp_Amount", String.valueOf(amount * 100));
+        } else {
+            String params =String.format("?dayOfWeeks=%s" +
+                    "&ptId=%s" +
+                    "&packageId=%s" +
+                    "&facilityId=%s" +
+                    "&trainTimeId=%s",
+                    String.join("", bookingRequestBodyDto.getDayOfWeeks().stream().map(Object::toString).toList()),
+                    bookingRequestBodyDto.getPtId(), bookingRequestBodyDto.getPackageId(), bookingRequestBodyDto.getFacilityId(),
+                    bookingRequestBodyDto.getTrainTimeId());
+            baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + params);
+            String price = String.format("%f", packageRepo.findById(bookingRequestBodyDto.getPackageId()).get().getPrice() * 100);
+            baseParams.put("vnp_Amount", price.substring(0, price.indexOf('.')));
+        }
         return ResponseEntity.ok(BaseResponse.ok(VNPayConfig.getPaymentUrl(baseParams)));
     }
 
-    @GetMapping("/info")
+    @PostMapping("/info")
     public ResponseEntity<BaseResponse<String>> paymentInfo(
             @RequestParam String responseCode,
             @RequestParam Long orderId) {

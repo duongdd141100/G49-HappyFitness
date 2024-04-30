@@ -1,6 +1,7 @@
 package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
+import com.example.happy_fitness.common.OrderStatusEnum;
 import com.example.happy_fitness.entity.CustomerTicket;
 import com.example.happy_fitness.entity.Order;
 import com.example.happy_fitness.repository.CustomerTicketRepository;
@@ -24,6 +25,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.ORDER_NOT_EXIST.getCode()));
         if ("00".equals(code)) {
             order.setPaid(true);
+        } else if ("24".equals(code)) {
+            order.setStatus(OrderStatusEnum.CANCELLED.name());
         }
         orderRepo.save(order);
         return HttpStatus.OK.getReasonPhrase();

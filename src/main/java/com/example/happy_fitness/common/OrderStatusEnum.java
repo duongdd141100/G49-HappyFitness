@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum OrderStatusEnum {
     PROCESSING("Đang vận chuyển"),
-    SUCCESSFULLY("Thành Công");
+    SUCCESSFULLY("Thành Công"),
+    CANCELLED("Huỷ");
 
     private String value;
 

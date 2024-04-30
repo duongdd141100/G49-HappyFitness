@@ -5,7 +5,7 @@ import com.example.happy_fitness.common.PropertyBean;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.constants.Constants;
 import com.example.happy_fitness.custom_repository.UserCustomRepository;
-import com.example.happy_fitness.dto.FreePtRequestBodyDto;
+import com.example.happy_fitness.dto.BookingRequestBodyDto;
 import com.example.happy_fitness.dto.UserDto;
 import com.example.happy_fitness.entity.MailTemplate;
 import com.example.happy_fitness.entity.TrainSchedule;
@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -167,7 +166,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findFreePt(FreePtRequestBodyDto freePtRequestBodyDto) {
+    public List<User> findFreePt(BookingRequestBodyDto freePtRequestBodyDto) {
         List<TrainSchedule> trainSchedulesExist = trainScheduleRepo
                 .findAllByTrainTime_IdAndClazz_Pt_Facility_IdAndDayOfWeekIn(freePtRequestBodyDto.getTrainTimeId(), freePtRequestBodyDto.getFacilityId(), freePtRequestBodyDto.getDayOfWeeks());
         List<User> busyPt = trainSchedulesExist
