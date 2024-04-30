@@ -104,7 +104,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/free-pt")
+    @PostMapping("/free-pt")
     public ResponseEntity<BaseResponse<List<UserDto>>> findFreePt(
             @RequestBody BookingRequestBodyDto freePtRequestBodyDto,
             @AuthenticationPrincipal UserDetails userDetails
