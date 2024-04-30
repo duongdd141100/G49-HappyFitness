@@ -2,18 +2,13 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.RoleEnum;
-import com.example.happy_fitness.entity.Schedule;
-import com.example.happy_fitness.entity.TrainTime;
-import com.example.happy_fitness.entity.User;
-import com.example.happy_fitness.repository.ScheduleRepository;
-import com.example.happy_fitness.repository.TrainTimeRepository;
-import com.example.happy_fitness.repository.UserRepository;
+import com.example.happy_fitness.entity.*;
+import com.example.happy_fitness.repository.*;
 import com.example.happy_fitness.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,6 +24,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Autowired
     private TrainTimeRepository trainTimeRepo;
+
+    @Autowired
+    private TrainHistoryRepository trainHistoryRepo;
+
+    @Autowired
+    private ClassStudentRepository classStudentRepo;
 
     @Override
     public String create(UserDetails userDetails, Schedule schedule) {
@@ -100,27 +101,27 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<Schedule> findAll(UserDetails userDetails) {
-        List<Schedule> schedules = null;
+    public List<TrainHistory> findAll(UserDetails userDetails) {
+        List<TrainHistory> schedules = null;
         String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
         if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
-            schedules = scheduleRepo.findAll();
+            schedules = trainHistoryRepo.findAll();
         }
         if (Arrays.asList(RoleEnum.ROLE_MANAGER.name(), RoleEnum.ROLE_RECEPTIONIST.name()).contains(requesterRole)) {
             User requester = userRepo.findByUsername(userDetails.getUsername());
-            schedules = scheduleRepo.findAllByFacility(requester.getFacility());
+            schedules = trainHistoryRepo.findAllByClazz_Pt_Facility(requester.getFacility());
         }
         if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
             User requester = userRepo.findByUsername(userDetails.getUsername());
-            schedules = scheduleRepo.findAllByCustomer(requester);
+            List<ClassStudent> clazzes = classStudentRepo.findAllByStudent(requester);
+            schedules = trainHistoryRepo.findAllByClazzIn(clazzes.stream().map(ClassStudent::getClazz).toList());
         }
         if (RoleEnum.ROLE_PERSONAL_TRAINER.name().contains(requesterRole)) {
             User requester = userRepo.findByUsername(userDetails.getUsername());
-            schedules = scheduleRepo.findAllByPt(requester);
+            schedules = trainHistoryRepo.findAllByClazz_Pt(requester);
         }
         return schedules.stream().map(x -> {
-            x.getPt().setFacility(null);
-            x.getFacility().setManager(null);
+            x.getClazz().getPt().setFacility(null);
             return x;
         }).toList();
     }
