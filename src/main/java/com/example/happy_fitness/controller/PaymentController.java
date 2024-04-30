@@ -31,12 +31,6 @@ public class PaymentController {
                                                               @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto,
                                                               HttpServletRequest req) throws UnsupportedEncodingException {
         Map<String, String> baseParams = VNPayConfig.getBaseParams(req);
-//        if (amount)
-//        baseParams.put("vnp_Amount", amount != null
-//                ? String.valueOf(amount * 100)
-//                : String.valueOf(Long.parseLong(String.valueOf(packageRepo.findById(bookingRequestBodyDto.getPackageId()).get().getPrice() * 100))));
-//                : String.valueOf(100000f * 100));
-
         if (orderId != null) {
             baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + "/" + orderId);
             baseParams.put("vnp_Amount", String.valueOf(amount * 100));
