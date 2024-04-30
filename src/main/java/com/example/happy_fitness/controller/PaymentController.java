@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Map;
 
 @RestController
@@ -63,9 +62,12 @@ public class PaymentController {
     @PostMapping("/info")
     public ResponseEntity<BaseResponse<String>> paymentInfo(
             @RequestParam String responseCode,
-            @RequestParam Long orderId) {
+            @RequestParam(required = false) Long orderId,
+            @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(paymentService.updateInfo(responseCode, orderId)));
+            return ResponseEntity.ok(BaseResponse.ok(orderId != null
+                    ? paymentService.updateOrderInfo(responseCode, orderId)
+                    : paymentService.createSchedule(responseCode, bookingRequestBodyDto)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }

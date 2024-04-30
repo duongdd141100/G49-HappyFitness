@@ -2,14 +2,20 @@ package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.OrderStatusEnum;
-import com.example.happy_fitness.entity.CustomerTicket;
-import com.example.happy_fitness.entity.Order;
-import com.example.happy_fitness.repository.CustomerTicketRepository;
-import com.example.happy_fitness.repository.OrderRepository;
+import com.example.happy_fitness.dto.BookingRequestBodyDto;
+import com.example.happy_fitness.entity.*;
+import com.example.happy_fitness.entity.Package;
+import com.example.happy_fitness.repository.*;
 import com.example.happy_fitness.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -19,8 +25,26 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private CustomerTicketRepository customerTicketRepo;
 
+    @Autowired
+    private ClassRepository classRepo;
+
+    @Autowired
+    private PackageRepository packageRepo;
+
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private TrainTimeRepository trainTimeRepo;
+
+    @Autowired
+    private TrainScheduleRepository trainScheduleRepo;
+
+    @Autowired
+    private TrainHistoryRepository trainHistoryRepo;
+
     @Override
-    public String updateInfo(String code, Long orderId) {
+    public String updateOrderInfo(String code, Long orderId) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException(ErrorMessageEnum.ORDER_NOT_EXIST.getCode()));
         if ("00".equals(code)) {
@@ -41,6 +65,51 @@ public class PaymentServiceImpl implements PaymentService {
             customerTicket.setStatus(true);
         }
         customerTicketRepo.save(customerTicket);
+        return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String createSchedule(String responseCode, BookingRequestBodyDto bookingRequestBodyDto) {
+        if ("00".equals(responseCode)) {
+            Package aPackage = packageRepo.findById(bookingRequestBodyDto.getPackageId()).get();
+            Clazz clazz = new Clazz();
+            clazz.setAPackage(aPackage);
+            clazz.setRemainSlot(aPackage.getTotalSlot());
+            clazz.setStatus("ACTIVE");
+            clazz.setPt(userRepo.findById(bookingRequestBodyDto.getPtId()).get());
+            clazz = classRepo.save(clazz);
+            List<TrainSchedule> trainSchedules = new ArrayList<>();
+            Clazz finalClazz = clazz;
+            bookingRequestBodyDto.getDayOfWeeks().forEach(x -> {
+                TrainSchedule trainSchedule = new TrainSchedule();
+                trainSchedule.setTrainTime(trainTimeRepo.findById(bookingRequestBodyDto.getTrainTimeId()).get());
+                trainSchedule.setDayOfWeek(x);
+                trainSchedule.setClazz(finalClazz);
+                trainSchedules.add(trainSchedule);
+            });
+            trainScheduleRepo.saveAll(trainSchedules);
+            List<TrainHistory> trainHistories = new ArrayList<>();
+            while (trainHistories.size() < aPackage.getTotalSlot()) {
+                Integer size = trainHistories.size();
+                LocalDate localDate = size > 0
+                        ? trainHistories.get(size - 1).getTrainDate().plusDays(1)
+                        : LocalDate.now().plusDays(1);
+                while (trainHistories.size() == size) {
+                    if (bookingRequestBodyDto.getDayOfWeeks().contains(localDate.getDayOfWeek().getValue() + 1)) {
+                        TrainHistory trainHistory = new TrainHistory();
+                        trainHistory.setClazz(clazz);
+                        trainHistory.setTrainDate(localDate);
+                        trainHistory.setStatus("NOT_YET");
+                        trainHistory.setDayOfWeek(localDate.getDayOfWeek().getValue() + 1);
+                        trainHistories.add(trainHistory);
+                    } else {
+                        localDate = localDate.plusDays(1);
+                    }
+                }
+            }
+            trainHistoryRepo.saveAll(trainHistories);
+        }
         return HttpStatus.OK.getReasonPhrase();
     }
 }

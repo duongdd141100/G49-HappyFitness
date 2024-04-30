@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "train_schedule")
+@Table(name = "train_history")
 public class TrainHistory extends BaseEntity {
     @Column(name = "day_of_week")
-    private String dayOfWeek;
+    private Integer dayOfWeek;
 
     @Column(name = "train_date")
     private LocalDate trainDate;
