@@ -103,7 +103,8 @@ public enum ErrorMessageEnum {
      */
     SCHEDULE_EXIST("011001", "Bạn đã có lịch tập cho thời gian bạn đã chọn!"),
     PT_BUSY("011002", "Không còn huấn luyện viên trong khung giờ này!"),
-    TRAIN_TIME_INVALID("011003", "Ca tập không hợp lệ!"),;
+    TRAIN_TIME_INVALID("011003", "Ca tập không hợp lệ!"),
+    YOUR_PT_BUSY("011004", "Huấn luyện viên của bạn có lịch dạy trong khung giờ này!"),;
 
     private String code;
 

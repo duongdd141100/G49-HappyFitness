@@ -6,6 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
-public interface ScheduleService extends BaseService<Schedule> {
+public interface ScheduleService extends BaseService<TrainHistory> {
     List<TrainHistory> findAll(UserDetails userDetails);
 }

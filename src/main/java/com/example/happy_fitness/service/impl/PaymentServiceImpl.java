@@ -9,11 +9,11 @@ import com.example.happy_fitness.repository.*;
 import com.example.happy_fitness.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +43,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private TrainHistoryRepository trainHistoryRepo;
 
+    @Autowired
+    private ClassStudentRepository classStudentRepo;
+
     @Override
     public String updateOrderInfo(String code, Long orderId) {
         Order order = orderRepo.findById(orderId)
@@ -70,7 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String createSchedule(String responseCode, BookingRequestBodyDto bookingRequestBodyDto) {
+    public String createSchedule(String responseCode, BookingRequestBodyDto bookingRequestBodyDto, UserDetails userDetails) {
         if ("00".equals(responseCode)) {
             Package aPackage = packageRepo.findById(bookingRequestBodyDto.getPackageId()).get();
             Clazz clazz = new Clazz();
@@ -79,6 +82,10 @@ public class PaymentServiceImpl implements PaymentService {
             clazz.setStatus("ACTIVE");
             clazz.setPt(userRepo.findById(bookingRequestBodyDto.getPtId()).get());
             clazz = classRepo.save(clazz);
+            ClassStudent classStudent = new ClassStudent();
+            classStudent.setClazz(clazz);
+            classStudent.setStudent(userRepo.findByUsername(userDetails.getUsername()));
+            classStudentRepo.save(classStudent);
             List<TrainSchedule> trainSchedules = new ArrayList<>();
             Clazz finalClazz = clazz;
             bookingRequestBodyDto.getDayOfWeeks().forEach(x -> {
@@ -102,6 +109,7 @@ public class PaymentServiceImpl implements PaymentService {
                         trainHistory.setTrainDate(localDate);
                         trainHistory.setStatus("NOT_YET");
                         trainHistory.setDayOfWeek(localDate.getDayOfWeek().getValue() + 1);
+                        trainHistory.setTrainTime(trainSchedules.getFirst().getTrainTime());
                         trainHistories.add(trainHistory);
                     } else {
                         localDate = localDate.plusDays(1);

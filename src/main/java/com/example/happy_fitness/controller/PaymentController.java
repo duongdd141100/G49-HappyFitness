@@ -9,6 +9,8 @@ import com.example.happy_fitness.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -57,11 +59,12 @@ public class PaymentController {
     public ResponseEntity<BaseResponse<String>> paymentInfo(
             @RequestParam String responseCode,
             @RequestParam(required = false) Long orderId,
-            @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto) {
+            @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto,
+            @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderId != null
                     ? paymentService.updateOrderInfo(responseCode, orderId)
-                    : paymentService.createSchedule(responseCode, bookingRequestBodyDto)));
+                    : paymentService.createSchedule(responseCode, bookingRequestBodyDto, userDetails)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }

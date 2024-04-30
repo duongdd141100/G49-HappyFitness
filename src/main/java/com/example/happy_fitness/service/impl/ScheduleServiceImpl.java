@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -32,65 +33,41 @@ public class ScheduleServiceImpl implements ScheduleService {
     private ClassStudentRepository classStudentRepo;
 
     @Override
-    public String create(UserDetails userDetails, Schedule schedule) {
-        if (scheduleRepo.findByCustomer_UsernameAndTrainDateAndTrainTime_Id(userDetails.getUsername(), schedule.getTrainDate(), schedule.getTrainTime().getId())
-                .isPresent()) {
-            throw new RuntimeException(ErrorMessageEnum.SCHEDULE_EXIST.getCode());
-        }
-        List<User> busyPt = scheduleRepo.findByTrainDateAndTrainTime_IdAndFacility_Id(schedule.getTrainDate(), schedule.getTrainTime().getId(), schedule.getFacility().getId())
-                .stream().map(Schedule::getPt).toList();
-        List<User> availablePt = userRepo.findAllByRole_IdAndFacility_Id(RoleEnum.ROLE_PERSONAL_TRAINER.getId(), schedule.getFacility().getId())
-                .stream().filter(x -> !busyPt.contains(x)).toList();
-        if (availablePt.isEmpty()) {
-            throw new RuntimeException(ErrorMessageEnum.PT_BUSY.getCode());
-        }
-        if (schedule.getTrainDate().equals(LocalDate.now())) {
-            TrainTime trainTime = trainTimeRepo.findById(schedule.getTrainTime().getId()).get();
-            if (trainTime.getStartTime().isBefore(LocalTime.now())) {
-                throw new RuntimeException(ErrorMessageEnum.TRAIN_TIME_INVALID.getCode());
-            }
-        }
-        Random random = new Random();
-        schedule.setPt(availablePt.get(random.nextInt(availablePt.size())));
-        schedule.setCustomer(userRepo.findByUsername(userDetails.getUsername()));
-        scheduleRepo.save(schedule);
+    public String create(UserDetails userDetails, TrainHistory trainHistory) {
         return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
-    public String update(Schedule schedule, Long id, UserDetails userDetails) {
-        Optional<Schedule> existSchedule = scheduleRepo.findByCustomer_UsernameAndTrainDateAndTrainTime_Id(userDetails.getUsername(), schedule.getTrainDate(), schedule.getTrainTime().getId());
-        if (existSchedule.isPresent() && !existSchedule.get().getId().equals(schedule.getId())) {
-            throw new RuntimeException(ErrorMessageEnum.SCHEDULE_EXIST.getCode());
-        }
-        Schedule originSchedule = scheduleRepo.findById(id).get();
-        if (originSchedule.getFacility().getId().equals(schedule.getFacility().getId())
-            && originSchedule.getTrainDate().equals(schedule.getTrainDate())
-            && originSchedule.getTrainTime().getId().equals(schedule.getTrainTime().getId())) {
-            return HttpStatus.OK.getReasonPhrase();
-        } else {
-            List<User> busyPt = scheduleRepo.findByTrainDateAndTrainTime_IdAndFacility_Id(schedule.getTrainDate(), schedule.getTrainTime().getId(), schedule.getFacility().getId())
-                    .stream().map(Schedule::getPt).toList();
-            List<User> availablePt = userRepo.findAllByRole_IdAndFacility_Id(RoleEnum.ROLE_PERSONAL_TRAINER.getId(), schedule.getFacility().getId())
-                    .stream().filter(x -> !busyPt.contains(x)).toList();
-            if (availablePt.isEmpty()) {
-                throw new RuntimeException(ErrorMessageEnum.PT_BUSY.getCode());
+    public String update(TrainHistory trainHistory, Long id, UserDetails userDetails) {
+        TrainHistory originSchedule = trainHistoryRepo.findById(id).get();
+        if (!originSchedule.getTrainTime().getId().equals(trainHistory.getTrainTime().getId())
+        || !originSchedule.getTrainDate().isEqual(trainHistory.getTrainDate())) {
+            LocalDateTime now = LocalDateTime.now();
+            TrainTime trainTimeUpdate = trainTimeRepo.findById(trainHistory.getTrainTime().getId()).get();
+            if (trainHistory.getTrainDate().isBefore(now.toLocalDate())
+            || (trainHistory.getTrainDate().isEqual(now.toLocalDate())
+                    && trainTimeUpdate.getStartTime().isBefore(now.toLocalTime()))) {
+                throw new RuntimeException(ErrorMessageEnum.TRAIN_TIME_INVALID.getCode());
             }
-            if (schedule.getTrainDate().equals(LocalDate.now())) {
-                TrainTime trainTime = trainTimeRepo.findById(schedule.getTrainTime().getId()).get();
-                if (trainTime.getStartTime().isBefore(LocalTime.now())) {
-                    throw new RuntimeException(ErrorMessageEnum.TRAIN_TIME_INVALID.getCode());
-                }
+            User customer = userRepo.findByUsername(userDetails.getUsername());
+            List<ClassStudent> clazzes = classStudentRepo.findAllByStudent(customer);
+            if (trainHistoryRepo.existsByClazzInAndTrainDateAndTrainTime_Id
+                    (clazzes.stream()
+                            .map(ClassStudent::getClazz)
+                            .filter(x -> x.getStatus().equals("ACTIVE"))
+                            .toList(), trainHistory.getTrainDate(), trainHistory.getTrainTime().getId())) {
+                throw new RuntimeException(ErrorMessageEnum.SCHEDULE_EXIST.getCode());
             }
-            Random random = new Random();
-            originSchedule.getFacility().setId(schedule.getId());
-            originSchedule.setTrainDate(schedule.getTrainDate());
-            originSchedule.getTrainTime().setId(schedule.getTrainTime().getId());
-            originSchedule.setPt(availablePt.get(random.nextInt(availablePt.size())));
-            originSchedule.setCustomer(userRepo.findByUsername(userDetails.getUsername()));
-            scheduleRepo.save(originSchedule);
-            return HttpStatus.OK.getReasonPhrase();
+            if (trainHistoryRepo.existsByClazz_PtAndTrainDateAndTrainTime_Id
+                    (originSchedule.getClazz().getPt(), trainHistory.getTrainDate(), trainHistory.getTrainTime().getId())) {
+                throw new RuntimeException(ErrorMessageEnum.YOUR_PT_BUSY.getCode());
+            }
+            originSchedule.setTrainDate(trainHistory.getTrainDate());
+            originSchedule.setTrainTime(trainTimeUpdate);
+            originSchedule.setDayOfWeek(trainHistory.getTrainDate().getDayOfWeek().getValue() + 1);
+            trainHistoryRepo.save(originSchedule);
         }
+        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
@@ -120,6 +97,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             User requester = userRepo.findByUsername(userDetails.getUsername());
             schedules = trainHistoryRepo.findAllByClazz_Pt(requester);
         }
+        schedules.sort(Comparator.comparing(TrainHistory::getTrainDate));
         return schedules.stream().map(x -> {
             x.getClazz().getPt().setFacility(null);
             return x;

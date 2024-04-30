@@ -21,4 +21,8 @@ public class TrainHistory extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Clazz clazz;
+
+    @ManyToOne
+    @JoinColumn(name = "train_time_id")
+    private TrainTime trainTime;
 }

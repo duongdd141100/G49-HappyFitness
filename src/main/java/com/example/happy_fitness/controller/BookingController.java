@@ -24,29 +24,29 @@ public class BookingController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @PostMapping("/create")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<String>> create(@AuthenticationPrincipal UserDetails userDetails,
-                                                         @RequestBody Schedule schedule) {
-        try {
-            return ResponseEntity.ok(BaseResponse.ok(scheduleService.create(userDetails, schedule)));
-        } catch (Exception e) {
-            log.error(RequestMappingConstant.BOOKING + e);
-            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
-        }
-    }
+//    @PostMapping("/create")
+//    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+//    public ResponseEntity<BaseResponse<String>> create(@AuthenticationPrincipal UserDetails userDetails,
+//                                                         @RequestBody Schedule schedule) {
+//        try {
+//            return ResponseEntity.ok(BaseResponse.ok(scheduleService.create(userDetails, schedule)));
+//        } catch (Exception e) {
+//            log.error(RequestMappingConstant.BOOKING + e);
+//            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+//        }
+//    }
 
-    @PostMapping("/update")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<BaseResponse<String>> update(@AuthenticationPrincipal UserDetails userDetails,
-                                                         @RequestBody Schedule schedule) {
-        try {
-            return ResponseEntity.ok(BaseResponse.ok(scheduleService.update(schedule, schedule.getId(), userDetails)));
-        } catch (Exception e) {
-            log.error(RequestMappingConstant.BOOKING + e);
-            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
-        }
-    }
+//    @PostMapping("/update")
+//    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+//    public ResponseEntity<BaseResponse<String>> update(@AuthenticationPrincipal UserDetails userDetails,
+//                                                         @RequestBody Schedule schedule) {
+//        try {
+//            return ResponseEntity.ok(BaseResponse.ok(scheduleService.update(schedule, schedule.getId(), userDetails)));
+//        } catch (Exception e) {
+//            log.error(RequestMappingConstant.BOOKING + e);
+//            return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
+//        }
+//    }
 
     @PostMapping("/cancel/{id}")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
