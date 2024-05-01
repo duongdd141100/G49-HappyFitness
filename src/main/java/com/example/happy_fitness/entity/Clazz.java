@@ -3,6 +3,8 @@ package com.example.happy_fitness.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "classes")
@@ -23,4 +25,10 @@ public class Clazz extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "pt_id")
     private User pt;
+
+    @OneToMany(mappedBy = "clazz", fetch = FetchType.LAZY)
+    private List<ClassStudent> classStudents;
+
+    @OneToMany(mappedBy = "clazz", fetch = FetchType.LAZY)
+    private List<TrainSchedule> trainSchedules;
 }
