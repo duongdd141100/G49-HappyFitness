@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -78,7 +77,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<TrainHistory> findAll(UserDetails userDetails) {
+    public List<TrainHistory> findAll(UserDetails userDetails, Long classId) {
         List<TrainHistory> schedules = null;
         String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
         if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
@@ -98,8 +97,13 @@ public class ScheduleServiceImpl implements ScheduleService {
             schedules = trainHistoryRepo.findAllByClazz_Pt(requester);
         }
         schedules.sort(Comparator.comparing(TrainHistory::getTrainDate));
+        if (classId != null) {
+            schedules = schedules.stream().filter(x -> x.getClazz().getId().equals(classId)).toList();
+        }
         return schedules.stream().map(x -> {
             x.getClazz().getPt().setFacility(null);
+            x.getClazz().setTrainSchedules(null);
+            x.getClazz().setClassStudents(null);
             return x;
         }).toList();
     }
@@ -111,6 +115,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new RuntimeException(ErrorMessageEnum.ATTEND_FAILED_INVALID_DATE.getCode());
         }
         trainHistory.setStatus("ATTENDED");
+        trainHistory.getClazz().setRemainSlot(trainHistory.getClazz().getRemainSlot() - 1);
         trainHistoryRepo.save(trainHistory);
         return HttpStatus.OK.getReasonPhrase();
     }

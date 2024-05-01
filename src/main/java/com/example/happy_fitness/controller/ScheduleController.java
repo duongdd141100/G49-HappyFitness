@@ -3,8 +3,6 @@ package com.example.happy_fitness.controller;
 import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.constants.RequestMappingConstant;
-import com.example.happy_fitness.dto.ProductDto;
-import com.example.happy_fitness.entity.Schedule;
 import com.example.happy_fitness.entity.TrainHistory;
 import com.example.happy_fitness.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +24,10 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     @GetMapping("")
-    public ResponseEntity<BaseResponse<List<Schedule>>> findAll(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<BaseResponse<List<TrainHistory>>> findAll(@AuthenticationPrincipal UserDetails userDetails,
+                                                                    @RequestParam(required = false) Long classId) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(scheduleService.findAll(userDetails)));
+            return ResponseEntity.ok(BaseResponse.ok(scheduleService.findAll(userDetails, classId)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.GET_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
