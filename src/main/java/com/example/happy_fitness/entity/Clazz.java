@@ -12,8 +12,6 @@ public class Clazz extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "remain_slot")
-    private Integer remainSlot;
 
     @Column(name = "status")
     private String status;

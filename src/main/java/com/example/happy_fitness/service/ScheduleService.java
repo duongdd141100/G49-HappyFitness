@@ -8,5 +8,5 @@ import java.util.List;
 public interface ScheduleService extends BaseService<TrainHistory> {
     List<TrainHistory> findAll(UserDetails userDetails, Long classId);
 
-    String attend(Long scheduleId, UserDetails userDetails);
+    String attend(Long scheduleId, UserDetails userDetails, Long studentId);
 }

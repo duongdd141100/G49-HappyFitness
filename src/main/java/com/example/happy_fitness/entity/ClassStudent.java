@@ -1,15 +1,15 @@
 package com.example.happy_fitness.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "class_student")
 public class ClassStudent extends BaseEntity {
+    @Column(name = "remain_slot")
+    private Integer remainSlot;
+
     @ManyToOne
     @JoinColumn(name = "student_id")
     private User student;

@@ -46,6 +46,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private ClassStudentRepository classStudentRepo;
 
+    @Autowired
+    private AttendanceRepository attendanceRepo;
+
     @Override
     public String updateOrderInfo(String code, Long orderId) {
         Order order = orderRepo.findById(orderId)
@@ -78,14 +81,14 @@ public class PaymentServiceImpl implements PaymentService {
             Package aPackage = packageRepo.findById(bookingRequestBodyDto.getPackageId()).get();
             Clazz clazz = new Clazz();
             clazz.setAPackage(aPackage);
-            clazz.setRemainSlot(aPackage.getTotalSlot());
             clazz.setStatus("ACTIVE");
             clazz.setPt(userRepo.findById(bookingRequestBodyDto.getPtId()).get());
             clazz = classRepo.save(clazz);
             ClassStudent classStudent = new ClassStudent();
             classStudent.setClazz(clazz);
             classStudent.setStudent(userRepo.findByUsername(userDetails.getUsername()));
-            classStudentRepo.save(classStudent);
+            classStudent.setRemainSlot(aPackage.getTotalSlot());
+            classStudent = classStudentRepo.save(classStudent);
             List<TrainSchedule> trainSchedules = new ArrayList<>();
             Clazz finalClazz = clazz;
             bookingRequestBodyDto.getDayOfWeeks().forEach(x -> {
@@ -116,7 +119,17 @@ public class PaymentServiceImpl implements PaymentService {
                     }
                 }
             }
-            trainHistoryRepo.saveAll(trainHistories);
+            trainHistories = trainHistoryRepo.saveAll(trainHistories);
+            List<Attendance> attendances = new ArrayList<>();
+            ClassStudent finalClassStudent = classStudent;
+            trainHistories.forEach(x -> {
+                Attendance attendance = new Attendance();
+                attendance.setClassStudent(finalClassStudent);
+                attendance.setTrainHistory(x);
+                attendance.setStatus("NOT_YET");
+                attendances.add(attendance);
+            });
+            attendanceRepo.saveAll(attendances);
         }
         return HttpStatus.OK.getReasonPhrase();
     }

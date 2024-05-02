@@ -31,6 +31,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private ClassStudentRepository classStudentRepo;
 
+    @Autowired
+    private AttendanceRepository attendanceRepo;
+
     @Override
     public String create(UserDetails userDetails, TrainHistory trainHistory) {
         return HttpStatus.OK.getReasonPhrase();
@@ -103,19 +106,34 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedules.stream().map(x -> {
             x.getClazz().getPt().setFacility(null);
             x.getClazz().setTrainSchedules(null);
-            x.getClazz().setClassStudents(null);
+            x.getClazz().getClassStudents()
+                    .forEach(classStudent -> classStudent.setClazz(null));
             return x;
         }).toList();
     }
 
     @Override
-    public String attend(Long scheduleId, UserDetails userDetails) {
+    public String attend(Long scheduleId, UserDetails userDetails, Long studentId) {
         TrainHistory trainHistory = trainHistoryRepo.findById(scheduleId).get();
         if (!LocalDate.now().isEqual(trainHistory.getTrainDate())) {
             throw new RuntimeException(ErrorMessageEnum.ATTEND_FAILED_INVALID_DATE.getCode());
         }
         trainHistory.setStatus("ATTENDED");
-        trainHistory.getClazz().setRemainSlot(trainHistory.getClazz().getRemainSlot() - 1);
+        ClassStudent classStudent = new ClassStudent();
+        for (ClassStudent x : trainHistory.getClazz().getClassStudents()) {
+            if (x.getStudent().getId().equals(studentId)) {
+                classStudent = x;
+                x.setRemainSlot(x.getRemainSlot() - 1);
+                break;
+            }
+        }
+//        Attendance attendance = attendanceRepo.findByClassStudent_IdAndTrainHistory_Id(trainHistory.getClazz().getClassStudents()
+//                .stream()
+//                .filter(x -> x.getStudent().getId().equals(studentId))
+//                .findFirst().get().getId(), trainHistory.getId());
+        Attendance attendance = attendanceRepo.findByClassStudent_IdAndTrainHistory_Id(classStudent.getId(), trainHistory.getId());
+        attendance.setStatus("ATTENDED");
+        attendanceRepo.save(attendance);
         trainHistoryRepo.save(trainHistory);
         return HttpStatus.OK.getReasonPhrase();
     }
