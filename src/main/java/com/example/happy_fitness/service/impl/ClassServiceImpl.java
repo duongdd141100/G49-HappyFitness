@@ -56,7 +56,7 @@ public class ClassServiceImpl implements ClassService {
             clazzes = classStudentRepo.findAllByStudent(requester).stream().map(ClassStudent::getClazz).toList();
         }
         return clazzes.stream().map(x -> {
-            x.getPt().setFacility(null);
+            x.getPt().getFacility().setManager(null);
             x.setClassStudents(x.getClassStudents().stream().map(classStudent -> {
                 classStudent.setClazz(null);
                 return classStudent;

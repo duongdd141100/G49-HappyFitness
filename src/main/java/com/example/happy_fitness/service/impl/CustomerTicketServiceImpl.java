@@ -160,7 +160,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
             customerTickets = customerTickets.stream()
                     .filter(x -> x.getStatus().equals(isUsing)).toList();
         }
-        customerTickets.sort(Comparator.comparing(CustomerTicket::getStatus, Comparator.reverseOrder()));
+//        customerTickets.sort(Comparator.comparing(CustomerTicket::getStatus, Comparator.reverseOrder()));
         return customerTickets.stream().map(x -> {
             x.getTicket().getFacility().setManager(null);
             return x;
