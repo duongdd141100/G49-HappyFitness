@@ -12,9 +12,11 @@ public class Clazz extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-
     @Column(name = "status")
     private String status;
+
+    @Column(name = "type")
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "package_id")

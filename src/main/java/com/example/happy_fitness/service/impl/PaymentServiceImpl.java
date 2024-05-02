@@ -79,14 +79,17 @@ public class PaymentServiceImpl implements PaymentService {
     public String createSchedule(String responseCode, BookingRequestBodyDto bookingRequestBodyDto, UserDetails userDetails) {
         if ("00".equals(responseCode)) {
             Package aPackage = packageRepo.findById(bookingRequestBodyDto.getPackageId()).get();
+            User student = userRepo.findByUsername(userDetails.getUsername());
             Clazz clazz = new Clazz();
+            clazz.setName("Lớp 1-1 " + student.getFullName());
             clazz.setAPackage(aPackage);
             clazz.setStatus("ACTIVE");
+            clazz.setType(aPackage.getType());
             clazz.setPt(userRepo.findById(bookingRequestBodyDto.getPtId()).get());
             clazz = classRepo.save(clazz);
             ClassStudent classStudent = new ClassStudent();
             classStudent.setClazz(clazz);
-            classStudent.setStudent(userRepo.findByUsername(userDetails.getUsername()));
+            classStudent.setStudent(student);
             classStudent.setRemainSlot(aPackage.getTotalSlot());
             classStudent = classStudentRepo.save(classStudent);
             List<TrainSchedule> trainSchedules = new ArrayList<>();
