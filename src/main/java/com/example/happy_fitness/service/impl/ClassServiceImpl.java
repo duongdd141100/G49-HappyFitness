@@ -1,17 +1,16 @@
 package com.example.happy_fitness.service.impl;
 
 import com.example.happy_fitness.common.RoleEnum;
-import com.example.happy_fitness.entity.ClassStudent;
-import com.example.happy_fitness.entity.Clazz;
-import com.example.happy_fitness.entity.User;
-import com.example.happy_fitness.repository.ClassRepository;
-import com.example.happy_fitness.repository.ClassStudentRepository;
-import com.example.happy_fitness.repository.UserRepository;
+import com.example.happy_fitness.entity.*;
+import com.example.happy_fitness.repository.*;
 import com.example.happy_fitness.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +24,12 @@ public class ClassServiceImpl implements ClassService {
 
     @Autowired
     private ClassStudentRepository classStudentRepo;
+
+    @Autowired
+    private TrainScheduleRepository trainScheduleRepo;
+
+    @Autowired
+    private TrainTimeRepository trainTimeRepo;
 
     @Override
     public String create(UserDetails userDetails, Clazz clazz) {
@@ -67,5 +72,24 @@ public class ClassServiceImpl implements ClassService {
             }).toList());
             return x;
         }).toList();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String createCustom(UserDetails userDetails, Clazz clazz, Long trainTimeId) {
+        clazz.setStatus("ACTIVE");
+        clazz = classRepo.save(clazz);
+        clazz.setType("ONE_ON_MANY");
+        List<TrainSchedule> trainSchedules = new ArrayList<>();
+        TrainTime trainTime = trainTimeRepo.findById(trainTimeId).get();
+        for (Integer dayOfWeek = 2; dayOfWeek <= 7; dayOfWeek ++) {
+            TrainSchedule trainSchedule = new TrainSchedule();
+            trainSchedule.setTrainTime(trainTime);
+            trainSchedule.setClazz(clazz);
+            trainSchedule.setDayOfWeek(dayOfWeek);
+            trainSchedules.add(trainSchedule);
+        }
+        trainScheduleRepo.saveAll(trainSchedules);
+        return HttpStatus.OK.getReasonPhrase();
     }
 }

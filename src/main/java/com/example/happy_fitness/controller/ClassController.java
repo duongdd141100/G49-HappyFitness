@@ -36,9 +36,10 @@ public class ClassController {
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<String>> create(@AuthenticationPrincipal UserDetails userDetails,
-                                                            @RequestBody Clazz clazz) {
+                                                       @RequestBody Clazz clazz,
+                                                       @RequestParam Long trainTimeId) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(classService.create(userDetails, clazz)));
+            return ResponseEntity.ok(BaseResponse.ok(classService.createCustom(userDetails, clazz, trainTimeId)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_CATEGORY + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

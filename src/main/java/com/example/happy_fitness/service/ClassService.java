@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ClassService extends BaseService<Clazz> {
     List<Clazz> findAll(UserDetails userDetails);
+
+    String createCustom(UserDetails userDetails, Clazz clazz, Long trainTimeId);
 }
