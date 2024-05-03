@@ -4,6 +4,7 @@ import com.example.happy_fitness.common.BaseResponse;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.config.VNPayConfig;
 import com.example.happy_fitness.dto.BookingRequestBodyDto;
+import com.example.happy_fitness.dto.JoinClassRequestBodyDto;
 import com.example.happy_fitness.repository.PackageRepository;
 import com.example.happy_fitness.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ public class PaymentController {
                                                               @RequestParam(required = false) Long orderId,
                                                               @RequestParam(required = false) Long ticketId,
                                                               @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto,
+                                                              @RequestBody(required = false) JoinClassRequestBodyDto joinClassRequestBodyDto,
                                                               HttpServletRequest req) throws UnsupportedEncodingException {
         Map<String, String> baseParams = VNPayConfig.getBaseParams(req);
         if (orderId != null) {
@@ -39,8 +41,8 @@ public class PaymentController {
         } else if (ticketId != null) {
             baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlCustomerTicket + ticketId);
             baseParams.put("vnp_Amount", String.valueOf(amount * 100));
-        } else {
-            String params =String.format("?dayOfWeeks=%s" +
+        } else if (bookingRequestBodyDto != null) {
+            String params = String.format("?dayOfWeeks=%s" +
                     "&ptId=%s" +
                     "&packageId=%s" +
                     "&facilityId=%s" +
@@ -51,6 +53,13 @@ public class PaymentController {
             baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + params);
             String price = String.format("%f", packageRepo.findById(bookingRequestBodyDto.getPackageId()).get().getPrice() * 100);
             baseParams.put("vnp_Amount", price.substring(0, price.indexOf('.')));
+        } else {
+            String params = String.format("?classId=%s" +
+                            "&packageId=%s",
+                    joinClassRequestBodyDto.getClassId(), joinClassRequestBodyDto.getPackageId());
+            baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + params);
+            String price = String.format("%f", packageRepo.findById(joinClassRequestBodyDto.getPackageId()).get().getPrice() * 100);
+            baseParams.put("vnp_Amount", price.substring(0, price.indexOf('.')));
         }
         return ResponseEntity.ok(BaseResponse.ok(VNPayConfig.getPaymentUrl(baseParams)));
     }
@@ -60,11 +69,14 @@ public class PaymentController {
             @RequestParam String responseCode,
             @RequestParam(required = false) Long orderId,
             @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto,
+            @RequestBody(required = false) JoinClassRequestBodyDto joinClassRequestBodyDto,
             @AuthenticationPrincipal UserDetails userDetails) {
         try {
             return ResponseEntity.ok(BaseResponse.ok(orderId != null
                     ? paymentService.updateOrderInfo(responseCode, orderId)
-                    : paymentService.createSchedule(responseCode, bookingRequestBodyDto, userDetails)));
+                    : (bookingRequestBodyDto != null
+                        ? paymentService.createSchedule(responseCode, bookingRequestBodyDto, userDetails)
+                        : paymentService.joinClass(joinClassRequestBodyDto, userDetails, responseCode))));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }

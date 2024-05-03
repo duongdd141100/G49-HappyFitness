@@ -3,6 +3,7 @@ package com.example.happy_fitness.service.impl;
 import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.OrderStatusEnum;
 import com.example.happy_fitness.dto.BookingRequestBodyDto;
+import com.example.happy_fitness.dto.JoinClassRequestBodyDto;
 import com.example.happy_fitness.entity.*;
 import com.example.happy_fitness.entity.Package;
 import com.example.happy_fitness.repository.*;
@@ -141,6 +142,27 @@ public class PaymentServiceImpl implements PaymentService {
             trainFee.setPrice(aPackage.getPrice());
             trainFee.setStudent(student);
             trainFee.setIsPaid(true);
+            trainFeeRepo.save(trainFee);
+        }
+        return HttpStatus.OK.getReasonPhrase();
+    }
+
+    @Override
+    public String joinClass(JoinClassRequestBodyDto joinClassRequestBodyDto, UserDetails userDetails, String responseCode) {
+        if ("00".equals(responseCode)) {
+            User student = userRepo.findByUsername(userDetails.getUsername());
+            Clazz clazz = classRepo.findById(joinClassRequestBodyDto.getClassId()).get();
+            Package aPackage = packageRepo.findById(joinClassRequestBodyDto.getPackageId()).get();
+            ClassStudent classStudent = new ClassStudent();
+            classStudent.setClazz(clazz);
+            classStudent.setStudent(student);
+            classStudent.setRemainSlot(aPackage.getTotalSlot());
+            classStudentRepo.save(classStudent);
+            TrainFee trainFee = new TrainFee();
+            trainFee.setIsPaid(true);
+            trainFee.setStudent(student);
+            trainFee.setClazz(clazz);
+            trainFee.setPrice(aPackage.getPrice());
             trainFeeRepo.save(trainFee);
         }
         return HttpStatus.OK.getReasonPhrase();
