@@ -12,4 +12,5 @@ import java.util.List;
 public interface ClassRepository extends JpaRepository<Clazz, Long> {
     List<Clazz> findAllByPt_Facility(Facility facility);
     List<Clazz> findAllByPt(User pt);
+    List<Clazz> findAllByStatusAndType(String status, String type);
 }
