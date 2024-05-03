@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<Clazz> findAll(UserDetails userDetails) {
+    public List<Clazz> findAll(UserDetails userDetails, String type) {
         User requester = userRepo.findByUsername(userDetails.getUsername());
         List<Clazz> clazzes;
         String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
@@ -59,6 +60,9 @@ public class ClassServiceImpl implements ClassService {
             clazzes = classRepo.findAllByPt(requester);
         } else {
             clazzes = classStudentRepo.findAllByStudent(requester).stream().map(ClassStudent::getClazz).toList();
+        }
+        if (StringUtils.hasText(type)) {
+            clazzes = clazzes.stream().filter(x -> x.getType().equals(type)).toList();
         }
         return clazzes.stream().map(x -> {
             x.getPt().getFacility().setManager(null);

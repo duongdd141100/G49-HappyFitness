@@ -25,9 +25,10 @@ public class ClassController {
     private ClassService classService;
 
     @GetMapping("")
-    public ResponseEntity<BaseResponse<List<Clazz>>> findAll(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<BaseResponse<List<Clazz>>> findAll(@AuthenticationPrincipal UserDetails userDetails,
+                                                             @RequestParam(required = false) String type) {
         try {
-            return ResponseEntity.ok(BaseResponse.ok(classService.findAll(userDetails)));
+            return ResponseEntity.ok(BaseResponse.ok(classService.findAll(userDetails, type)));
         } catch (Exception e) {
             log.error(RequestMappingConstant.FIND_CATEGORY + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));

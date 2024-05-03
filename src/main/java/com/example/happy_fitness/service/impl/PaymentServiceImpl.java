@@ -49,6 +49,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private AttendanceRepository attendanceRepo;
 
+    @Autowired
+    private TrainFeeRepository trainFeeRepo;
+
     @Override
     public String updateOrderInfo(String code, Long orderId) {
         Order order = orderRepo.findById(orderId)
@@ -133,6 +136,12 @@ public class PaymentServiceImpl implements PaymentService {
                 attendances.add(attendance);
             });
             attendanceRepo.saveAll(attendances);
+            TrainFee trainFee = new TrainFee();
+            trainFee.setClazz(clazz);
+            trainFee.setPrice(aPackage.getPrice());
+            trainFee.setStudent(student);
+            trainFee.setIsPaid(true);
+            trainFeeRepo.save(trainFee);
         }
         return HttpStatus.OK.getReasonPhrase();
     }
