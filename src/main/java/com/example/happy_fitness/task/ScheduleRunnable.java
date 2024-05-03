@@ -1,7 +1,9 @@
 package com.example.happy_fitness.task;
 
+import com.example.happy_fitness.entity.Attendance;
 import com.example.happy_fitness.entity.Clazz;
 import com.example.happy_fitness.entity.TrainHistory;
+import com.example.happy_fitness.repository.AttendanceRepository;
 import com.example.happy_fitness.repository.ClassRepository;
 import com.example.happy_fitness.repository.TrainHistoryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,9 @@ public class ScheduleRunnable {
     @Autowired
     private TrainHistoryRepository trainHistoryRepo;
 
+    @Autowired
+    private AttendanceRepository attendanceRepo;
+
     @Transactional(rollbackFor = Exception.class)
     public void createScheduleNextWeek() {
         List<Clazz> clazzes = classRepo.findAllByStatusAndType("ACTIVE", "ONE_ON_MANY")
@@ -31,6 +36,7 @@ public class ScheduleRunnable {
                         && x.getClassStudents()
                         .stream().anyMatch(classStudent -> classStudent.getRemainSlot() > 0)).toList();
         List<TrainHistory> trainHistories = new ArrayList<>();
+        List<Attendance> attendances = new ArrayList<>();
         for (Clazz clazz : clazzes) {
             LocalDate localDate = LocalDate.now().plusDays(2);
             while (localDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
@@ -41,9 +47,17 @@ public class ScheduleRunnable {
                 trainHistory.setDayOfWeek(localDate.getDayOfWeek().getValue() + 1);
                 trainHistory.setClazz(clazz);
                 trainHistories.add(trainHistory);
+                clazz.getClassStudents().forEach(x -> {
+                    Attendance attendance = new Attendance();
+                    attendance.setClassStudent(x);
+                    attendance.setTrainHistory(trainHistory);
+                    attendance.setStatus("NOT_YET");
+                    attendances.add(attendance);
+                });
                 localDate = localDate.plusDays(1);
             }
         }
         trainHistoryRepo.saveAll(trainHistories);
+        attendanceRepo.saveAll(attendances);
     }
 }
