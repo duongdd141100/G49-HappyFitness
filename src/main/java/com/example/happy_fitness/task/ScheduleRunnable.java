@@ -48,11 +48,15 @@ public class ScheduleRunnable {
                 trainHistory.setClazz(clazz);
                 trainHistories.add(trainHistory);
                 clazz.getClassStudents().forEach(x -> {
-                    Attendance attendance = new Attendance();
-                    attendance.setClassStudent(x);
-                    attendance.setTrainHistory(trainHistory);
-                    attendance.setStatus("NOT_YET");
-                    attendances.add(attendance);
+                    if (attendances.stream()
+                            .filter(attendance -> attendance.getClassStudent().getId().equals(x.getId()))
+                            .toList().size() < x.getRemainSlot()) {
+                        Attendance attendance = new Attendance();
+                        attendance.setClassStudent(x);
+                        attendance.setTrainHistory(trainHistory);
+                        attendance.setStatus("NOT_YET");
+                        attendances.add(attendance);
+                    }
                 });
                 localDate = localDate.plusDays(1);
             }
