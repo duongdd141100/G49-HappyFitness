@@ -30,9 +30,10 @@ public class ScheduleConfig {
         }
     }
 
-    @Scheduled(cron = "0 0 0 ? * 7/1")
+    @Scheduled(cron = "0 0 0 ? * SAT")
     public void createScheduleNextWeek() {
         try {
+            log.info("Create schedule");
             Task task = new Task(() -> scheduleRunnable.createScheduleNextWeek());
             task.getRunnable().run();
         } catch (Exception e) {
