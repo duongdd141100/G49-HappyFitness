@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -25,4 +26,7 @@ public class TrainHistory extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "train_time_id")
     private TrainTime trainTime;
+
+    @OneToMany(mappedBy = "trainHistory", fetch = FetchType.LAZY)
+    private List<Attendance> attendances;
 }

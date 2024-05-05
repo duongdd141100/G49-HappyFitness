@@ -108,6 +108,11 @@ public class ScheduleServiceImpl implements ScheduleService {
             x.getClazz().setTrainSchedules(null);
             x.getClazz().getClassStudents()
                     .forEach(classStudent -> classStudent.setClazz(null));
+            x.setAttendances(x.getAttendances().stream().map(attendance -> {
+                attendance.setTrainHistory(null);
+                attendance.getClassStudent().setClazz(null);
+                return attendance;
+            }).toList());
             return x;
         }).toList();
     }
