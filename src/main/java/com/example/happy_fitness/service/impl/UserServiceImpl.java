@@ -4,6 +4,7 @@ import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.PropertyBean;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.constants.Constants;
+import com.example.happy_fitness.custom_repository.TrainScheduleCustomRepository;
 import com.example.happy_fitness.custom_repository.UserCustomRepository;
 import com.example.happy_fitness.dto.BookingRequestBodyDto;
 import com.example.happy_fitness.dto.UserDto;
@@ -58,6 +59,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TrainScheduleRepository trainScheduleRepo;
+
+    @Autowired
+    private TrainScheduleCustomRepository trainScheduleCustomRepo;
 
     @Override
     public List<UserDto> findAllByCondition(String requesterUsername, String username, String fullName, String email, Boolean gender, Float roleId) {
@@ -166,14 +170,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findFreePt(BookingRequestBodyDto freePtRequestBodyDto) {
-        List<TrainSchedule> trainSchedulesExist = trainScheduleRepo
-                .findAllByTrainTime_IdAndClazz_Pt_Facility_IdAndDayOfWeekIn(freePtRequestBodyDto.getTrainTimeId(), freePtRequestBodyDto.getFacilityId(), freePtRequestBodyDto.getDayOfWeeks());
+    public List<User> findFreePt(BookingRequestBodyDto bookingRequestBodyDto) {
+        List<TrainSchedule> trainSchedulesExist = trainScheduleCustomRepo
+                .findAllByFacilityIdAndMapDayOfWeekWithTrainTimeId(bookingRequestBodyDto.getFacilityId(), bookingRequestBodyDto.getMapDayOfWeekWithTrainTimeId());
         List<User> busyPt = trainSchedulesExist
                 .stream()
                 .filter(x -> x.getClazz().getStatus().equals("ACTIVE"))
                 .map(x -> x.getClazz().getPt()).toList();
-        return userRepo.findAllByRole_IdAndFacility_Id(RoleEnum.ROLE_PERSONAL_TRAINER.getId(), freePtRequestBodyDto.getFacilityId())
+        return userRepo.findAllByRole_IdAndFacility_Id(RoleEnum.ROLE_PERSONAL_TRAINER.getId(), bookingRequestBodyDto.getFacilityId())
                 .stream().filter(x -> !busyPt.contains(x)).map(x -> {
                     x.setFacility(null);
                     return x;
