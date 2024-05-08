@@ -8,10 +8,8 @@ import java.util.Map;
 
 @Data
 public class BookingRequestBodyDto {
-    private Long trainTimeId;
     private Long facilityId;
     private Long packageId;
     private Long ptId;
-    private List<Integer> dayOfWeeks;
-    private HashMap<Long, Long> mapDayOfWeekWithTrainTimeId;
+    private HashMap<Integer, Long> mapDayOfWeekWithTrainTimeId;
 }

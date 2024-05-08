@@ -26,17 +26,17 @@ public class TrainScheduleCustomRepository {
             "        INNER JOIN" +
             "    facilities f ON f.id = u.facility_id";
 
-    public List<TrainSchedule> findAllByFacilityIdAndMapDayOfWeekWithTrainTimeId(Long facilityId, Map<Long, Long> mapDayOfWeekWithTrainTimeId) {
+    public List<TrainSchedule> findAllByFacilityIdAndMapDayOfWeekWithTrainTimeId(Long facilityId, Map<Integer, Long> mapDayOfWeekWithTrainTimeId) {
         String sql = BASE_SQL + getCondition(mapDayOfWeekWithTrainTimeId);
         Query query = entityManager.createNativeQuery(sql, TrainSchedule.class);
         query.setParameter("facilityId", facilityId);
         return query.getResultList();
     }
 
-    private String getCondition(Map<Long, Long> mapDayOfWeekWithTrainTimeId) {
+    private String getCondition(Map<Integer, Long> mapDayOfWeekWithTrainTimeId) {
         String condition = " WHERE f.id = :facilityId";
         List<String> mapCondition = new ArrayList<>();
-        for (Map.Entry<Long, Long> entry : mapDayOfWeekWithTrainTimeId.entrySet()) {
+        for (Map.Entry<Integer, Long> entry : mapDayOfWeekWithTrainTimeId.entrySet()) {
             mapCondition.add("(ts.day_of_week = " + entry.getKey() + " AND ts.train_time_id = " + entry.getValue() + ")");
         }
         return condition + " AND + (" + String.join(" OR ", mapCondition) + ")";

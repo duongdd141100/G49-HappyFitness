@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -98,13 +99,13 @@ public class PaymentServiceImpl implements PaymentService {
             classStudent = classStudentRepo.save(classStudent);
             List<TrainSchedule> trainSchedules = new ArrayList<>();
             Clazz finalClazz = clazz;
-            bookingRequestBodyDto.getDayOfWeeks().forEach(x -> {
+            for (Map.Entry<Integer, Long> entry : bookingRequestBodyDto.getMapDayOfWeekWithTrainTimeId().entrySet()) {
                 TrainSchedule trainSchedule = new TrainSchedule();
-                trainSchedule.setTrainTime(trainTimeRepo.findById(bookingRequestBodyDto.getTrainTimeId()).get());
-                trainSchedule.setDayOfWeek(x);
+                trainSchedule.setTrainTime(trainTimeRepo.findById(entry.getValue()).get());
+                trainSchedule.setDayOfWeek(entry.getKey());
                 trainSchedule.setClazz(finalClazz);
                 trainSchedules.add(trainSchedule);
-            });
+            }
             trainScheduleRepo.saveAll(trainSchedules);
             List<TrainHistory> trainHistories = new ArrayList<>();
             while (trainHistories.size() < aPackage.getTotalSlot()) {
@@ -113,13 +114,16 @@ public class PaymentServiceImpl implements PaymentService {
                         ? trainHistories.get(size - 1).getTrainDate().plusDays(1)
                         : LocalDate.now().plusDays(1);
                 while (trainHistories.size() == size) {
-                    if (bookingRequestBodyDto.getDayOfWeeks().contains(localDate.getDayOfWeek().getValue() + 1)) {
+                    Integer dayOfWeek = localDate.getDayOfWeek().getValue() + 1;
+                    if (bookingRequestBodyDto.getMapDayOfWeekWithTrainTimeId().containsKey((dayOfWeek))) {
                         TrainHistory trainHistory = new TrainHistory();
                         trainHistory.setClazz(clazz);
                         trainHistory.setTrainDate(localDate);
                         trainHistory.setStatus("NOT_YET");
-                        trainHistory.setDayOfWeek(localDate.getDayOfWeek().getValue() + 1);
-                        trainHistory.setTrainTime(trainSchedules.getFirst().getTrainTime());
+                        trainHistory.setDayOfWeek(dayOfWeek);
+                        TrainTime trainTime = new TrainTime();
+                        trainTime.setId(bookingRequestBodyDto.getMapDayOfWeekWithTrainTimeId().get(dayOfWeek));
+                        trainHistory.setTrainTime(trainTime);
                         trainHistories.add(trainHistory);
                     } else {
                         localDate = localDate.plusDays(1);
