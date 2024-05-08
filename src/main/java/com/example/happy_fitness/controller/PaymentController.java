@@ -7,6 +7,8 @@ import com.example.happy_fitness.dto.BookingRequestBodyDto;
 import com.example.happy_fitness.dto.JoinClassRequestBodyDto;
 import com.example.happy_fitness.repository.PackageRepository;
 import com.example.happy_fitness.service.PaymentService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,16 @@ public class PaymentController {
     @Autowired
     private PackageRepository packageRepo;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<String>> createPayment(@RequestParam(required = false) Long amount,
                                                               @RequestParam(required = false) Long orderId,
                                                               @RequestParam(required = false) Long ticketId,
                                                               @RequestBody(required = false) BookingRequestBodyDto bookingRequestBodyDto,
                                                               @RequestBody(required = false) JoinClassRequestBodyDto joinClassRequestBodyDto,
-                                                              HttpServletRequest req) throws UnsupportedEncodingException {
+                                                              HttpServletRequest req) throws UnsupportedEncodingException, JsonProcessingException {
         Map<String, String> baseParams = VNPayConfig.getBaseParams(req);
         if (orderId != null) {
             baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + "/" + orderId);
@@ -42,14 +47,14 @@ public class PaymentController {
             baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlCustomerTicket + ticketId);
             baseParams.put("vnp_Amount", String.valueOf(amount * 100));
         } else if (bookingRequestBodyDto != null) {
-            String params = String.format("?dayOfWeeks=%s" +
-                    "&ptId=%s" +
+            String params = String.format("?&ptId=%s" +
                     "&packageId=%s" +
                     "&facilityId=%s" +
-                    "&trainTimeId=%s",
-                    String.join("", bookingRequestBodyDto.getDayOfWeeks().stream().map(Object::toString).toList()),
-                    bookingRequestBodyDto.getPtId(), bookingRequestBodyDto.getPackageId(), bookingRequestBodyDto.getFacilityId(),
-                    bookingRequestBodyDto.getTrainTimeId());
+                    "&mapDayOfWeekWithTrainTimeId=%s",
+                    bookingRequestBodyDto.getPtId(),
+                    bookingRequestBodyDto.getPackageId(),
+                    bookingRequestBodyDto.getFacilityId(),
+                    objectMapper.writeValueAsString(bookingRequestBodyDto.getMapDayOfWeekWithTrainTimeId()));
             baseParams.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrlOrder + params);
             String price = String.format("%f", packageRepo.findById(bookingRequestBodyDto.getPackageId()).get().getPrice() * 100);
             baseParams.put("vnp_Amount", price.substring(0, price.indexOf('.')));
