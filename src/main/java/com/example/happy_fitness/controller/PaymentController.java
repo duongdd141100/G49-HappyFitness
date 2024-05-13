@@ -5,6 +5,7 @@ import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.config.VNPayConfig;
 import com.example.happy_fitness.dto.BookingRequestBodyDto;
 import com.example.happy_fitness.dto.JoinClassRequestBodyDto;
+import com.example.happy_fitness.repository.ClassRepository;
 import com.example.happy_fitness.repository.PackageRepository;
 import com.example.happy_fitness.service.PaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,6 +32,9 @@ public class PaymentController {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ClassRepository classRepo;
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<String>> createPayment(@RequestParam(required = false) Long amount,
@@ -59,6 +63,9 @@ public class PaymentController {
             String price = String.format("%f", packageRepo.findById(bookingRequestBodyDto.getPackageId()).get().getPrice() * 100);
             baseParams.put("vnp_Amount", price.substring(0, price.indexOf('.')));
         } else {
+            if (classRepo.findById(joinClassRequestBodyDto.getClassId()).get().getClassStudents().size() >= 8) {
+                return ResponseEntity.badRequest().body(BaseResponse.fail("Lớp đã đủ số lượng học viên!"));
+            }
             String params = String.format("?classId=%s" +
                             "&packageId=%s",
                     joinClassRequestBodyDto.getClassId(), joinClassRequestBodyDto.getPackageId());
