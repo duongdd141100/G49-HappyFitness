@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,6 +42,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public String update(TrainHistory trainHistory, Long id, UserDetails userDetails) {
+        if (trainHistory.getTrainDate().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            throw new RuntimeException("Xin lỗi! Chủ nhật trung tâm đóng cửa!");
+        }
         TrainHistory originSchedule = trainHistoryRepo.findById(id).get();
         if (!originSchedule.getTrainTime().getId().equals(trainHistory.getTrainTime().getId())
         || !originSchedule.getTrainDate().isEqual(trainHistory.getTrainDate())) {
