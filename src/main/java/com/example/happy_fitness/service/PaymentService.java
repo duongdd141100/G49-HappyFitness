@@ -1,7 +1,6 @@
 package com.example.happy_fitness.service;
 
 import com.example.happy_fitness.dto.BookingRequestBodyDto;
-import com.example.happy_fitness.dto.JoinClassRequestBodyDto;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface PaymentService {
@@ -11,5 +10,5 @@ public interface PaymentService {
 
     String createSchedule(String responseCode, BookingRequestBodyDto bookingRequestBodyDto, UserDetails userDetails);
 
-    String joinClass(JoinClassRequestBodyDto joinClassRequestBodyDto, UserDetails userDetails, String responseCode);
+    String joinClass(BookingRequestBodyDto bookingRequestBodyDto, UserDetails userDetails, String responseCode);
 }
