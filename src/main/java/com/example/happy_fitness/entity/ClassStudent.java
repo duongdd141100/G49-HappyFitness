@@ -17,4 +17,8 @@ public class ClassStudent extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Clazz clazz;
+
+    @ManyToOne
+    @JoinColumn(name = "package_id")
+    private Package aPackage;
 }
