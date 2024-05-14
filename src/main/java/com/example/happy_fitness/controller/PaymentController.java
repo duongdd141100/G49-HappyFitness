@@ -67,7 +67,7 @@ public class PaymentController {
             if (clazz.getClassStudents().stream().anyMatch(x -> x.getStudent().getUsername().equals(userDetails.getUsername()))) {
                 return ResponseEntity.badRequest().body(BaseResponse.fail("Bạn đã là học viên trong lớp này!"));
             }
-            if (clazz.getClassStudents().size() >= 8) {
+            if (clazz.getClassStudents().stream().filter(x -> x.getRemainSlot() > 0).toList().size() >= 8) {
                 return ResponseEntity.badRequest().body(BaseResponse.fail("Lớp đã đủ số lượng học viên!"));
             }
             String params = String.format("?classId=%s" +

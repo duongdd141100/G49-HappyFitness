@@ -55,13 +55,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                     && trainTimeUpdate.getStartTime().isBefore(now.toLocalTime()))) {
                 throw new RuntimeException(ErrorMessageEnum.TRAIN_TIME_INVALID.getCode());
             }
-            User customer = userRepo.findByUsername(userDetails.getUsername());
-            List<ClassStudent> clazzes = classStudentRepo.findAllByStudent(customer);
             if (trainHistoryRepo.existsByClazzInAndTrainDateAndTrainTime_Id
-                    (clazzes.stream()
-                            .map(ClassStudent::getClazz)
-                            .filter(x -> x.getStatus().equals("ACTIVE"))
-                            .toList(), trainHistory.getTrainDate(), trainHistory.getTrainTime().getId())) {
+                    (Arrays.asList(originSchedule.getClazz()), trainHistory.getTrainDate(), trainHistory.getTrainTime().getId())) {
                 throw new RuntimeException(ErrorMessageEnum.SCHEDULE_EXIST.getCode());
             }
             if (trainHistoryRepo.existsByClazz_PtAndTrainDateAndTrainTime_Id
