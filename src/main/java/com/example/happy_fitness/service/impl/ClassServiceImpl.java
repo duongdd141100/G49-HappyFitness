@@ -4,6 +4,7 @@ import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.entity.*;
 import com.example.happy_fitness.repository.*;
 import com.example.happy_fitness.service.ClassService;
+import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,9 @@ public class ClassServiceImpl implements ClassService {
     @Autowired
     private TrainTimeRepository trainTimeRepo;
 
+    @Autowired
+    private TrainHistoryRepository trainHistoryRepo;
+
     @Override
     public String create(UserDetails userDetails, Clazz clazz) {
         return null;
@@ -58,6 +62,10 @@ public class ClassServiceImpl implements ClassService {
             clazzes = classRepo.findAllByPt_Facility(requester.getFacility());
         } else if (RoleEnum.ROLE_PERSONAL_TRAINER.name().equals(requesterRole)) {
             clazzes = classRepo.findAllByPt(requester);
+            clazzes.addAll(trainHistoryRepo.findAllByPt(requester)
+                    .stream().map(TrainHistory::getClazz)
+                    .toList());
+            clazzes = StreamEx.of(clazzes).distinct(Clazz::getId).toList();
         } else {
             clazzes = classStudentRepo.findAllByStudent(requester).stream().map(ClassStudent::getClazz).toList();
         }

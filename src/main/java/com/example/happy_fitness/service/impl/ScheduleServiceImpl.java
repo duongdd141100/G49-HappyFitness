@@ -82,26 +82,25 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<TrainHistory> findAll(UserDetails userDetails, Long classId) {
         List<TrainHistory> schedules = null;
         String requesterRole = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
+        User requester = userRepo.findByUsername(userDetails.getUsername());
         if (RoleEnum.ROLE_ADMIN.name().equals(requesterRole)) {
             schedules = trainHistoryRepo.findAll();
         }
         if (Arrays.asList(RoleEnum.ROLE_MANAGER.name(), RoleEnum.ROLE_RECEPTIONIST.name()).contains(requesterRole)) {
-            User requester = userRepo.findByUsername(userDetails.getUsername());
             schedules = trainHistoryRepo.findAllByClazz_Pt_Facility(requester.getFacility());
         }
         if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
-            User requester = userRepo.findByUsername(userDetails.getUsername());
             List<ClassStudent> clazzes = classStudentRepo.findAllByStudent(requester);
             schedules = trainHistoryRepo.findAllByClazzIn(clazzes.stream().map(ClassStudent::getClazz).toList());
         }
         if (RoleEnum.ROLE_PERSONAL_TRAINER.name().contains(requesterRole)) {
-            User requester = userRepo.findByUsername(userDetails.getUsername());
-            schedules = trainHistoryRepo.findAllByClazz_Pt(requester);
+            schedules = trainHistoryRepo.findAllByPt(requester);
         }
-        schedules.sort(Comparator.comparing(TrainHistory::getTrainDate));
         if (classId != null) {
             schedules = schedules.stream().filter(x -> x.getClazz().getId().equals(classId)).toList();
         }
+        // TODO: fix this
+//        schedules.sort(Comparator.comparing(TrainHistory::getTrainDate));
         return schedules.stream().map(x -> {
             x.getClazz().getPt().setFacility(null);
             x.getClazz().setTrainSchedules(null);
@@ -112,6 +111,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 attendance.getClassStudent().setClazz(null);
                 return attendance;
             }).toList());
+            x.getPt().setFacility(null);
             return x;
         }).toList();
     }

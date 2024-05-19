@@ -21,4 +21,6 @@ public interface TrainHistoryRepository extends JpaRepository<TrainHistory, Long
     Boolean existsByClazzInAndTrainDateAndTrainTime_Id(List<Clazz> clazzes, LocalDate trainDate, Long trainTimeId);
 
     Boolean existsByClazz_PtAndTrainDateAndTrainTime_Id(User pt, LocalDate trainDate, Long trainTimeId);
+
+    List<TrainHistory> findAllByPt(User pt);
 }

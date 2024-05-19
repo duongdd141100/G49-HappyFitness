@@ -27,6 +27,10 @@ public class TrainHistory extends BaseEntity {
     @JoinColumn(name = "train_time_id")
     private TrainTime trainTime;
 
+    @ManyToOne
+    @JoinColumn(name = "pt_id")
+    private User pt;
+
     @OneToMany(mappedBy = "trainHistory", fetch = FetchType.LAZY)
     private List<Attendance> attendances;
 }
