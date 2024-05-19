@@ -27,7 +27,8 @@ public class OrderCustomRepository {
             "    SUM(op.unit_price * quantity) AS totalPrice," +
             "    SUM(op.unit_price * quantity) - o.price AS discount," +
             "    o.price," +
-            "    o.paid" +
+            "    o.paid," +
+            "    o.created_date AS createdDate" +
             " FROM" +
             "    orders o" +
             "        INNER JOIN" +
@@ -48,7 +49,8 @@ public class OrderCustomRepository {
             "    SUM(op.unit_price * quantity) AS totalPrice," +
             "    SUM(op.unit_price * quantity) - o.price AS discount," +
             "    o.price," +
-            "    o.paid" +
+            "    o.paid," +
+            "    o.created_date AS createdDate" +
             " FROM" +
             "    orders o" +
             "        INNER JOIN" +

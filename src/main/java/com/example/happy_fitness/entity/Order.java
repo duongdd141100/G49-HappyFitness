@@ -3,6 +3,7 @@ package com.example.happy_fitness.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -45,6 +46,7 @@ import java.util.List;
                         @ColumnResult(name = "discount", type = Float.class),
                         @ColumnResult(name = "price", type = Float.class),
                         @ColumnResult(name = "paid", type = Boolean.class),
+                        @ColumnResult(name = "createdDate", type = Date.class),
                 }
         )
 )
