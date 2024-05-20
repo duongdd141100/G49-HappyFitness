@@ -123,6 +123,7 @@ public class PaymentServiceImpl implements PaymentService {
                         TrainTime trainTime = new TrainTime();
                         trainTime.setId(bookingRequestBodyDto.getMapDayOfWeekWithTrainTimeId().get(dayOfWeek));
                         trainHistory.setTrainTime(trainTime);
+                        trainHistory.setPt(clazz.getPt());
                         trainHistories.add(trainHistory);
                     } else {
                         localDate = localDate.plusDays(1);
@@ -160,15 +161,25 @@ public class PaymentServiceImpl implements PaymentService {
             classStudent.setClazz(clazz);
             classStudent.setStudent(student);
             classStudent.setRemainSlot(aPackage.getTotalSlot());
-            classStudent.setAPackage(new Package());
-            classStudent.getAPackage().setId(bookingRequestBodyDto.getPackageId());
-            classStudentRepo.save(classStudent);
+            classStudent.setAPackage(aPackage);
+            classStudent = classStudentRepo.save(classStudent);
             TrainFee trainFee = new TrainFee();
             trainFee.setIsPaid(true);
             trainFee.setStudent(student);
             trainFee.setClazz(clazz);
             trainFee.setPrice(aPackage.getPrice());
             trainFeeRepo.save(trainFee);
+            List<TrainHistory> trainHistories = trainHistoryRepo.findAllByClazzAndTrainDateGreaterThanEqual(clazz, LocalDate.now());
+            List<Attendance> attendances = new ArrayList<>();
+            ClassStudent finalClassStudent = classStudent;
+            trainHistories.forEach(x -> {
+                Attendance attendance = new Attendance();
+                attendance.setStatus("NOT_YET");
+                attendance.setClassStudent(finalClassStudent);
+                attendance.setTrainHistory(x);
+                attendances.add(attendance);
+            });
+            attendanceRepo.saveAll(attendances);
         }
         return HttpStatus.OK.getReasonPhrase();
     }

@@ -91,7 +91,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         if (RoleEnum.ROLE_CUSTOMER.name().contains(requesterRole)) {
             List<ClassStudent> clazzes = classStudentRepo.findAllByStudent(requester);
-            schedules = trainHistoryRepo.findAllByClazzIn(clazzes.stream().map(ClassStudent::getClazz).toList());
+            List<Attendance> attendances = attendanceRepo.findAllByClassStudentIn(clazzes);
+            List<Long> validScheduleIds = attendances.stream().map(x -> x.getTrainHistory().getId()).toList();
+            schedules = trainHistoryRepo.findAllByClazzIn(clazzes.stream().map(ClassStudent::getClazz).toList())
+                    .stream().filter(x -> validScheduleIds.contains(x.getId())).toList();
         }
         if (RoleEnum.ROLE_PERSONAL_TRAINER.name().contains(requesterRole)) {
             schedules = trainHistoryRepo.findAllByPt(requester);
