@@ -68,6 +68,11 @@ public class ScheduleServiceImpl implements ScheduleService {
             originSchedule.setDayOfWeek(trainHistory.getTrainDate().getDayOfWeek().getValue() + 1);
             trainHistoryRepo.save(originSchedule);
         }
+        if (trainHistory.getPt() != null
+                && !originSchedule.getPt().getId().equals(trainHistory.getPt().getId())) {
+            originSchedule.setPt(userRepo.findById(trainHistory.getPt().getId()).get());
+            trainHistoryRepo.save(originSchedule);
+        }
         return HttpStatus.OK.getReasonPhrase();
     }
 
