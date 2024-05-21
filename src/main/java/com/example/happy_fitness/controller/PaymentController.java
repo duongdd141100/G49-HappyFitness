@@ -64,7 +64,7 @@ public class PaymentController {
             baseParams.put("vnp_Amount", price.substring(0, price.indexOf('.')));
         } else {
             Clazz clazz = classRepo.findById(bookingRequestBodyDto.getClassId()).get();
-            if (clazz.getClassStudents().stream().anyMatch(x -> x.getStudent().getUsername().equals(userDetails.getUsername()))) {
+            if (clazz.getClassStudents().stream().anyMatch(x -> x.getStudent().getUsername().equals(userDetails.getUsername()) && x.getRemainSlot() > 0)) {
                 return ResponseEntity.badRequest().body(BaseResponse.fail("Bạn đã là học viên trong lớp này!"));
             }
             if (clazz.getClassStudents().stream().filter(x -> x.getRemainSlot() > 0).toList().size() >= 8) {

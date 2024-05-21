@@ -157,21 +157,32 @@ public class PaymentServiceImpl implements PaymentService {
             User student = userRepo.findByUsername(userDetails.getUsername());
             Clazz clazz = classRepo.findById(bookingRequestBodyDto.getClassId()).get();
             Package aPackage = packageRepo.findById(bookingRequestBodyDto.getPackageId()).get();
-            ClassStudent classStudent = new ClassStudent();
-            classStudent.setClazz(clazz);
-            classStudent.setStudent(student);
-            classStudent.setRemainSlot(aPackage.getTotalSlot());
+            ClassStudent classStudent = clazz.getClassStudents()
+                    .stream().filter(x -> x.getStudent().equals(student))
+                    .findFirst().orElse(null);
+            if (classStudent != null) {
+                classStudent.setRemainSlot(classStudent.getRemainSlot() + aPackage.getTotalSlot());
+            } else {
+                classStudent = new ClassStudent();
+                classStudent.setClazz(clazz);
+                classStudent.setStudent(student);
+                classStudent.setRemainSlot(aPackage.getTotalSlot());
+            }
             classStudent.setAPackage(aPackage);
             classStudent = classStudentRepo.save(classStudent);
+            ClassStudent finalClassStudent = classStudent;
             TrainFee trainFee = new TrainFee();
             trainFee.setIsPaid(true);
             trainFee.setStudent(student);
             trainFee.setClazz(clazz);
             trainFee.setPrice(aPackage.getPrice());
             trainFeeRepo.save(trainFee);
-            List<TrainHistory> trainHistories = trainHistoryRepo.findAllByClazzAndTrainDateGreaterThanEqual(clazz, LocalDate.now());
+            List<TrainHistory> trainHistories = trainHistoryRepo.findAllByClazzAndTrainDateGreaterThanEqual(clazz, LocalDate.now())
+                    .stream().filter(x -> x.getAttendances()
+                            .stream().noneMatch(attendance -> attendance.getClassStudent().getId()
+                                    .equals(finalClassStudent.getId())))
+                    .toList();
             List<Attendance> attendances = new ArrayList<>();
-            ClassStudent finalClassStudent = classStudent;
             trainHistories.forEach(x -> {
                 Attendance attendance = new Attendance();
                 attendance.setStatus("NOT_YET");

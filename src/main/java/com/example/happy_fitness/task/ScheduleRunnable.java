@@ -46,6 +46,7 @@ public class ScheduleRunnable {
                 trainHistory.setTrainDate(localDate);
                 trainHistory.setDayOfWeek(localDate.getDayOfWeek().getValue() + 1);
                 trainHistory.setClazz(clazz);
+                trainHistory.setPt(clazz.getPt());
                 trainHistories.add(trainHistory);
                 clazz.getClassStudents().forEach(x -> {
                     if (attendances.stream()
