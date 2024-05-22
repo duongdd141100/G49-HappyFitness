@@ -36,7 +36,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/update")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<BaseResponse<String>> update(@AuthenticationPrincipal UserDetails userDetails,
                                                        @RequestBody TrainHistory trainHistory) {
         try {
