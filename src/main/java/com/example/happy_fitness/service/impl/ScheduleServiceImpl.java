@@ -42,12 +42,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public String update(TrainHistory trainHistory, Long id, UserDetails userDetails) {
-        if (trainHistory.getTrainDate().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+        if (trainHistory.getTrainDate() != null && trainHistory.getTrainDate().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             throw new RuntimeException("Xin lỗi! Chủ nhật trung tâm đóng cửa!");
         }
         TrainHistory originSchedule = trainHistoryRepo.findById(id).get();
-        if (!originSchedule.getTrainTime().getId().equals(trainHistory.getTrainTime().getId())
-        || !originSchedule.getTrainDate().isEqual(trainHistory.getTrainDate())) {
+        if ((trainHistory.getTrainTime() != null
+                && trainHistory.getTrainDate()!= null)
+                && (!originSchedule.getTrainTime().getId().equals(trainHistory.getTrainTime().getId())
+                || !originSchedule.getTrainDate().isEqual(trainHistory.getTrainDate()))) {
             LocalDateTime now = LocalDateTime.now();
             TrainTime trainTimeUpdate = trainTimeRepo.findById(trainHistory.getTrainTime().getId()).get();
             if (trainHistory.getTrainDate().isBefore(now.toLocalDate())
