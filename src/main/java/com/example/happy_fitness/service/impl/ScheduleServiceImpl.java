@@ -110,7 +110,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // TODO: fix this
 //        schedules.sort(Comparator.comparing(TrainHistory::getTrainDate));
         return schedules.stream().map(x -> {
-            x.getClazz().getPt().setFacility(null);
+            x.getClazz().getPt().getFacility().setManager(null);
             x.getClazz().setTrainSchedules(null);
             x.getClazz().getClassStudents()
                     .forEach(classStudent -> classStudent.setClazz(null));
@@ -119,7 +119,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 attendance.getClassStudent().setClazz(null);
                 return attendance;
             }).toList());
-            x.getPt().setFacility(null);
+            x.getPt().getFacility().setManager(null);
             return x;
         }).toList();
     }
