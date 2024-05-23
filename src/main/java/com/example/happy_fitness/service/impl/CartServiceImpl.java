@@ -56,9 +56,15 @@ public class CartServiceImpl implements CartService {
         }
         Cart cartExist = cartRepo.findByCreatedByAndFacilityProduct_Id(username, cart.getFacilityProduct().getId());
         if (cartExist != null) {
-            cartExist.setQuantity(cartExist.getQuantity() + cart.getQuantity());
+            Integer cartQuantity = cartExist.getQuantity() + cart.getQuantity();
+            cartExist.setQuantity(cartQuantity <= facilityProduct.getStockQuantity()
+                    ? cartQuantity
+                    : facilityProduct.getStockQuantity());
             cartRepo.save(cartExist);
         } else {
+            cart.setQuantity(cart.getQuantity() < facilityProduct.getStockQuantity()
+                    ? cart.getQuantity()
+                    : facilityProduct.getStockQuantity());
             cartRepo.save(cart);
         }
         return HttpStatus.OK.getReasonPhrase();
@@ -68,8 +74,14 @@ public class CartServiceImpl implements CartService {
     public String changeQuantity(List<CartDto> cartDtos) {
         List<Cart> carts = cartRepo.findAllById(cartDtos.stream().map(CartDto::getId).toList());
         carts.forEach(x -> {
-            x.setQuantity(cartDtos.stream()
-                    .filter(cartDto -> x.getId().equals(cartDto.getId())).findFirst().get().getQuantity());
+            CartDto cart = cartDtos.stream()
+                    .filter(cartDto -> x.getId().equals(cartDto.getId())).findFirst().get();
+            if (cart.getQuantity() > x.getFacilityProduct().getStockQuantity()) {
+                throw new RuntimeException(String.format("Sản phẩm %s chỉ còn lại tối đa %d",
+                        x.getFacilityProduct().getProduct().getName(),
+                        x.getFacilityProduct().getStockQuantity()));
+            }
+            x.setQuantity(cart.getQuantity());
         });
         cartRepo.saveAll(carts);
         return HttpStatus.OK.getReasonPhrase();
