@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
         }
         String passRandom = RandomStringUtils.random(8, true, true);
         MailTemplate mailTemplate = mailTemplateRepo.findByCode(propertyBean.getResetPasswordTemplateCode());
-        emailService.send(user.getEmail(), mailTemplate.getSubject(), String.format(mailTemplate.getContent(), username, passRandom), new MultipartFile[]{});
+        emailService.send(new String[]{user.getEmail()}, mailTemplate.getSubject(), String.format(mailTemplate.getContent(), username, passRandom), new MultipartFile[]{});
         user.setPassword(passwordEncoder.encode(passRandom));
         userRepo.save(user);
         return HttpStatus.OK.getReasonPhrase();

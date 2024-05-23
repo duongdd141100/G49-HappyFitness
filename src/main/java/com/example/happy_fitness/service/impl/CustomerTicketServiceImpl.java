@@ -119,6 +119,7 @@ public class CustomerTicketServiceImpl implements CustomerTicketService {
         newCustomerTicket.setAction(CustomerTickeActionEnum.BUY_NEW.name());
         newCustomerTicket.setVoucher(voucher);
         newCustomerTicket.setPaid(false);
+        newCustomerTicket.setIsUsing(false);
         Float price = ticket.getPrice();
         if (voucher != null) {
             Float discount = price * voucher.getPercentAmount() / 100;

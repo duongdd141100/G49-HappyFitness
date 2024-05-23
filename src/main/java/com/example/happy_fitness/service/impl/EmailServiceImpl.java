@@ -21,7 +21,7 @@ public class EmailServiceImpl implements EmailService {
     private PropertyBean propertyBean;
 
     @Override
-    public void send(String to, String subject, String content, MultipartFile... attachFile) throws MessagingException {
+    public void send(String[] to, String subject, String content, MultipartFile... attachFile) throws MessagingException {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

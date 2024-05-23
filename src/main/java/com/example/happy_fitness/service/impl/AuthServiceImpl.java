@@ -126,7 +126,7 @@ public class AuthServiceImpl implements AuthService {
         MailTemplate mailTemplate = mailTemplateRepo.findByCode(propertyBean.getForgetPasswordTemplateCode());
         Random random = new Random();
         String code = String.format("%06d", random.nextInt(MAX_CODE));
-        emailService.send(email, mailTemplate.getSubject(), String.format(mailTemplate.getContent(), code), new MultipartFile[]{});
+        emailService.send(new String[]{email}, mailTemplate.getSubject(), String.format(mailTemplate.getContent(), code), new MultipartFile[]{});
         return code;
     }
 }

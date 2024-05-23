@@ -4,16 +4,21 @@ import com.example.happy_fitness.common.ErrorMessageEnum;
 import com.example.happy_fitness.common.RoleEnum;
 import com.example.happy_fitness.entity.*;
 import com.example.happy_fitness.repository.*;
+import com.example.happy_fitness.service.EmailService;
 import com.example.happy_fitness.service.ScheduleService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -35,13 +40,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private AttendanceRepository attendanceRepo;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private MailTemplateRepository mailTemplateRepo;
+
     @Override
     public String create(UserDetails userDetails, TrainHistory trainHistory) {
         return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
-    public String update(TrainHistory trainHistory, Long id, UserDetails userDetails) {
+    public String update(TrainHistory trainHistory, Long id, UserDetails userDetails) throws MessagingException {
         if (trainHistory.getTrainDate() != null && trainHistory.getTrainDate().getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             throw new RuntimeException("Xin lỗi! Chủ nhật trung tâm đóng cửa!");
         }
@@ -65,9 +76,28 @@ public class ScheduleServiceImpl implements ScheduleService {
                     (originSchedule.getClazz().getPt(), trainHistory.getTrainDate(), trainHistory.getTrainTime().getId())) {
                 throw new RuntimeException(ErrorMessageEnum.YOUR_PT_BUSY.getCode());
             }
+            String oldTrainDate = originSchedule.getTrainDate().toString();
+            TrainTime oldTrainTime = originSchedule.getTrainTime();
             originSchedule.setTrainDate(trainHistory.getTrainDate());
             originSchedule.setTrainTime(trainTimeUpdate);
             originSchedule.setDayOfWeek(trainHistory.getTrainDate().getDayOfWeek().getValue() + 1);
+            List<User> receptionists = userRepo.findAllByRole_IdAndFacility_Id(4L, originSchedule.getPt().getFacility().getId());
+            receptionists.stream().map(User::getEmail).toArray();
+            MailTemplate template = mailTemplateRepo.findByCode("NOTIFY_UPDATE_TRAIN_DATETIME");
+            List<String> to = new ArrayList<>(receptionists.stream().map(User::getEmail).toList());
+            to.add(originSchedule.getPt().getEmail());
+            String[] toArr = new String[to.size()];
+            toArr = to.toArray(toArr);
+            emailService.send(toArr,
+                    template.getSubject(),
+                    String.format(template.getContent(),
+                            originSchedule.getClazz().getName(),
+                            originSchedule.getPt().getFullName(),
+                            oldTrainDate + " (" + oldTrainTime.getStartTime().toString() + " - " + oldTrainTime.getEndTime().toString() + ")",
+                            trainHistory.getTrainDate().toString()
+                                    + " (" +
+                                    trainTimeUpdate.getStartTime().toString() + " - " + trainTimeUpdate.getEndTime().toString() + ")",
+                    new MultipartFile[]{}));
             trainHistoryRepo.save(originSchedule);
         }
         if (trainHistory.getPt() != null

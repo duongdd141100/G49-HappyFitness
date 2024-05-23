@@ -42,6 +42,7 @@ public class ScheduleController {
         try {
             return ResponseEntity.ok(BaseResponse.ok(scheduleService.update(trainHistory, trainHistory.getId(), userDetails)));
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(RequestMappingConstant.GET_PRODUCT + e);
             return ResponseEntity.badRequest().body(BaseResponse.fail(ErrorMessageEnum.typeOf(e.getMessage()).getMessage()));
         }
