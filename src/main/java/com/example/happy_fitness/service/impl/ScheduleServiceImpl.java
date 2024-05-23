@@ -96,13 +96,30 @@ public class ScheduleServiceImpl implements ScheduleService {
                             oldTrainDate + " (" + oldTrainTime.getStartTime().toString() + " - " + oldTrainTime.getEndTime().toString() + ")",
                             trainHistory.getTrainDate().toString()
                                     + " (" +
-                                    trainTimeUpdate.getStartTime().toString() + " - " + trainTimeUpdate.getEndTime().toString() + ")",
-                    new MultipartFile[]{}));
+                                    trainTimeUpdate.getStartTime().toString() + " - " + trainTimeUpdate.getEndTime().toString() + ")"),
+                    new MultipartFile[]{});
             trainHistoryRepo.save(originSchedule);
         }
         if (trainHistory.getPt() != null
                 && !originSchedule.getPt().getId().equals(trainHistory.getPt().getId())) {
-            originSchedule.setPt(userRepo.findById(trainHistory.getPt().getId()).get());
+            MailTemplate template = mailTemplateRepo.findByCode("NOTIFY_UPDATE_PT");
+            List<User> receptionists = userRepo.findAllByRole_IdAndFacility_Id(4L, originSchedule.getPt().getFacility().getId());
+            receptionists.stream().map(User::getEmail).toArray();
+            List<String> to = new ArrayList<>(receptionists.stream().map(User::getEmail).toList());
+            to.add(originSchedule.getPt().getEmail());
+            String[] toArr = new String[to.size()];
+            toArr = to.toArray(toArr);
+            User newPt = userRepo.findById(trainHistory.getPt().getId()).get();
+            emailService.send(toArr,
+                    template.getSubject(),
+                    String.format(template.getContent(),
+                            originSchedule.getClazz().getName(),
+                            originSchedule.getPt().getFullName(),
+                            originSchedule.getTrainDate() + " (" + originSchedule.getTrainTime().getStartTime().toString() + " - " + originSchedule.getTrainTime().getEndTime().toString() + ")",
+                            originSchedule.getPt().getFullName(),
+                            newPt.getFullName()),
+                            new MultipartFile[]{});
+            originSchedule.setPt(newPt);
             trainHistoryRepo.save(originSchedule);
         }
         return HttpStatus.OK.getReasonPhrase();
