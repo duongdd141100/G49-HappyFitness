@@ -105,7 +105,14 @@ public class OrderServiceImpl implements OrderService {
         } else {
             order.setPrice(orderPrice);
         }
-
+        List<Cart> cartsExistByProduct = cartRepo.findAllByFacilityProductIn(carts.stream().map(Cart::getFacilityProduct).toList())
+                .stream().map(x -> {
+                    x.setQuantity(x.getQuantity() - carts
+                            .stream().filter(cart -> cart.getFacilityProduct().getId().equals(x.getFacilityProduct().getId()))
+                            .findFirst().get().getQuantity());
+                    return x;
+                }).toList();
+        cartRepo.saveAll(cartsExistByProduct);
         cartRepo.deleteAllById(cartIds);
         Order orderSaved = orderRepo.save(order);
         orderSaved.setOrderProducts(null);
